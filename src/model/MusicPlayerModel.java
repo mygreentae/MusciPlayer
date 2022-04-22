@@ -13,8 +13,7 @@ public class MusicPlayerModel {
 	// add currentQueue
 	// add currentPlaylists
 	// add favorites
-	
-	
+
 	public MusicPlayerModel(Song start) {
 		curSong = start; 
 		songs = new Song[10];
