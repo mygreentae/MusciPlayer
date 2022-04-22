@@ -108,6 +108,20 @@ public class PlayList {
 	
 	
 	/**
+	 * Returns if the PlayList contains the Song
+	 * 
+	 * @param song, a Song
+	 * @return true if PlayList contains song
+	 */
+	public boolean contains(Song song) {
+		if (songList.contains(song)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
 	 * Returns the genre metadata about the Playlist
 	 * 
 	 * @return the genre's within the Playlist
@@ -135,6 +149,31 @@ public class PlayList {
 			playOrder.add(song);
 			shuffle.remove(i);
 		}		
+	}
+	
+	/**
+	 * This is used to reassign the song that plays first in the 
+	 * PlayList.
+	 * 
+	 * It is mostly used for when a user clicks on a song in a PlayList, 
+	 * whilst playing said PlayList. It just shifts where the song used
+	 * to be and moves it to the front.
+	 * 
+	 * @param song, the song select to be first
+	 */
+	public void playFirst(Song song) {
+		shuffle = new ArrayList<Song>();
+		shuffle.add(song);
+		ArrayList<Song> order = songList;
+		if (playOrder != null) {
+			order = playOrder;
+		}
+		for (Song s: order) {
+			if (s != shuffle.get(0)) {
+				shuffle.add(s);
+			}
+		}
+		playOrder = shuffle;
 	}
 	
 	/**

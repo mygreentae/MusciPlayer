@@ -11,6 +11,8 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+
+import model.MusicPlayerModel;
 import song.Song;
 
 
@@ -128,6 +130,12 @@ public class Tester {
 		for (Song songs: defaultPlaylist.getPlayOrder()) {
 			System.out.println(songs.getName());
 		}
+
+		defaultPlaylist.playFirst(song4);
+		defaultPlaylist.playFirst(song3);
+		defaultPlaylist.playFirst(song2);
+		defaultPlaylist.playFirst(song5);
+		defaultPlaylist.playFirst(song4);
 	}	
 	
 	
@@ -188,4 +196,41 @@ public class Tester {
 		
 	}
 
+	/**
+	 * Test 4 tests the functionality of the MusicPlayerModel class
+	 * 
+	 * We'll see how this goes.
+	 */
+	@Test
+	void test4() {
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("yeet", "Seth", "the best");
+		Song song2 = new Song("yawt", "Jackson", "the best");
+		Song song3 = new Song("yurt", "Paris", "the best");
+		Song song4 = new Song("yewt", "Lieghanna", "the best");
+		Song song5 = new Song("yaat", "Rey", "the best");
+		Song song6 = new Song("yoot", "Tyler", "the best");
+		
+		PlayList p1 = new PlayList("test1");
+		p1.addSong(song1);
+		p1.addSong(song2);
+		p1.addSong(song3);
+		
+		PlayList p2 = new PlayList("test2");
+		p2.addSong(song4);
+		p2.addSong(song5);
+		p2.addSong(song6);
+		
+		model.addPlaylist(p1);
+		model.addPlaylist(p2);
+		
+	}
+	
+	
+	/**
+	 * need to test playing songs when they are in multiple playlists and 
+	 * in the queue so thatll be fun.
+	 */
+	
+	
 }
