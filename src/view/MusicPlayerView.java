@@ -21,7 +21,7 @@ public class MusicPlayerView extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		Song start = new Song("dub", "Yeat");
+		Song start = new Song("dub", "Yeat", null);
 		model = new MusicPlayerModel(start);
 		controller = new MusicPlayerController(model);
 		GridPane pane = new GridPane();

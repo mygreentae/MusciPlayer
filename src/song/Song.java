@@ -40,7 +40,7 @@ public class Song {
 		this.artist = artist; 
 		this.genre = genre;
 		this.favorite = false;
-
+	}
 	
 	/**
 	 * Returns the name of the Song
