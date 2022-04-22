@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import song.Song;
 import utilities.PlayList;
@@ -34,6 +35,7 @@ public class MusicPlayerModel {
 		allPlaylists = new ArrayList<>();
 		favorites = new ArrayList<>();
 		recommended = new ArrayList<>();
+		//songlibrary
 		
 	}
 	
@@ -81,6 +83,18 @@ public class MusicPlayerModel {
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
+		for (Song song : playlist.getPlayOrder()) {
+			//plays song for however long it is
+			curSong = song;
+			System.out.println(curSong.getName());
+			song.play();
+			try {
+				TimeUnit.SECONDS.sleep((long)song.getDuration() + 1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		System.out.println("gonna figure it out later");
 	}
 	
@@ -94,7 +108,20 @@ public class MusicPlayerModel {
 		playingPlaylist = true;
 		playingQueue = false;
 		curSong = song;
-		currentPlaylist.playFirst(song);
+		playlist.playFirst(song); //sets first song
+		// plays entire playlist
+		for (Song songs : playlist.getPlayOrder()) {
+			//plays song for however long it is
+			curSong = songs;
+			System.out.println(curSong.getName());
+			songs.play();
+			try {
+				TimeUnit.SECONDS.sleep((long)songs.getDuration() + 1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		System.out.println("gonna figure it out later");
 	}
 	
@@ -137,8 +164,6 @@ public class MusicPlayerModel {
 		}
 		// if in PlayList, start playlist with this song:
 	}	
-	
-	
 	
 	
 	/* 
@@ -209,6 +234,11 @@ public class MusicPlayerModel {
 			song.unFavorite();
 			favorites.remove(song);
 		}
+	}
+	
+	public Song search(String name) {
+		System.out.println();
+		return null;
 	}
 	
 	

@@ -76,6 +76,7 @@ public class PlayList {
 	 * @param song, the Song to be added to the PlayList
 	 */
 	public void addSong(Song song) {
+		playOrder = songList;
 		songList.add(song);
 		this.size += 1;
 		

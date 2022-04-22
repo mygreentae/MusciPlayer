@@ -32,6 +32,7 @@ public class Tester {
 		assertEquals(song.getGenre(), "the best");
 
 		// plays song
+		song.setAudioStream("Audios/yeat.wav");
 		song.play();
 		song.setPlaying();
 		assertTrue(song.isPlaying());
@@ -235,13 +236,40 @@ public class Tester {
 		assertEquals(model.getAllPlaylists(), new ArrayList<PlayList>());		
 	}
 	
+	
+	/*
+	 * Test 5 plays 2 songs from a PlayList that was added to the model
+	 * They're just super song and annoying to play 
+	 */
+	@Test
+	void test5() {
+		
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("freeze", "Jackson", "k-pop");
+		Song song2 = new Song("yeat", "Seth", "rap");
+		//literally the most crucial thing ever, download wav/audio file into audios
+		// assign them to songs based on name, ezpz
+		song1.setAudioStream("Audios/Freeze.wav");
+		song2.setAudioStream("Audios/yeat.wav");
+				
+		PlayList p1 = new PlayList("test1");
+		p1.addSong(song1);
+		p1.addSong(song2);
+		model.addPlaylist(p1);
+		System.out.println("added");
+		
+		//model.playPlaylist(p1);
+	}
+	
+	
 	/**
-	 * Test 5 tests adding to the favorites PlayList in the MusicPlayerModel.
+	 * Test 6 tests adding to the favorites PlayList in the MusicPlayerModel.
+	 * It also tests playing the actual PlayList contents
 	 * 
 	 * We'll see how this goes.
 	 */
 	@Test
-	void test5() {
+	void test6() {
 		MusicPlayerModel model = new MusicPlayerModel();
 		Song song1 = new Song("yeet", "Seth", "the best");
 		Song song2 = new Song("yawt", "Jackson", "the best");
@@ -253,12 +281,7 @@ public class Tester {
 		PlayList p1 = new PlayList("test1");
 		p1.addSong(song1);
 		p1.addSong(song2);
-		p1.addSong(song3);
 		
-		PlayList p2 = new PlayList("test2");
-		p2.addSong(song4);
-		p2.addSong(song5);
-		p2.addSong(song6);
 		
 		model.addToFavorites(song6);
 		model.addToFavorites(song2);
@@ -269,10 +292,25 @@ public class Tester {
 		model.removeFromFavorites(song5);
 		assertFalse(song6.isFavorite());
 		
-		
 	}
 	
-	
+	@Test
+	void test7(){
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("Deja Vu", "Ateez", "k-pop");
+		Song song2 = new Song("Maniac", "Stray Kids", "k-pop");
+		//literally the most crucial thing ever, download wav/audio file into audios
+		// assign them to songs based on name, ezpz
+		song1.setAudioStream("Audios/Deja-Vu.wav");
+		song2.setAudioStream("Audios/Maniac.wav");
+				
+		PlayList p1 = new PlayList("test1");
+		p1.addSong(song1);
+		p1.addSong(song2);
+		model.addPlaylist(p1);
+		System.out.println("added");
+		model.playPlaylist(p1, song2);
+	}
 	
 	
 	/**
