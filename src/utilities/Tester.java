@@ -197,7 +197,7 @@ public class Tester {
 	}
 
 	/**
-	 * Test 4 tests the functionality of the MusicPlayerModel class
+	 * Test 4 tests adding an removing PlayLists using the MusicPlayerModel class.
 	 * 
 	 * We'll see how this goes.
 	 */
@@ -221,10 +221,58 @@ public class Tester {
 		p2.addSong(song5);
 		p2.addSong(song6);
 		
+		// check adding/ removing playlists
+		ArrayList<PlayList> all = new ArrayList<>();
+		all.add(p1);
 		model.addPlaylist(p1);
-		model.addPlaylist(p2);
+		assertEquals(model.getAllPlaylists(), all);
+		model.addPlaylist(p2);	
+		all.add(p2);
+		assertEquals(model.getAllPlaylists(), all);
+		
+		model.removePlaylist(p1);
+		model.removePlaylist(p2);
+		assertEquals(model.getAllPlaylists(), new ArrayList<PlayList>());		
+	}
+	
+	/**
+	 * Test 5 tests adding to the favorites PlayList in the MusicPlayerModel.
+	 * 
+	 * We'll see how this goes.
+	 */
+	@Test
+	void test5() {
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("yeet", "Seth", "the best");
+		Song song2 = new Song("yawt", "Jackson", "the best");
+		Song song3 = new Song("yurt", "Paris", "the best");
+		Song song4 = new Song("yewt", "Lieghanna", "the best");
+		Song song5 = new Song("yaat", "Rey", "the best");
+		Song song6 = new Song("yoot", "Tyler", "the best");
+		
+		PlayList p1 = new PlayList("test1");
+		p1.addSong(song1);
+		p1.addSong(song2);
+		p1.addSong(song3);
+		
+		PlayList p2 = new PlayList("test2");
+		p2.addSong(song4);
+		p2.addSong(song5);
+		p2.addSong(song6);
+		
+		model.addToFavorites(song6);
+		model.addToFavorites(song2);
+		model.addToFavorites(song3);
+		assertTrue(song6.isFavorite());
+		
+		model.removeFromFavorites(song6);
+		model.removeFromFavorites(song5);
+		assertFalse(song6.isFavorite());
+		
 		
 	}
+	
+	
 	
 	
 	/**
