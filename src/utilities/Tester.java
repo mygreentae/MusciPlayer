@@ -402,10 +402,6 @@ public class Tester {
 	/**
 	 * Begins to test Controller, also tests the ability to search Songs based 
 	 * on Strings 
-	 * 
-	 * TODO: Runs into issue when playing a playlist, adding a song, and playing 
-	 * it again from said song.
-	 * TODO: maybe fixed that
 	 */
 	@Test
 	void test11() {
@@ -422,8 +418,8 @@ public class Tester {
 		controller.playPlaylist(controller.getFavorites(), false, null);
 		
 		Song song2 = controller.search("Maniac");
-		controller.addToFavorites(song);
-		controller.playPlaylist(controller.getFavorites(), false, null);
+		controller.addToFavorites(song2);
+		controller.playPlaylist(controller.getFavorites(), false, song2);
 
 		
 	}

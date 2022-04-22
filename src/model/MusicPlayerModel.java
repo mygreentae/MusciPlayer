@@ -92,7 +92,6 @@ public class MusicPlayerModel {
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist) {
-		playlist = copyPlaylist(playlist);
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
@@ -111,7 +110,6 @@ public class MusicPlayerModel {
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist, Song song) {
-		playlist = copyPlaylist(playlist);
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
@@ -267,6 +265,13 @@ public class MusicPlayerModel {
 			return searchedSong;
 		}
 	}
+	
+	
+	/**
+	 * unsure if we need this but ya never know, could be a cool feature
+	 * @param playlist
+	 * @return
+	 */
 	
 	public PlayList copyPlaylist(PlayList playlist) {
 		PlayList copy = new PlayList(playlist.getName());
