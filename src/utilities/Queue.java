@@ -4,6 +4,17 @@ import java.util.ArrayList;
 
 import song.Song;
 
+
+/**
+ * 
+ * @author Jackson
+ *
+ *	Uses the Linked List Compatibility of Song objects
+ *	Allows for a user to go forward and backward through
+ *	a queue of songs that can be added to while other songs 
+ *	are being played. (hopefullly)
+ *
+ */
 public class Queue {
 
 	private Song curSong;
@@ -11,7 +22,13 @@ public class Queue {
 	private Song prevSong;
 	private Song lastSong;
 	
-	
+	/**
+	 * Creates the First song in the Queue
+	 * 
+	 * Thus, Queues cannot be empty. It will always have 
+	 * a length of at least 1.
+	 * @param song, the first Song
+	 */
 	public Queue(Song song){
 		this.curSong = song;
 		song.setNext(null); // ensure references
@@ -52,7 +69,11 @@ public class Queue {
 		return prevSong;
 	}
 	
-	
+	/**
+	 * Gets the current Song
+	 * 
+	 * @return the current Song
+	 */
 	public Song getCur() {
 		return curSong;
 	}

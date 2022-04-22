@@ -150,10 +150,11 @@ public class PlayList {
 	}
 	
 	/**
+	 * Increments the value of a key in a Map
 	 * 
-	 * @param <K>
-	 * @param map
-	 * @param key
+	 * @param <K>, Generics for keys 
+	 * @param map, the Map
+	 * @param key, the specific key whose value is to be incremented
 	 */
 	private static<K> void incrementValue(Map<K, Integer> map, K key)
     {
@@ -172,10 +173,11 @@ public class PlayList {
     }
 	
 	/**
+	 * Decrements the value of a key in a Map
 	 * 
-	 * @param <K>
-	 * @param map
-	 * @param key
+	 * @param <K>, Generics for keys 
+	 * @param map, the Map
+	 * @param key, the specific key whose value is to be decremented
 	 */
 	private static<K> void decrementValue(Map<K, Integer> map, K key)
     {
