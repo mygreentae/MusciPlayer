@@ -209,6 +209,7 @@ public class Song {
 		try {
 			stream = AudioSystem.getAudioInputStream(new File(fileName).getAbsoluteFile());
 			audio = AudioSystem.getClip();
+			audio.open(stream);
 			AudioFormat format = stream.getFormat();
 			long frames = stream.getFrameLength();
 			durationInSeconds = (frames+0.0) / format.getFrameRate();
@@ -227,15 +228,6 @@ public class Song {
 	public void play() {
 		// if we have to manually hardcode Song objects using setStream that I, jackson
 		// have made just now, we can have play just start the stream
-		try {
-			audio.open(stream);
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		audio.start();
 		
 		

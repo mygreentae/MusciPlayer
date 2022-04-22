@@ -68,6 +68,18 @@ public class MusicPlayerModel {
 		currentQueue = queue;
 		playingQueue = true;
 		playingPlaylist = false;
+		curSong = queue.getCur();
+		while (curSong != null) {
+			curSong = queue.getCur();
+			curSong.play();
+			try {
+				TimeUnit.SECONDS.sleep((long)curSong.getDuration() + 1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			queue.next();
+		}
 		System.out.println("gonna figure it out later");
 	}
 	
@@ -86,7 +98,6 @@ public class MusicPlayerModel {
 		for (Song song : playlist.getPlayOrder()) {
 			//plays song for however long it is
 			curSong = song;
-			System.out.println(curSong.getName());
 			song.play();
 			try {
 				TimeUnit.SECONDS.sleep((long)song.getDuration() + 1);
@@ -113,7 +124,6 @@ public class MusicPlayerModel {
 		for (Song songs : playlist.getPlayOrder()) {
 			//plays song for however long it is
 			curSong = songs;
-			System.out.println(curSong.getName());
 			songs.play();
 			try {
 				TimeUnit.SECONDS.sleep((long)songs.getDuration() + 1);
@@ -142,9 +152,11 @@ public class MusicPlayerModel {
 	 * 
 	 * @param song, the Song we want to change to.
 	 */
-	public void changeSongs(Song song) {
+	public void changeSong(Song song) {
 		// if a song is playing, stop it
-		curSong.stop();
+		if (curSong != null) {
+			curSong.stop();
+		}
 		// if in Queue
 		if (playingQueue) {
 			curSong = currentQueue.getCur();

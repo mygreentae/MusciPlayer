@@ -294,7 +294,7 @@ public class Tester {
 		
 	}
 	
-	@Test
+	//@Test
 	void test7(){
 		MusicPlayerModel model = new MusicPlayerModel();
 		Song song1 = new Song("Deja Vu", "Ateez", "k-pop");
@@ -310,6 +310,55 @@ public class Tester {
 		model.addPlaylist(p1);
 		System.out.println("added");
 		model.playPlaylist(p1, song2);
+	}
+	
+	
+	
+	/**
+	 * Testing Queues, single song
+	 * 
+	 * ChangeSong is gonna give us problems down the road cuz its gonna be tied 
+	 * to an event listener. Thus we're going to have an issue ucz its breaking
+	 * when i try to add songs after the queue was started
+	 */
+	
+	//@Test
+	void test8(){
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("Industry Baby", "Lil Nas X", "pop");
+		Song song2 = new Song("Montero", "Lil Nas X", "pop");
+		//literally the most crucial thing ever, download wav/audio file into audios
+		// assign them to songs based on name, ezpz
+		song1.setAudioStream("Audios/Industry-Baby.wav");
+		song2.setAudioStream("Audios/Montero.wav");
+				
+
+		model.changeSong(song1);
+	}
+	
+	/*
+	 * Same thing here, should be fine with multi song queue, but will have trouble 
+	 * with queue that has stuff added after its started playing.
+	 */
+	@Test
+	void test9() {
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("Industry Baby", "Lil Nas X", "pop");
+		Song song2 = new Song("Montero", "Lil Nas X", "pop");
+		song1.setAudioStream("Audios/Industry-Baby.wav");
+		song2.setAudioStream("Audios/Montero.wav");
+		
+		Song song3 = new Song("Deja Vu", "Ateez", "k-pop");
+		Song song4 = new Song("Maniac", "Stray Kids", "k-pop");
+		song3.setAudioStream("Audios/Deja-Vu.wav");
+		song4.setAudioStream("Audios/Maniac.wav");
+				
+
+		model.addToQueue(song1);
+		model.addToQueue(song4);
+		model.addToQueue(song3);
+		model.addToQueue(song2);
+		model.playQueue(model.getCurQueue());
 	}
 	
 	
