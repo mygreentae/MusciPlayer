@@ -8,39 +8,53 @@ import java.util.ArrayList;
 import javax.sound.sampled.*;
 
 /**
- * @author Seth 
+ * @author Seth/Jackson
+ * 	
+ * Holds a Song and all relevant information relating to it. Has dual functions 
+ * mentioned below. 
+ * 
+ * Properties:
+ * name, artist, coverImage, duration, lyrics?, audio file,
+ * 
+ * Linked List Compatibility:
+ * Utilizes .prev and .next in order to use a "live" Queue System
+ * 
+ * Metadata: 
+ * favorite used in model as special playlist
+ * genre used as recommended songs metadata
  *
  */
 
 public class Song {
 
+	//properties
 	private static Clip audio;
 	private static AudioInputStream stream;
 	private String name;
-	
 	private String artist; 
-
 	private String cover; // temporary for now.
 	private int length; // in seconds, needed for song play delay
 	private ArrayList<String> lyrics;
+	private boolean isPlaying; 
+	
+	//List shit
+	private Song next;
+	private Song prev;
 	
 	//metadata
 	private String genre;
 	private Boolean favorite;
-	
-	private boolean isPlaying; 
-	
+
 	/**
 	 * @param name, the name of the Song
 	 * @param artist, the artist of the Song
 	 */
-  
 	public Song(String name, String artist, String genre) {
 		this.name = name;
 		this.artist = artist; 
 		this.genre = genre;
 		this.favorite = false;
-
+	}
 	
 	/**
 	 * Returns the name of the Song
@@ -124,6 +138,51 @@ public class Song {
 	public void notPlaying() {
 		isPlaying = false; 
 	}
+	
+	/**
+	 * Gets the next Song if any
+	 * 
+	 * @return the next Song if applicable
+	 */
+	public Song getNext() {
+		if (next == null) {
+			return null;
+		} else {
+			return this.next;
+		}
+	}
+	
+	/**
+	 * Gets the previous Song if any
+	 * 
+	 * @return the previous Song if applicable
+	 */
+	public Song getPrev() {
+		if (prev == null) {
+			return null;
+		} else {
+			return this.prev;
+		}
+	}
+	
+	/**
+	 * Sets this instance's next Song
+	 * 
+	 * @param song, the next Song
+	 */
+	public void setNext(Song song) {
+		this.next = song;
+	}
+	
+	/**
+	 * Sets this instance's previous Song
+	 * 
+	 * @param song, the Song previous to this
+	 */
+	public void setPrev(Song song) {
+		this.prev = song;
+	}
+	
 	
 	/*
 	 * will probably have to be used in gui function like displayCover() or something

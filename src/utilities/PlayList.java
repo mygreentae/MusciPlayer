@@ -2,10 +2,28 @@ package utilities;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import song.Song;
 
+/**
+ * 
+ * @author Jackson
+ *
+ *	A data structure used to hold Song objects in a list that can be shuffle played.
+ *	Uses indexing ???? to index through and play songs. Maybe does not need to play 
+ *	Songs as it returns just an ArrayList Order in which to play/show them. Must
+ *	rely on other classes in order to play songs correctly i think.
+ *
+ *	GUI: Only shows songList, its just the order that Songs were added.
+ *	Controller: Uses playlist and its own currentSong variable probably.
+ *	
+ *
+ */
 public class PlayList {
 	
 	private String name;
@@ -13,14 +31,14 @@ public class PlayList {
 	private ArrayList<Song> songList;
 	
 	// playing songs;
-	private Set<Song> shuffle;
+	private ArrayList<Song> shuffle;
 	private ArrayList<Song> playOrder;
-	private Song currentSong;
+	private Song currentSong; //might have to be an int
 	
 	//metadata
 	//Hashmap that allows person to know what dominant genre a playlist is
 	// add meta data to Model to track user data
-	private ArrayList<String> genres;
+	private HashMap<String, Integer> genres;
 	
 	/**
 	 * Creates the PlayList Object
@@ -30,26 +48,26 @@ public class PlayList {
 	public PlayList(String name) {
 		this.name = name;
 		this.size = 0;
+		this.songList = new ArrayList<Song>();
+		this.shuffle = new ArrayList<Song>();
+		this.playOrder = new ArrayList<Song>();
+		this.genres = new HashMap<String, Integer>();
 	}
 	
-	
+	/**
+	 * Returns the name of the PlayList
+	 * @return the name of the PlayList
+	 */
 	public String getName() {
 		return this.name;
 	}
 	
+	/**
+	 * Returns the size of the PlayList
+	 * @return the size of the PlayList
+	 */
 	public int getSize() {
 		return this.size;
-	}
-	
-	public ArrayList<Song> getPlayOrder(){
-		if (this.playOrder != null) {
-			return this.playOrder;
-		}
-		return this.songList;
-	}
-	
-	public Song getCurrentSong() {
-		return this.currentSong;
 	}
 	
 	/**
@@ -60,6 +78,12 @@ public class PlayList {
 	public void addSong(Song song) {
 		songList.add(song);
 		this.size += 1;
+		
+		//metadata
+
+        String genre = song.getGenre();
+        
+        PlayList.incrementValue(genres, genre);
 	}
 	
 	/**
@@ -71,63 +95,104 @@ public class PlayList {
 		if (size == 0) {
 			return;
 		}
+		if (!this.songList.contains(song)) {
+			return;
+		}
 		songList.remove(song);
 		this.size -= 1;
+		
+		//metadata removes number from genre or removes it completely
+		 String genre = song.getGenre();
+	     PlayList.decrementValue(genres, genre);
 	}
 	
-	//shuffle and play in order might need to not be in the PLaylist model
-	//same thing with stop
-	// we'll see
 	
 	/**
-	 * Plays songs in added Order
+	 * Returns the genre metadata about the Playlist
+	 * 
+	 * @return the genre's within the Playlist
 	 */
-	public void playInOder() {
-		this.playOrder = songList;
-		for (Song song : songList) {
-			song.play();
-			currentSong = song;
-			//somehow stop the song 
-			while (song.isPlaying()) {
-				//do some random thing
-				System.out.println("playing");
-			}
-		}
+	public Map<String, Integer> getGenres(){
+		return genres;
+		
 	}
 	
 	/**
-	 * Plays songs in random order
+	 * Puts the Songs in a random Play Order
 	 */
 	public void shuffle() {
 		//shuffles with Set
+		playOrder = new ArrayList<Song>();
+		shuffle = new ArrayList<Song>();
+		
 		for (Song song : songList) {
 			shuffle.add(song);
 		}
-		//random makes playOrder
-		for (Song song : shuffle) {
+		Random random = new Random();
+		while (shuffle.size() > 0) {
+			int i = random.nextInt(shuffle.size());
+			Song song = shuffle.get(i);
 			playOrder.add(song);
-		}
-		//plays song
-		for (Song song : playOrder) {
-			song.play();
-			currentSong = song;
-			//somehow stop the song 
-			while (song.isPlaying()) {
-				//do some random thing that relies on Song.length
-				//if(something){
-				//song.stop()
-				//}
-				System.out.println("playing");
-			}
+			shuffle.remove(i);
+		}		
+	}
+	
+	/**
+	 * Returns the order in which to play the songs
+	 * @return a List of Songs to play
+	 */
+	public ArrayList<Song> getPlayOrder(){
+		if (this.playOrder.size() == 0) {
+			return this.songList;
+		} else {
+			return this.playOrder;
 		}
 	}
 	
+	/**
+	 * Increments the value of a key in a Map
+	 * 
+	 * @param <K>, Generics for keys 
+	 * @param map, the Map
+	 * @param key, the specific key whose value is to be incremented
+	 */
+	private static<K> void incrementValue(Map<K, Integer> map, K key)
+    {
+        // get the value of the specified key
+        Integer count = map.get(key);
+ 
+        // if the map contains no mapping for the key,
+        // map the key with a value of 1
+        if (count == null) {
+            map.put(key, 1);
+        }
+        // else increment the found value by 1
+        else {
+            map.put(key, count + 1);
+        }
+    }
 	
-	public void stop() {
-		for (Song song : playOrder) {
-			song.stop();
-		}
-		currentSong = null;
-		playOrder = null;
-	}
+	/**
+	 * Decrements the value of a key in a Map
+	 * 
+	 * @param <K>, Generics for keys 
+	 * @param map, the Map
+	 * @param key, the specific key whose value is to be decremented
+	 */
+	private static<K> void decrementValue(Map<K, Integer> map, K key)
+    {
+        // get the value of the specified key
+        Integer count = map.get(key);
+        
+        if (count == 1) {
+        	map.remove(key);
+        }
+
+        // else decrement the found value by 1
+        else {
+            map.put(key, count - 1);
+        }
+    }
+
+}
 	
