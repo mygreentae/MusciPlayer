@@ -15,7 +15,9 @@ public class Tester {
 
 	
 	/**
+
 	 * Tests 1 tests the functionality of the Song class
+
 	 */
 	@Test
 	void test1() {
@@ -25,6 +27,7 @@ public class Tester {
 		assertEquals(song.getName(), "yeet");
 		assertEquals(song.getArtist(), "Seth");
 		assertEquals(song.getGenre(), "the best");
+
 		// plays song
 		song.play();
 		song.setPlaying();
@@ -54,4 +57,5 @@ public class Tester {
 	void test2() {
 		Song song = new Song("yeet", "Seth", "the best");
 	}	
+
 }

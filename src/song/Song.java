@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-
 import javax.sound.sampled.*;
 
 /**
@@ -20,6 +19,7 @@ public class Song {
 	private String name;
 	
 	private String artist; 
+
 	private String cover; // temporary for now.
 	private int length; // in seconds, needed for song play delay
 	private ArrayList<String> lyrics;
@@ -34,13 +34,13 @@ public class Song {
 	 * @param name, the name of the Song
 	 * @param artist, the artist of the Song
 	 */
+  
 	public Song(String name, String artist, String genre) {
 		this.name = name;
 		this.artist = artist; 
 		this.genre = genre;
 		this.favorite = false;
-		isPlaying = false;
-	}
+
 	
 	/**
 	 * Returns the name of the Song
@@ -102,6 +102,7 @@ public class Song {
 	}
 	
 	/**
+
 	 * Sets the Song to isPlaying status
 	 */
 	public void setPlaying() {
