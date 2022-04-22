@@ -10,6 +10,20 @@ import java.util.Set;
 
 import song.Song;
 
+/**
+ * 
+ * @author Jackson
+ *
+ *	A data structure used to hold Song objects in a list that can be shuffle played.
+ *	Uses indexing ???? to index through and play songs. Maybe does not need to play 
+ *	Songs as it returns just an ArrayList Order in which to play/show them. Must
+ *	rely on other classes in order to play songs correctly i think.
+ *
+ *	GUI: Only shows songList, its just the order that Songs were added.
+ *	Controller: Uses playlist and its own currentSong variable probably.
+ *	
+ *
+ */
 public class PlayList {
 	
 	private String name;
@@ -19,7 +33,7 @@ public class PlayList {
 	// playing songs;
 	private ArrayList<Song> shuffle;
 	private ArrayList<Song> playOrder;
-	private Song currentSong;
+	private Song currentSong; //might have to be an int
 	
 	//metadata
 	//Hashmap that allows person to know what dominant genre a playlist is
