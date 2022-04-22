@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
+import controller.MusicPlayerController;
 import model.MusicPlayerModel;
 import song.Song;
 
@@ -22,7 +23,7 @@ public class Tester {
 	/**
 	 * Test 1 tests the functionality of the Song class
 	 */
-	@Test
+	//@Test
 	void test1() {
 		// creates song, asserts everything works
 		Song song = new Song("yeet", "Seth", "the best");
@@ -61,7 +62,7 @@ public class Tester {
 	/**
 	 * Test 2 tests the functionality of the Playlist class
 	 */
-	@Test
+	//@Test
 	void test2() {
 		Song song = new Song("yeet", "Seth", "the best");
 		Song song2 = new Song("yawt", "Jackson", "the best");
@@ -146,7 +147,7 @@ public class Tester {
 	 * do not, add the same song to a queue multiple times, it will not work unless 
 	 * u clone it probably
 	 */
-	@Test
+	//@Test
 	void test3() {
 		Song song = new Song("yeet", "Seth", "the best");
 		Song song2 = new Song("yawt", "Jackson", "the best");
@@ -202,9 +203,10 @@ public class Tester {
 	 * 
 	 * We'll see how this goes.
 	 */
-	@Test
+	//@Test
 	void test4() {
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("yeet", "Seth", "the best");
 		Song song2 = new Song("yawt", "Jackson", "the best");
 		Song song3 = new Song("yurt", "Paris", "the best");
@@ -241,10 +243,10 @@ public class Tester {
 	 * Test 5 plays 2 songs from a PlayList that was added to the model
 	 * They're just super song and annoying to play 
 	 */
-	@Test
+	//@Test
 	void test5() {
-		
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("freeze", "Jackson", "k-pop");
 		Song song2 = new Song("yeat", "Seth", "rap");
 		//literally the most crucial thing ever, download wav/audio file into audios
@@ -268,9 +270,10 @@ public class Tester {
 	 * 
 	 * We'll see how this goes.
 	 */
-	@Test
+	//@Test
 	void test6() {
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("yeet", "Seth", "the best");
 		Song song2 = new Song("yawt", "Jackson", "the best");
 		Song song3 = new Song("yurt", "Paris", "the best");
@@ -294,9 +297,10 @@ public class Tester {
 		
 	}
 	
-	@Test
+	//@Test
 	void test7(){
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("Deja Vu", "Ateez", "k-pop");
 		Song song2 = new Song("Maniac", "Stray Kids", "k-pop");
 		//literally the most crucial thing ever, download wav/audio file into audios
@@ -324,9 +328,10 @@ public class Tester {
 	 * when i try to add songs after the queue was started
 	 */
 	
-	@Test
+	//@Test
 	void test8(){
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("Industry Baby", "Lil Nas X", "pop");
 		Song song2 = new Song("Montero", "Lil Nas X", "pop");
 		//literally the most crucial thing ever, download wav/audio file into audios
@@ -344,9 +349,10 @@ public class Tester {
 	 * Same thing here, should be fine with multi song queue, but will have trouble 
 	 * with queue that has stuff added after its started playing.
 	 */
-	@Test
+	//@Test
 	void test9() {
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("Industry Baby", "Lil Nas X", "pop");
 		Song song2 = new Song("Montero", "Lil Nas X", "pop");
 		song1.setAudioStream("Audios/Industry-Baby.wav");
@@ -370,9 +376,10 @@ public class Tester {
 	/**
 	 * Tests playPlayList(PlayList)
 	 */
-	@Test
+	//@Test
 	void test10() {
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("Deja Vu", "Ateez", "k-pop");
 		Song song2 = new Song("Maniac", "Stray Kids", "k-pop");
 		//literally the most crucial thing ever, download wav/audio file into audios
@@ -392,9 +399,33 @@ public class Tester {
 		assertEquals(model.getCurPlaylist(), p1);
 	}
 	
+	/**
+	 * Begins to test Controller, also tests the ability to search Songs based 
+	 * on Strings 
+	 * 
+	 * TODO: Runs into issue when playing a playlist, adding a song, and playing 
+	 * it again from said song.
+	 * TODO: maybe fixed that
+	 */
 	@Test
-	void test() {
-		System.out.println();
+	void test11() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController controller = new MusicPlayerController(model);
+		try {
+			controller.search("hello");
+		} catch (IllegalArgumentException e) {
+			System.out.println("success");
+		}
+		Song song = controller.search("Montero");
+		controller.addToFavorites(song);
+		controller.playPlaylist(controller.getFavorites(), false, null);
+		
+		Song song2 = controller.search("Maniac");
+		controller.addToFavorites(song);
+		controller.playPlaylist(controller.getFavorites(), false, null);
+
+		
 	}
 	/**
 	 * need to test playing songs when they are in multiple playlists and 

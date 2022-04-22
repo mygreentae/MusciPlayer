@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 import javax.sound.sampled.*;
 
 /**
@@ -229,8 +231,12 @@ public class Song {
 		// if we have to manually hardcode Song objects using setStream that I, jackson
 		// have made just now, we can have play just start the stream
 		audio.start();
-		
-		
+		try {
+			TimeUnit.SECONDS.sleep((long) durationInSeconds + 1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 	/**
@@ -238,7 +244,9 @@ public class Song {
 	 */
 	public void stop() {
 		audio.stop();
+		audio.setFramePosition(0);
 	}
+	
 	
 	
 }

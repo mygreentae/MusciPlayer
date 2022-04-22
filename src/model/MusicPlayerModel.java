@@ -6,9 +6,13 @@ import java.util.concurrent.TimeUnit;
 import song.Song;
 import utilities.PlayList;
 import utilities.Queue;
+import utilities.SongLibrary;
 
 public class MusicPlayerModel {
 
+	
+	private SongLibrary songLibrary;
+	
 	private Song curSong; 
 	
 	private Queue currentQueue; 
@@ -19,8 +23,8 @@ public class MusicPlayerModel {
 	
 	//features maybe?
 	private ArrayList<PlayList> allPlaylists;
-	private ArrayList<Song> favorites;
-	private ArrayList<Song> recommended;
+	private PlayList favorites;
+	private PlayList recommended;
 
 	//model state
 	private boolean playingQueue;
@@ -31,11 +35,12 @@ public class MusicPlayerModel {
 	/**
 	 * Creates the MusicPlayerModel
 	 */
-	public MusicPlayerModel() {
+	public MusicPlayerModel(SongLibrary songLibrary) {
+		this.songLibrary = songLibrary;
+		
 		allPlaylists = new ArrayList<>();
-		favorites = new ArrayList<>();
-		recommended = new ArrayList<>();
-		//songlibrary
+		favorites = new PlayList("favorites");
+		recommended = new PlayList("recommended");
 		
 	}
 	
@@ -71,12 +76,7 @@ public class MusicPlayerModel {
 		curSong = queue.getCur();
 		while (curSong != null) {
 			curSong.play();
-			try {
-				TimeUnit.SECONDS.sleep((long)curSong.getDuration() + 1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			curSong.stop();
 			queue.next();
 			curSong = queue.getCur();
 		}
@@ -92,19 +92,15 @@ public class MusicPlayerModel {
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist) {
+		playlist = copyPlaylist(playlist);
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
 		for (Song song : playlist.getPlayOrder()) {
 			//plays song for however long it is
 			curSong = song;
-			song.play();
-			try {
-				TimeUnit.SECONDS.sleep((long)song.getDuration() + 1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			curSong.play();
+			curSong.stop();
 		}
 		System.out.println("gonna figure it out later");
 	}
@@ -115,6 +111,7 @@ public class MusicPlayerModel {
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist, Song song) {
+		playlist = copyPlaylist(playlist);
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
@@ -124,15 +121,16 @@ public class MusicPlayerModel {
 		for (Song songs : playlist.getPlayOrder()) {
 			//plays song for however long it is
 			curSong = songs;
-			songs.play();
-			try {
-				TimeUnit.SECONDS.sleep((long)songs.getDuration() + 1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			curSong.play();
+			curSong.stop();
 		}
 		System.out.println("gonna figure it out later");
+	}
+	
+	
+	public PlayList shufflePlayList(PlayList playlist) {
+		playlist.shuffle();
+		return playlist;
 	}
 	
 	/**
@@ -199,11 +197,11 @@ public class MusicPlayerModel {
 		return allPlaylists;
 	}
 
-	public ArrayList<Song> getFavorites(){
+	public PlayList getFavorites(){
 		return favorites;
 	}
 	
-	public ArrayList<Song> getRecommended(){
+	public PlayList getRecommended(){
 		return recommended;
 	}
 	
@@ -238,19 +236,45 @@ public class MusicPlayerModel {
 	
 	public void addToFavorites(Song song) {
 		song.makeFavorite();
-		favorites.add(song);
+		favorites.addSong(song);
 	}
 	
 	public void removeFromFavorites(Song song) {
 		if (favorites.contains(song)) {
 			song.unFavorite();
-			favorites.remove(song);
+			favorites.removeSong(song);
 		}
 	}
 	
+	/**
+	 * Returns the song if its present in the Song Library
+	 * 
+	 * @param name, the name of the song the user wants
+	 * @return null if Song is not found, otherwise returns the Song
+	 */
 	public Song search(String name) {
-		System.out.println();
-		return null;
+		//binary search song names?
+		Song searchedSong = null;
+		for (Song song : songLibrary.getSongs()) {
+			if (song.getName().toLowerCase().equals(name.toLowerCase())) {
+				searchedSong = song;
+			}
+		}
+		// if song is not found, returns null
+		if (searchedSong == null) {
+			return null;
+		} else {
+			return searchedSong;
+		}
+	}
+	
+	public PlayList copyPlaylist(PlayList playlist) {
+		PlayList copy = new PlayList(playlist.getName());
+		for (Song song: playlist.getSongList()) {
+			copy.addSong(song);
+		}
+		return copy;
+		
 	}
 	
 	

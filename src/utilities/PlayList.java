@@ -21,8 +21,7 @@ import song.Song;
  *
  *	GUI: Only shows songList, its just the order that Songs were added.
  *	Controller: Uses playlist and its own currentSong variable probably.
- *	
- *
+ *	5
  */
 public class PlayList {
 	
@@ -68,6 +67,14 @@ public class PlayList {
 	 */
 	public int getSize() {
 		return this.size;
+	}
+	
+	/**
+	 * Returns the list of Songs in the PlayList
+	 * @return the list of Songs in the PlayList
+	 */
+	public ArrayList<Song> getSongList(){
+		return this.songList;
 	}
 	
 	/**
