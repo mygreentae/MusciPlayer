@@ -14,15 +14,19 @@ import javax.sound.sampled.*;
 
 public class Song {
 
+	//properties
 	private static Clip audio;
 	private static AudioInputStream stream;
 	private String name;
-	
 	private String artist; 
-
 	private String cover; // temporary for now.
 	private int length; // in seconds, needed for song play delay
 	private ArrayList<String> lyrics;
+	
+	
+	//List shit
+	private Song next;
+	private Song prev;
 	
 	//metadata
 	private String genre;
@@ -124,6 +128,32 @@ public class Song {
 	public void notPlaying() {
 		isPlaying = false; 
 	}
+	
+	
+	public Song getNext() {
+		if (next == null) {
+			return null;
+		} else {
+			return this.next;
+		}
+	}
+	
+	public Song getPrev() {
+		if (prev == null) {
+			return null;
+		} else {
+			return this.prev;
+		}
+	}
+	
+	public void setNext(Song song) {
+		this.next = song;
+	}
+	
+	public void setPrev(Song song) {
+		this.prev = song;
+	}
+	
 	
 	/*
 	 * will probably have to be used in gui function like displayCover() or something

@@ -1,6 +1,9 @@
 package model;
 
+import java.util.ArrayList;
+
 import song.Song;
+import utilities.PlayList;
 
 public class MusicPlayerModel {
 
@@ -11,13 +14,13 @@ public class MusicPlayerModel {
 	private int numSongs; 
 	
 	// add currentQueue
-	// add currentPlaylists
-	// add favorites
+	private PlayList[] currentPlaylists;
+	private ArrayList<Song> favorites;
+	private ArrayList<Song> recommended;
 
-	public MusicPlayerModel(Song start) {
-		curSong = start; 
-		songs = new Song[10];
-		songs[0] = start; 
+	public MusicPlayerModel() {
+		
+		
 	}
 	
 	public void play() { // needs to be more rigorous 
