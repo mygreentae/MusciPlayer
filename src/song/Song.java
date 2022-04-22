@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import javax.sound.sampled.*;
 
 /**
@@ -18,8 +19,14 @@ public class Song {
 	private String name;
 	
 	private String artist; 
-	
+
 	private String cover; // temporary for now.
+	private int length; // in seconds, needed for song play delay
+	private ArrayList<String> lyrics;
+	
+	//metadata
+	private String genre;
+	private Boolean favorite;
 	
 	private boolean isPlaying; 
 	
@@ -27,11 +34,13 @@ public class Song {
 	 * @param name, the name of the Song
 	 * @param artist, the artist of the Song
 	 */
-	public Song(String name, String artist) {
+  
+	public Song(String name, String artist, String genre) {
 		this.name = name;
 		this.artist = artist; 
-		isPlaying = false;
-	}
+		this.genre = genre;
+		this.favorite = false;
+
 	
 	/**
 	 * Returns the name of the Song
@@ -52,6 +61,15 @@ public class Song {
 	}
 	
 	/**
+	 * Returns the Song's genre
+	 * 
+	 * @return the Song genre
+	 */
+	public String getGenre() {
+		return genre;
+	}
+	
+	/**
 	 * Returns the cover Image
 	 * 
 	 * @return the Song  over
@@ -61,6 +79,30 @@ public class Song {
 	}
 	
 	/**
+	 * Marks Song as a favorite
+	 */
+	public void makeFavorite() {
+		this.favorite = true;
+	}
+	
+	/**
+	 * Unmarks Song as a favorite
+	 */
+	public void unFavorite() {
+		this.favorite = false;
+	}
+	
+	/**
+	 * Returns if the Song is a favorite Song
+	 * 
+	 * @return returns if the Song is a favorite Song
+	 */
+	public Boolean isFavorite() {
+		return this.favorite;
+	}
+	
+	/**
+
 	 * Sets the Song to isPlaying status
 	 */
 	public void setPlaying() {

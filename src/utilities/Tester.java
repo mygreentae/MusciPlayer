@@ -15,21 +15,23 @@ public class Tester {
 
 	
 	/**
-	 * Tests 1-whatever test the functionality of the Song class
+
+	 * Tests 1 tests the functionality of the Song class
+
 	 */
 	@Test
 	void test1() {
 		// creates song, asserts everything works
-		Song song = new Song("yeet", "Seth");
+		Song song = new Song("yeet", "Seth", "the best");
 		assertFalse(song.isPlaying());
 		assertEquals(song.getName(), "yeet");
 		assertEquals(song.getArtist(), "Seth");
-		
+		assertEquals(song.getGenre(), "the best");
+
 		// plays song
 		song.play();
 		song.setPlaying();
 		assertTrue(song.isPlaying());
-		
 		
 		// stops song
 		try {
@@ -41,7 +43,19 @@ public class Tester {
 		song.stop();
 		song.notPlaying();
 		assertFalse(song.isPlaying());
+		
+		// checks favorite
+		assertFalse(song.isFavorite());
+		song.makeFavorite();
+		assertTrue(song.isFavorite());
+		song.unFavorite();
+		assertFalse(song.isFavorite());
+	
 	}
 	
-	
+	@Test
+	void test2() {
+		Song song = new Song("yeet", "Seth", "the best");
+	}	
+
 }
