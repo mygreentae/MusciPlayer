@@ -11,6 +11,8 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+
+import model.MusicPlayerModel;
 import song.Song;
 
 
@@ -30,6 +32,7 @@ public class Tester {
 		assertEquals(song.getGenre(), "the best");
 
 		// plays song
+		song.setAudioStream("Audios/yeat.wav");
 		song.play();
 		song.setPlaying();
 		assertTrue(song.isPlaying());
@@ -128,6 +131,12 @@ public class Tester {
 		for (Song songs: defaultPlaylist.getPlayOrder()) {
 			System.out.println(songs.getName());
 		}
+
+		defaultPlaylist.playFirst(song4);
+		defaultPlaylist.playFirst(song3);
+		defaultPlaylist.playFirst(song2);
+		defaultPlaylist.playFirst(song5);
+		defaultPlaylist.playFirst(song4);
 	}	
 	
 	
@@ -188,4 +197,175 @@ public class Tester {
 		
 	}
 
+	/**
+	 * Test 4 tests adding an removing PlayLists using the MusicPlayerModel class.
+	 * 
+	 * We'll see how this goes.
+	 */
+	@Test
+	void test4() {
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("yeet", "Seth", "the best");
+		Song song2 = new Song("yawt", "Jackson", "the best");
+		Song song3 = new Song("yurt", "Paris", "the best");
+		Song song4 = new Song("yewt", "Lieghanna", "the best");
+		Song song5 = new Song("yaat", "Rey", "the best");
+		Song song6 = new Song("yoot", "Tyler", "the best");
+		
+		PlayList p1 = new PlayList("test1");
+		p1.addSong(song1);
+		p1.addSong(song2);
+		p1.addSong(song3);
+		
+		PlayList p2 = new PlayList("test2");
+		p2.addSong(song4);
+		p2.addSong(song5);
+		p2.addSong(song6);
+		
+		// check adding/ removing playlists
+		ArrayList<PlayList> all = new ArrayList<>();
+		all.add(p1);
+		model.addPlaylist(p1);
+		assertEquals(model.getAllPlaylists(), all);
+		model.addPlaylist(p2);	
+		all.add(p2);
+		assertEquals(model.getAllPlaylists(), all);
+		
+		model.removePlaylist(p1);
+		model.removePlaylist(p2);
+		assertEquals(model.getAllPlaylists(), new ArrayList<PlayList>());		
+	}
+	
+	
+	/*
+	 * Test 5 plays 2 songs from a PlayList that was added to the model
+	 * They're just super song and annoying to play 
+	 */
+	@Test
+	void test5() {
+		
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("freeze", "Jackson", "k-pop");
+		Song song2 = new Song("yeat", "Seth", "rap");
+		//literally the most crucial thing ever, download wav/audio file into audios
+		// assign them to songs based on name, ezpz
+		song1.setAudioStream("Audios/Freeze.wav");
+		song2.setAudioStream("Audios/yeat.wav");
+				
+		PlayList p1 = new PlayList("test1");
+		p1.addSong(song1);
+		p1.addSong(song2);
+		model.addPlaylist(p1);
+		System.out.println("added");
+		
+		//model.playPlaylist(p1);
+	}
+	
+	
+	/**
+	 * Test 6 tests adding to the favorites PlayList in the MusicPlayerModel.
+	 * It also tests playing the actual PlayList contents
+	 * 
+	 * We'll see how this goes.
+	 */
+	@Test
+	void test6() {
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("yeet", "Seth", "the best");
+		Song song2 = new Song("yawt", "Jackson", "the best");
+		Song song3 = new Song("yurt", "Paris", "the best");
+		Song song4 = new Song("yewt", "Lieghanna", "the best");
+		Song song5 = new Song("yaat", "Rey", "the best");
+		Song song6 = new Song("yoot", "Tyler", "the best");
+		
+		PlayList p1 = new PlayList("test1");
+		p1.addSong(song1);
+		p1.addSong(song2);
+		
+		
+		model.addToFavorites(song6);
+		model.addToFavorites(song2);
+		model.addToFavorites(song3);
+		assertTrue(song6.isFavorite());
+		
+		model.removeFromFavorites(song6);
+		model.removeFromFavorites(song5);
+		assertFalse(song6.isFavorite());
+		
+	}
+	
+	//@Test
+	void test7(){
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("Deja Vu", "Ateez", "k-pop");
+		Song song2 = new Song("Maniac", "Stray Kids", "k-pop");
+		//literally the most crucial thing ever, download wav/audio file into audios
+		// assign them to songs based on name, ezpz
+		song1.setAudioStream("Audios/Deja-Vu.wav");
+		song2.setAudioStream("Audios/Maniac.wav");
+				
+		PlayList p1 = new PlayList("test1");
+		p1.addSong(song1);
+		p1.addSong(song2);
+		model.addPlaylist(p1);
+		System.out.println("added");
+		model.playPlaylist(p1, song2);
+	}
+	
+	
+	
+	/**
+	 * Testing Queues, single song
+	 * 
+	 * ChangeSong is gonna give us problems down the road cuz its gonna be tied 
+	 * to an event listener. Thus we're going to have an issue ucz its breaking
+	 * when i try to add songs after the queue was started
+	 */
+	
+	//@Test
+	void test8(){
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("Industry Baby", "Lil Nas X", "pop");
+		Song song2 = new Song("Montero", "Lil Nas X", "pop");
+		//literally the most crucial thing ever, download wav/audio file into audios
+		// assign them to songs based on name, ezpz
+		song1.setAudioStream("Audios/Industry-Baby.wav");
+		song2.setAudioStream("Audios/Montero.wav");
+				
+
+		model.changeSong(song1);
+	}
+	
+	/*
+	 * Same thing here, should be fine with multi song queue, but will have trouble 
+	 * with queue that has stuff added after its started playing.
+	 */
+	@Test
+	void test9() {
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("Industry Baby", "Lil Nas X", "pop");
+		Song song2 = new Song("Montero", "Lil Nas X", "pop");
+		song1.setAudioStream("Audios/Industry-Baby.wav");
+		song2.setAudioStream("Audios/Montero.wav");
+		
+		Song song3 = new Song("Deja Vu", "Ateez", "k-pop");
+		Song song4 = new Song("Maniac", "Stray Kids", "k-pop");
+		song3.setAudioStream("Audios/Deja-Vu.wav");
+		song4.setAudioStream("Audios/Maniac.wav");
+				
+
+		model.addToQueue(song1);
+		model.addToQueue(song4);
+		model.addToQueue(song3);
+		model.addToQueue(song2);
+		model.playQueue(model.getCurQueue());
+	}
+	
+	
+	/**
+	 * need to test playing songs when they are in multiple playlists and 
+	 * in the queue so thatll be fun.
+	 */
+	
+	
 }

@@ -28,12 +28,12 @@ import javax.sound.sampled.*;
 public class Song {
 
 	//properties
-	private static Clip audio;
-	private static AudioInputStream stream;
+	private Clip audio;
+	private AudioInputStream stream;
 	private String name;
 	private String artist; 
 	private String cover; // temporary for now.
-	private int length; // in seconds, needed for song play delay
+	private double durationInSeconds; // in seconds, needed for song play delay
 	private ArrayList<String> lyrics;
 	private boolean isPlaying; 
 	
@@ -183,6 +183,11 @@ public class Song {
 		this.prev = song;
 	}
 	
+	public double getDuration() {
+		return durationInSeconds;
+	}
+	
+	
 	
 	/*
 	 * will probably have to be used in gui function like displayCover() or something
@@ -204,6 +209,10 @@ public class Song {
 		try {
 			stream = AudioSystem.getAudioInputStream(new File(fileName).getAbsoluteFile());
 			audio = AudioSystem.getClip();
+			audio.open(stream);
+			AudioFormat format = stream.getFormat();
+			long frames = stream.getFrameLength();
+			durationInSeconds = (frames+0.0) / format.getFrameRate();
 		} catch (UnsupportedAudioFileException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -219,18 +228,8 @@ public class Song {
 	public void play() {
 		// if we have to manually hardcode Song objects using setStream that I, jackson
 		// have made just now, we can have play just start the stream
-		try {
-			stream = AudioSystem.getAudioInputStream(new File("yeat.wav").getAbsoluteFile());
-			audio = AudioSystem.getClip();
-			audio.open(stream);
-			audio.start();
-		} catch (UnsupportedAudioFileException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		audio.start();
+		
 		
 	}
 
