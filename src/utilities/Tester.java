@@ -189,11 +189,11 @@ public class Tester {
 		Song s = q.getCur();
 		q.next();
 		q.next();
-		assertEquals(q.getCur(), s);
+		assertEquals(q.getCur(), null);
 		q.back();
 		q.back();
 		q.back();
-		assertEquals(q.getCur(), s);
+		assertEquals(q.getCur(), null);
 		
 	}
 
@@ -294,7 +294,7 @@ public class Tester {
 		
 	}
 	
-	//@Test
+	@Test
 	void test7(){
 		MusicPlayerModel model = new MusicPlayerModel();
 		Song song1 = new Song("Deja Vu", "Ateez", "k-pop");
@@ -310,6 +310,8 @@ public class Tester {
 		model.addPlaylist(p1);
 		System.out.println("added");
 		model.playPlaylist(p1, song2);
+		assertTrue(model.isPlayingPlaylist());
+		assertFalse(model.isPlayingQueue());
 	}
 	
 	
@@ -322,7 +324,7 @@ public class Tester {
 	 * when i try to add songs after the queue was started
 	 */
 	
-	//@Test
+	@Test
 	void test8(){
 		MusicPlayerModel model = new MusicPlayerModel();
 		Song song1 = new Song("Industry Baby", "Lil Nas X", "pop");
@@ -334,6 +336,8 @@ public class Tester {
 				
 
 		model.changeSong(song1);
+		assertFalse(model.isPlayingPlaylist());
+		assertTrue(model.isPlayingQueue());
 	}
 	
 	/*
@@ -359,9 +363,39 @@ public class Tester {
 		model.addToQueue(song3);
 		model.addToQueue(song2);
 		model.playQueue(model.getCurQueue());
+		assertFalse(model.isPlayingPlaylist());
+		assertTrue(model.isPlayingQueue());
 	}
 	
+	/**
+	 * Tests playPlayList(PlayList)
+	 */
+	@Test
+	void test10() {
+		MusicPlayerModel model = new MusicPlayerModel();
+		Song song1 = new Song("Deja Vu", "Ateez", "k-pop");
+		Song song2 = new Song("Maniac", "Stray Kids", "k-pop");
+		//literally the most crucial thing ever, download wav/audio file into audios
+		// assign them to songs based on name, ezpz
+		song1.setAudioStream("Audios/Deja-Vu.wav");
+		song2.setAudioStream("Audios/Maniac.wav");
+				
+		PlayList p1 = new PlayList("test1");
+		p1.addSong(song1);
+		p1.addSong(song2);
+		model.addPlaylist(p1);
+		System.out.println("added");
+		model.playPlaylist(p1);
+		assertTrue(model.isPlayingPlaylist());
+		assertFalse(model.isPlayingQueue());
+		
+		assertEquals(model.getCurPlaylist(), p1);
+	}
 	
+	@Test
+	void test() {
+		System.out.println();
+	}
 	/**
 	 * need to test playing songs when they are in multiple playlists and 
 	 * in the queue so thatll be fun.

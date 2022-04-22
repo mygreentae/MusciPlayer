@@ -70,7 +70,6 @@ public class MusicPlayerModel {
 		playingPlaylist = false;
 		curSong = queue.getCur();
 		while (curSong != null) {
-			curSong = queue.getCur();
 			curSong.play();
 			try {
 				TimeUnit.SECONDS.sleep((long)curSong.getDuration() + 1);
@@ -79,6 +78,7 @@ public class MusicPlayerModel {
 				e.printStackTrace();
 			}
 			queue.next();
+			curSong = queue.getCur();
 		}
 		System.out.println("gonna figure it out later");
 	}
