@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.sound.sampled.*;
 
+import utilities.PlayList;
+
 /**
  * @author Seth/Jackson
  * 	
@@ -247,7 +249,21 @@ public class Song {
 		audio.setFramePosition(0);
 	}
 	
+	/**
+	 * maybe works
+	 */
+	public void pause() {
+		audio.stop();
+	}
 	
 	
+	/**
+	 * gonna hope this works
+	 * 
+	 * @param playlist
+	 */
+	public void addToPlaylist(PlayList playlist) {
+		playlist.addSong(this);
+	}	
 }
 

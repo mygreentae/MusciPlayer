@@ -194,6 +194,15 @@ public class MusicPlayerModel {
 	public ArrayList<PlayList> getAllPlaylists(){
 		return allPlaylists;
 	}
+	
+	public PlayList getPlaylist(String name) {
+		for (PlayList playlist : allPlaylists) {
+			if (playlist.getName().toLowerCase().equals(name.toLowerCase())) {
+				return playlist;
+			}
+		} 
+		return null;
+	}
 
 	public PlayList getFavorites(){
 		return favorites;
@@ -210,8 +219,6 @@ public class MusicPlayerModel {
 	public boolean isPlayingPlaylist() {
 		return playingPlaylist;
 	}
-	
-	
 	
 	/*
 	 * All of the create/remove things methods
@@ -266,6 +273,9 @@ public class MusicPlayerModel {
 		}
 	}
 	
+	public void addToPlaylist(PlayList playlist, Song song) {
+		playlist.addSong(song);
+	}
 	
 	/**
 	 * unsure if we need this but ya never know, could be a cool feature

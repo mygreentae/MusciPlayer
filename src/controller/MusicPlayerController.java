@@ -112,6 +112,21 @@ public class MusicPlayerController {
 	public ArrayList<PlayList> getAllPlaylists(){
 		return model.getAllPlaylists();
 	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public PlayList getPlaylist(String name) throws IllegalArgumentException{
+		PlayList playlist = model.getPlaylist(name);
+		if (playlist != null) {
+			return playlist;
+		} else {
+			throw new IllegalArgumentException();
+		}
+	}
 
 	public PlayList getFavorites(){
 		return model.getFavorites();
@@ -139,10 +154,6 @@ public class MusicPlayerController {
 		// literal ai
 		System.out.println("horrible");
 	}
-		
-	public void addPlaylist(PlayList playlist) {
-		model.addPlaylist(playlist);
-	}
 	
 	public void removePlaylist(PlayList playlist) {
 		model.removePlaylist(playlist);;
@@ -157,15 +168,29 @@ public class MusicPlayerController {
 	}
 	
 	
+	/**
+	 * make a playlist function, it will be a new playlist and be empty
+	 */
+	public void makePlaylist(String name) {
+		PlayList newPlaylist = new PlayList(name);
+		model.addPlaylist(newPlaylist);
+		
+	}
 	
 	/**
-	 * make a playlist function
+	 * 
+	 * @param playlist
+	 * @param song
 	 */
+	public void addToPlaylist(PlayList playlist, Song song) {
+		model.addToPlaylist(playlist, song);
+	}
 	
 	/**
 	 * 
 	 * @param name, the name of the Song you want
-	 * @return 
+	 * @return returns the song if its found
+	 * @throws IllegalArgumentException if song is not found
 	 */
 	public Song search(String name) throws IllegalArgumentException {
 		Song song = model.search(name);
@@ -174,6 +199,34 @@ public class MusicPlayerController {
 		}
 		return song;
 		
+	}
+	
+	/*
+	 * play, pause skip
+	 */
+	
+	public void pause() {
+		model.getCurSong().pause();
+	}
+	
+	public void resume() {
+		model.getCurSong().play();
+	}
+	
+	public void skip() {
+		if (model.isPlayingPlaylist()) {
+			Song curSong = model.getCurSong();
+			curSong.stop();
+			PlayList p = model.getCurPlaylist();
+			
+			
+		} else if (model.isPlayingQueue()) {
+			model.getCurSong().stop();
+			Song nextSong = model.getCurSong().getNext();
+			model.changeSong(nextSong);
+		} else {
+			return;
+		}
 	}
 	
 	

@@ -349,7 +349,7 @@ public class Tester {
 	 * Same thing here, should be fine with multi song queue, but will have trouble 
 	 * with queue that has stuff added after its started playing.
 	 */
-	@Test
+	//@Test
 	void test9() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
@@ -424,8 +424,11 @@ public class Tester {
 		
 	}
 	
-	
-	//@Test
+	/**
+	 * tests the viability of adding songs to a playlist via the controller
+	 * Also tests getPlaylists and stuff.
+	 */
+	@Test
 	void test12() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
@@ -434,15 +437,39 @@ public class Tester {
 		Song song2 = controller.search("Maniac");
 		Song song3 = controller.search("Freeze");
 		Song song4 = controller.search("Industry Baby");
-		PlayList p = new PlayList("Bangers");
 		
-		p.addSong(song);
-		p.addSong(song2);
-		p.addSong(song3);
-		p.addSong(song4);
-		controller.addPlaylist(p);
+		controller.makePlaylist("Bangers");
+		
+		ArrayList<PlayList> playlists = controller.getAllPlaylists();
+		PlayList p = controller.getPlaylist("Bangers");
+		assertEquals(playlists.get(0), p);
+		
+		controller.addToPlaylist(p, song);
+		controller.addToPlaylist(p, song2);
+		controller.addToPlaylist(p, song3);
+		controller.addToPlaylist(p, song4);
+		
 		controller.playPlaylist(p, true, null);
 		
+	}
+	
+	
+	/**
+	 * Test, play pause and stop// doesnt work
+	 */
+	@Test
+	void test13() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController controller = new MusicPlayerController(model);
+		
+		Song song2 = controller.search("Maniac");
+		controller.makePlaylist("Kpop");
+		
+		PlayList p = controller.getPlaylist("Kpop");
+		controller.addToPlaylist(p, song2);
+		
+		controller.playPlaylist(p, true, null);	
 	}
 	/**
 	 * need to test playing songs when they are in multiple playlists and 
