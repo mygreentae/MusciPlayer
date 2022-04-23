@@ -29,11 +29,18 @@ public class SongLibrary {
 		Song maniac = new Song("Maniac", "Stray Kids", "k-pop");
 		maniac.setAudioStream("Audios/Maniac.wav");
 		
+		Song freeze = new Song("Freeze", "Stray Kids", "k-pop");
+		freeze.setAudioStream("Audios/Freeze.wav");
+		
+		Song yeat = new Song("yeat", "Seth", "rap");
+		yeat.setAudioStream("Audios/yeat.wav");
 		//adds songs to library
 		songLibrary.add(industryBaby);
 		songLibrary.add(montero);
 		songLibrary.add(dejaVu);
 		songLibrary.add(maniac);
+		songLibrary.add(freeze);
+		//songLibrary.add(yeat);
 	}
 	
 	private void addSongs2() {

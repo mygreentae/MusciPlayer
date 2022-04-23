@@ -349,7 +349,7 @@ public class Tester {
 	 * Same thing here, should be fine with multi song queue, but will have trouble 
 	 * with queue that has stuff added after its started playing.
 	 */
-	//@Test
+	@Test
 	void test9() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
@@ -403,7 +403,7 @@ public class Tester {
 	 * Begins to test Controller, also tests the ability to search Songs based 
 	 * on Strings 
 	 */
-	@Test
+	//@Test
 	void test11() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
@@ -421,6 +421,27 @@ public class Tester {
 		controller.addToFavorites(song2);
 		controller.playPlaylist(controller.getFavorites(), false, song2);
 
+		
+	}
+	
+	
+	//@Test
+	void test12() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController controller = new MusicPlayerController(model);
+		Song song = controller.search("Deja Vu");
+		Song song2 = controller.search("Maniac");
+		Song song3 = controller.search("Freeze");
+		Song song4 = controller.search("Industry Baby");
+		PlayList p = new PlayList("Bangers");
+		
+		p.addSong(song);
+		p.addSong(song2);
+		p.addSong(song3);
+		p.addSong(song4);
+		controller.addPlaylist(p);
+		controller.playPlaylist(p, true, null);
 		
 	}
 	/**

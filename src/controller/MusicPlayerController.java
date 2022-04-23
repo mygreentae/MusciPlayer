@@ -157,6 +157,11 @@ public class MusicPlayerController {
 	}
 	
 	
+	
+	/**
+	 * make a playlist function
+	 */
+	
 	/**
 	 * 
 	 * @param name, the name of the Song you want
