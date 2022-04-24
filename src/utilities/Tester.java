@@ -462,7 +462,7 @@ public class Tester {
 	 * 
 	 * Test
 	 */
-	@Test
+	//@Test
 	void test13() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
@@ -509,23 +509,60 @@ public class Tester {
 	}
 	
 	
-	
+	/**
+	 * Skips song mid-playlist, also works
+	 */
 	//@Test
 	void test14() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
-		Song song = model.search("Maniac");
-		model.play(song);
+		MusicPlayerController c = new MusicPlayerController(model);
 		
+		Song song = model.search("Maniac");
+		Song song2 = model.search("Freeze");
+		c.makePlaylist("Kpop");
+		PlayList p = c.getPlaylist("Kpop");
+		c.addToPlaylist(p, song);
+		c.addToPlaylist(p, song2);
+		
+		c.playPlaylist(p, false, null);
 		try {
 			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 10);
+			c.skip();
 			TimeUnit.SECONDS.sleep((long) 10);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}		
 	}
 	
+	
+	@Test
+	void test15() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController c = new MusicPlayerController(model);
+		
+		Song song = model.search("Maniac");
+		Song song2 = model.search("Freeze");
+		c.makePlaylist("Kpop");
+		PlayList p = c.getPlaylist("Kpop");
+		c.addToPlaylist(p, song);
+		c.addToPlaylist(p, song2);
+		
+		c.playPlaylist(p, false, null);
+		try {
+			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 10);
+			c.pause();
+			TimeUnit.SECONDS.sleep((long) 5);
+			c.resume();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
 	
 	
 	/**

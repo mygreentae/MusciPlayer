@@ -43,35 +43,6 @@ public class MusicPlayerModel {
 		
 	}
 	
-	private class playQueue implements Runnable{
-		Queue queue;
-		Thread runner;
-		
-		public playQueue(Queue queue) {
-			this.queue = queue;
-			this.runner = new Thread(this);
-			this.runner.start();
-		}
-		
-		@Override
-		public void run() {
-			
-		
-		}
-	}
-		
-	
-	public void play(Song song) {
-		//Runnable runnable = new playSong(song);
-			    
-			  
-		//Thread thread = new Thread(runnable);
-		//threads.add(thread);
-		//System.out.println(song.getName());
-		//thread.start();
-		//System.out.println("shit");
-	}
-	
 	/**
 	 * Adds songs to current Queue or starts new Queue
 	 * 
@@ -98,6 +69,9 @@ public class MusicPlayerModel {
 	 * @param queue, the Queue to be played
 	 */
 	public void playQueue(Queue queue) { 
+		if (curSong != null) {
+			curSong.stop();
+		}
 		currentQueue = queue;
 		playingQueue = true;
 		playingPlaylist = false;
@@ -132,16 +106,27 @@ public class MusicPlayerModel {
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist) {
+		if (curSong != null) {
+			curSong.stop();
+		}
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
-		for (Song song : playlist.getPlayOrder()) {
-			//plays song for however long it is
-			curSong = song;
-			curSong.play();
-			curSong.stop();
-		}
-		System.out.println("gonna figure it out later");
+		Runnable runnable =
+			    new Runnable(){
+			        public void run(){
+			        	for (Song song : playlist.getPlayOrder()) {
+			    			//plays song for however long it is
+			    			curSong = song;
+			    			curSong.play();
+			    			curSong.stop();
+			    		}
+			        }
+			    };
+			  
+		Thread thread = new Thread(runnable);
+		threads.add(thread);
+		thread.start();
 	}
 	
 	/**
@@ -150,21 +135,60 @@ public class MusicPlayerModel {
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist, Song song) {
+		if (curSong != null) {
+			curSong.stop();
+		}
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
 		curSong = song;
 		playlist.playFirst(song); //sets first song
 		// plays entire playlist
-		for (Song songs : playlist.getPlayOrder()) {
-			//plays song for however long it is
-			curSong = songs;
-			curSong.play();
-			curSong.stop();
-		}
+		Runnable runnable =
+			    new Runnable(){
+			        public void run(){
+			        	for (Song song : playlist.getPlayOrder()) {
+			    			//plays song for however long it is
+			    			curSong = song;
+			    			curSong.play();
+			    			curSong.stop();
+			    		}
+			        }
+			    };
+	
 		System.out.println("gonna figure it out later");
+		Thread thread = new Thread(runnable);
+		threads.add(thread);
+		thread.start();
 	}
 	
+	
+	public void playPlaylist(PlayList playlist, int index) {
+		if (curSong != null) {
+			curSong.stop();
+		}
+		currentPlaylist = playlist;
+		playingPlaylist = true;
+		playingQueue = false;
+		Runnable runnable =
+			    new Runnable(){
+			        public void run(){
+			        	int count = 0;
+			    		for (Song song : playlist.getPlayOrder()) {
+			    			//plays song for however long it is
+			    			if (count >= index) {
+			    				curSong = song;
+			    				curSong.play();
+			    				curSong.stop();
+			    			}
+			    			count += 1;
+			    		}
+			        }
+			    };
+		Thread thread = new Thread(runnable);
+		threads.add(thread);
+		thread.start();
+	}
 	
 	public PlayList shufflePlayList(PlayList playlist) {
 		playlist.shuffle();
@@ -325,6 +349,10 @@ public class MusicPlayerModel {
 		
 	}
 	
+	
+	/**
+	 * This fucking works lets go
+	 */
 	public void skip() {
 		if (playingQueue) { 
 			curSong.stop();
@@ -341,7 +369,9 @@ public class MusicPlayerModel {
 			}
 			
 		} else if (playingPlaylist) {
-			return;
+			curSong.stop();
+			int skipIndex = curSong.getIndex() + 1;
+			playPlaylist(currentPlaylist, skipIndex);
 		} else {
 			return;
 		}

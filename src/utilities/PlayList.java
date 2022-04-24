@@ -86,6 +86,7 @@ public class PlayList {
 		playOrder = songList;
 		songList.add(song);
 		this.size += 1;
+		song.setIndex(this.size - 1);
 		
 		//metadata
 

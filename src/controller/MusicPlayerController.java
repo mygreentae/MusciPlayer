@@ -202,17 +202,29 @@ public class MusicPlayerController {
 	}
 	
 	/*
-	 * play, pause skip
+	 * play, pause skip, all need to be handled differently based on threading for 
+	 * Playlists and Queues, so thats a tomorrow problem, skip works tho
 	 */
 	
+	
+	
+	
+	 
+	//
 	public void pause() {
 		model.getCurSong().pause();
 	}
 	
+	/**
+	 * 
+	 */
 	public void resume() {
 		model.getCurSong().play();
 	}
 	
+	/**
+	 * Skips the current Song
+	 */
 	public void skip() {
 		model.skip();
 	}
