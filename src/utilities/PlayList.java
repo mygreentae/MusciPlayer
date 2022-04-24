@@ -21,8 +21,7 @@ import song.Song;
  *
  *	GUI: Only shows songList, its just the order that Songs were added.
  *	Controller: Uses playlist and its own currentSong variable probably.
- *	
- *
+ *	5
  */
 public class PlayList {
 	
@@ -71,6 +70,14 @@ public class PlayList {
 	}
 	
 	/**
+	 * Returns the list of Songs in the PlayList
+	 * @return the list of Songs in the PlayList
+	 */
+	public ArrayList<Song> getSongList(){
+		return this.songList;
+	}
+	
+	/**
 	 * Adds a song to the Playlist
 	 * 
 	 * @param song, the Song to be added to the PlayList
@@ -79,6 +86,7 @@ public class PlayList {
 		playOrder = songList;
 		songList.add(song);
 		this.size += 1;
+		song.setIndex(this.size - 1);
 		
 		//metadata
 

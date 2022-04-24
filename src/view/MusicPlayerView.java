@@ -13,16 +13,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.MusicPlayerModel;
 import song.Song;
+import utilities.SongLibrary;
 
 public class MusicPlayerView extends Application {
 	
 	private static MusicPlayerController controller;
 	private static MusicPlayerModel model; 
+	private static SongLibrary songLibrary;
 
 	@Override
 	public void start(Stage stage) {
-		Song start = new Song("dub", "Yeat", null);
-		model = new MusicPlayerModel(start);
+		songLibrary = new SongLibrary();
+		model = new MusicPlayerModel(songLibrary);
 		controller = new MusicPlayerController(model);
 		GridPane pane = new GridPane();
 		Button playPause = new Button("Play");
@@ -39,8 +41,6 @@ public class MusicPlayerView extends Application {
 		stage.setScene(mainScene);
 		stage.setTitle("Music Player");
 		stage.show();
-		
-		
 		
 		
 		// lambdas

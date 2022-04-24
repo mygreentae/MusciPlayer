@@ -5,19 +5,26 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 import javax.sound.sampled.*;
+
+import utilities.PlayList;
 
 /**
  * @author Seth/Jackson
  * 	
  * Holds a Song and all relevant information relating to it. Has dual functions 
- * mentioned below. 
+ * mentioned below. ArrayList compatible, Linked List compatible, 
  * 
  * Properties:
  * name, artist, coverImage, duration, lyrics?, audio file,
  * 
  * Linked List Compatibility:
  * Utilizes .prev and .next in order to use a "live" Queue System
+ * 
+ * ArrayList Compatibility:
+ * Utilizes an index so that it is usable in Lists.
  * 
  * Metadata: 
  * favorite used in model as special playlist
@@ -38,6 +45,7 @@ public class Song {
 	private boolean isPlaying; 
 	
 	//List shit
+	private int index;
 	private Song next;
 	private Song prev;
 	
@@ -53,6 +61,7 @@ public class Song {
 		this.name = name;
 		this.artist = artist; 
 		this.genre = genre;
+		this.index = 0;
 		this.favorite = false;
 	}
 	
@@ -140,6 +149,21 @@ public class Song {
 	}
 	
 	/**
+	 * Returns the Song's index
+	 * @return the Song's index
+	 */
+	public int getIndex() {
+		return index;
+	}
+	
+	/**
+	 * Sets the Song's index to whatever parameter is passed.
+	 * @param index, an int indicating the Song's index in a List
+	 */
+	public void setIndex(int index) {
+		this.index = index;
+	}
+	/**
 	 * Gets the next Song if any
 	 * 
 	 * @return the next Song if applicable
@@ -183,6 +207,11 @@ public class Song {
 		this.prev = song;
 	}
 	
+	/**
+	 * Gets the duration of the Song, probably not needed but ya never know
+	 * 
+	 * @return the duraction of a Song's audio in Seconds
+	 */
 	public double getDuration() {
 		return durationInSeconds;
 	}
@@ -218,28 +247,52 @@ public class Song {
 			e.printStackTrace();
 		} catch (LineUnavailableException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 	}
 	
 	/**
 	 * Plays the song audio
+	 * 
+	 * Allocates stall time based on audioInputStream's duration in seconds.
 	 */
 	public void play() {
 		// if we have to manually hardcode Song objects using setStream that I, jackson
 		// have made just now, we can have play just start the stream
 		audio.start();
-		
-		
+		try {
+			TimeUnit.SECONDS.sleep((long) durationInSeconds + 1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 	/**
-	 * Stops the Song audio
+	 * Stops the Song audio, resets audio Clip back to beginning
 	 */
 	public void stop() {
+		audio.stop();
+		audio.setFramePosition(0);
+	}
+	
+	/**
+	 * Stops the Song audio, resuming it will continue audio
+	 * 
+	 * Time will have to be adjusted accordingly when you use resume function
+	 */
+	public void pause() {
 		audio.stop();
 	}
 	
 	
+	/**
+	 * Adds this Song to a playList, also probably not needed
+	 * 
+	 * @param playlist
+	 */
+	public void addToPlaylist(PlayList playlist) {
+		playlist.addSong(this);
+	}	
 }
 

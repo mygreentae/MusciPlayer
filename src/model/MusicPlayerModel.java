@@ -6,9 +6,13 @@ import java.util.concurrent.TimeUnit;
 import song.Song;
 import utilities.PlayList;
 import utilities.Queue;
+import utilities.SongLibrary;
 
 public class MusicPlayerModel {
 
+	
+	private SongLibrary songLibrary;
+	
 	private Song curSong; 
 	
 	private Queue currentQueue; 
@@ -19,23 +23,23 @@ public class MusicPlayerModel {
 	
 	//features maybe?
 	private ArrayList<PlayList> allPlaylists;
-	private ArrayList<Song> favorites;
-	private ArrayList<Song> recommended;
+	private PlayList favorites;
+	private PlayList recommended;
 
 	//model state
 	private boolean playingQueue;
 	private boolean playingPlaylist;
-	
-	
+	private ArrayList<Thread> threads;
 	
 	/**
 	 * Creates the MusicPlayerModel
 	 */
-	public MusicPlayerModel() {
+	public MusicPlayerModel(SongLibrary songLibrary) {
+		this.songLibrary = songLibrary;
 		allPlaylists = new ArrayList<>();
-		favorites = new ArrayList<>();
-		recommended = new ArrayList<>();
-		//songlibrary
+		favorites = new PlayList("favorites");
+		recommended = new PlayList("recommended");
+		threads = new ArrayList<Thread>();
 		
 	}
 	
@@ -65,21 +69,31 @@ public class MusicPlayerModel {
 	 * @param queue, the Queue to be played
 	 */
 	public void playQueue(Queue queue) { 
+		if (curSong != null) {
+			curSong.stop();
+		}
 		currentQueue = queue;
 		playingQueue = true;
 		playingPlaylist = false;
-		curSong = queue.getCur();
-		while (curSong != null) {
-			curSong = queue.getCur();
-			curSong.play();
-			try {
-				TimeUnit.SECONDS.sleep((long)curSong.getDuration() + 1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			queue.next();
-		}
+    	curSong = queue.getCur();
+		Runnable runnable =
+			    new Runnable(){
+			        public void run(){
+			        	while (curSong != null) {
+			    			curSong.play();
+			    			curSong.stop();
+			    			queue.next();
+			    			curSong = queue.getCur();
+			    		}  
+			        }
+			    };
+			  
+		Thread thread = new Thread(runnable);
+		threads.add(thread);
+		System.out.println("yeet");
+		thread.start();
+		
+		
 		System.out.println("gonna figure it out later");
 	}
 	
@@ -92,21 +106,27 @@ public class MusicPlayerModel {
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist) {
+		if (curSong != null) {
+			curSong.stop();
+		}
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
-		for (Song song : playlist.getPlayOrder()) {
-			//plays song for however long it is
-			curSong = song;
-			song.play();
-			try {
-				TimeUnit.SECONDS.sleep((long)song.getDuration() + 1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		System.out.println("gonna figure it out later");
+		Runnable runnable =
+			    new Runnable(){
+			        public void run(){
+			        	for (Song song : playlist.getPlayOrder()) {
+			    			//plays song for however long it is
+			    			curSong = song;
+			    			curSong.play();
+			    			curSong.stop();
+			    		}
+			        }
+			    };
+			  
+		Thread thread = new Thread(runnable);
+		threads.add(thread);
+		thread.start();
 	}
 	
 	/**
@@ -115,24 +135,64 @@ public class MusicPlayerModel {
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist, Song song) {
+		if (curSong != null) {
+			curSong.stop();
+		}
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
 		curSong = song;
 		playlist.playFirst(song); //sets first song
 		// plays entire playlist
-		for (Song songs : playlist.getPlayOrder()) {
-			//plays song for however long it is
-			curSong = songs;
-			songs.play();
-			try {
-				TimeUnit.SECONDS.sleep((long)songs.getDuration() + 1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		Runnable runnable =
+			    new Runnable(){
+			        public void run(){
+			        	for (Song song : playlist.getPlayOrder()) {
+			    			//plays song for however long it is
+			    			curSong = song;
+			    			curSong.play();
+			    			curSong.stop();
+			    		}
+			        }
+			    };
+	
 		System.out.println("gonna figure it out later");
+		Thread thread = new Thread(runnable);
+		threads.add(thread);
+		thread.start();
+	}
+	
+	
+	public void playPlaylist(PlayList playlist, int index) {
+		if (curSong != null) {
+			curSong.stop();
+		}
+		currentPlaylist = playlist;
+		playingPlaylist = true;
+		playingQueue = false;
+		Runnable runnable =
+			    new Runnable(){
+			        public void run(){
+			        	int count = 0;
+			    		for (Song song : playlist.getPlayOrder()) {
+			    			//plays song for however long it is
+			    			if (count >= index) {
+			    				curSong = song;
+			    				curSong.play();
+			    				curSong.stop();
+			    			}
+			    			count += 1;
+			    		}
+			        }
+			    };
+		Thread thread = new Thread(runnable);
+		threads.add(thread);
+		thread.start();
+	}
+	
+	public PlayList shufflePlayList(PlayList playlist) {
+		playlist.shuffle();
+		return playlist;
 	}
 	
 	/**
@@ -157,18 +217,11 @@ public class MusicPlayerModel {
 		if (curSong != null) {
 			curSong.stop();
 		}
-		// if in Queue
-		if (playingQueue) {
-			curSong = currentQueue.getCur();
-			song.setNext(curSong.getNext());
-			song.setPrev(curSong);
-			curSong.setNext(song);
-			curSong = song;
-		}
 		// if in Playlist, and playlist is currently being played
-		else if (playingPlaylist && currentPlaylist.contains(song)) {
+		if (playingPlaylist && currentPlaylist.contains(song)) {
 			curSong = song;
 			currentPlaylist.playFirst(song);
+			playPlaylist(currentPlaylist);
 			
 		} else {
 			// starts new queue, basically this handles the 1st song pick
@@ -198,12 +251,21 @@ public class MusicPlayerModel {
 	public ArrayList<PlayList> getAllPlaylists(){
 		return allPlaylists;
 	}
+	
+	public PlayList getPlaylist(String name) {
+		for (PlayList playlist : allPlaylists) {
+			if (playlist.getName().toLowerCase().equals(name.toLowerCase())) {
+				return playlist;
+			}
+		} 
+		return null;
+	}
 
-	public ArrayList<Song> getFavorites(){
+	public PlayList getFavorites(){
 		return favorites;
 	}
 	
-	public ArrayList<Song> getRecommended(){
+	public PlayList getRecommended(){
 		return recommended;
 	}
 	
@@ -214,8 +276,6 @@ public class MusicPlayerModel {
 	public boolean isPlayingPlaylist() {
 		return playingPlaylist;
 	}
-	
-	
 	
 	/*
 	 * All of the create/remove things methods
@@ -238,22 +298,83 @@ public class MusicPlayerModel {
 	
 	public void addToFavorites(Song song) {
 		song.makeFavorite();
-		favorites.add(song);
+		favorites.addSong(song);
 	}
 	
 	public void removeFromFavorites(Song song) {
 		if (favorites.contains(song)) {
 			song.unFavorite();
-			favorites.remove(song);
+			favorites.removeSong(song);
 		}
 	}
 	
+	/**
+	 * Returns the song if its present in the Song Library
+	 * 
+	 * @param name, the name of the song the user wants
+	 * @return null if Song is not found, otherwise returns the Song
+	 */
 	public Song search(String name) {
-		System.out.println();
-		return null;
+		//binary search song names?
+		Song searchedSong = null;
+		for (Song song : songLibrary.getSongs()) {
+			if (song.getName().toLowerCase().equals(name.toLowerCase())) {
+				searchedSong = song;
+			}
+		}
+		// if song is not found, returns null
+		if (searchedSong == null) {
+			return null;
+		} else {
+			return searchedSong;
+		}
+	}
+	
+	public void addToPlaylist(PlayList playlist, Song song) {
+		playlist.addSong(song);
+	}
+	
+	/**
+	 * unsure if we need this but ya never know, could be a cool feature
+	 * @param playlist
+	 * @return
+	 */
+	
+	public PlayList copyPlaylist(PlayList playlist) {
+		PlayList copy = new PlayList(playlist.getName());
+		for (Song song: playlist.getSongList()) {
+			copy.addSong(song);
+		}
+		return copy;
+		
 	}
 	
 	
-	
+	/**
+	 * This fucking works lets go
+	 */
+	public void skip() {
+		if (playingQueue) { 
+			curSong.stop();
+			if (currentQueue.getNext() != null) {
+				curSong = currentQueue.getNext();
+				Queue newQueue = new Queue(curSong);
+				if (currentQueue.getNext().getNext() != null) {
+					Song count = currentQueue.getNext().getNext();
+					while (count != null) {
+						newQueue.enqueue(count);
+					}
+				}
+				playQueue(newQueue);
+			}
+			
+		} else if (playingPlaylist) {
+			curSong.stop();
+			int skipIndex = curSong.getIndex() + 1;
+			playPlaylist(currentPlaylist, skipIndex);
+		} else {
+			return;
+		}
+	}
 	
 }

@@ -82,7 +82,7 @@ public class Queue {
 	 * Changes to the next Song
 	 */
 	public void next() {
-		if (curSong.getNext() != null) {
+		if (curSong != null) {
 			curSong = curSong.getNext();
 		}
 	}
@@ -91,7 +91,7 @@ public class Queue {
 	 * Changes to the previous Song
 	 */
 	public void back() {
-		if (curSong.getPrev() != null) {
+		if (curSong != null) {
 			curSong = curSong.getPrev();
 		}
 	}

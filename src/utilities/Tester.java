@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
+import controller.MusicPlayerController;
 import model.MusicPlayerModel;
 import song.Song;
 
@@ -22,7 +23,7 @@ public class Tester {
 	/**
 	 * Test 1 tests the functionality of the Song class
 	 */
-	@Test
+	//@Test
 	void test1() {
 		// creates song, asserts everything works
 		Song song = new Song("yeet", "Seth", "the best");
@@ -61,7 +62,7 @@ public class Tester {
 	/**
 	 * Test 2 tests the functionality of the Playlist class
 	 */
-	@Test
+	//@Test
 	void test2() {
 		Song song = new Song("yeet", "Seth", "the best");
 		Song song2 = new Song("yawt", "Jackson", "the best");
@@ -146,7 +147,7 @@ public class Tester {
 	 * do not, add the same song to a queue multiple times, it will not work unless 
 	 * u clone it probably
 	 */
-	@Test
+	//@Test
 	void test3() {
 		Song song = new Song("yeet", "Seth", "the best");
 		Song song2 = new Song("yawt", "Jackson", "the best");
@@ -189,11 +190,11 @@ public class Tester {
 		Song s = q.getCur();
 		q.next();
 		q.next();
-		assertEquals(q.getCur(), s);
+		assertEquals(q.getCur(), null);
 		q.back();
 		q.back();
 		q.back();
-		assertEquals(q.getCur(), s);
+		assertEquals(q.getCur(), null);
 		
 	}
 
@@ -202,9 +203,10 @@ public class Tester {
 	 * 
 	 * We'll see how this goes.
 	 */
-	@Test
+	//@Test
 	void test4() {
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("yeet", "Seth", "the best");
 		Song song2 = new Song("yawt", "Jackson", "the best");
 		Song song3 = new Song("yurt", "Paris", "the best");
@@ -241,10 +243,10 @@ public class Tester {
 	 * Test 5 plays 2 songs from a PlayList that was added to the model
 	 * They're just super song and annoying to play 
 	 */
-	@Test
+	//@Test
 	void test5() {
-		
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("freeze", "Jackson", "k-pop");
 		Song song2 = new Song("yeat", "Seth", "rap");
 		//literally the most crucial thing ever, download wav/audio file into audios
@@ -268,9 +270,10 @@ public class Tester {
 	 * 
 	 * We'll see how this goes.
 	 */
-	@Test
+	//@Test
 	void test6() {
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("yeet", "Seth", "the best");
 		Song song2 = new Song("yawt", "Jackson", "the best");
 		Song song3 = new Song("yurt", "Paris", "the best");
@@ -296,7 +299,8 @@ public class Tester {
 	
 	//@Test
 	void test7(){
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("Deja Vu", "Ateez", "k-pop");
 		Song song2 = new Song("Maniac", "Stray Kids", "k-pop");
 		//literally the most crucial thing ever, download wav/audio file into audios
@@ -310,6 +314,8 @@ public class Tester {
 		model.addPlaylist(p1);
 		System.out.println("added");
 		model.playPlaylist(p1, song2);
+		assertTrue(model.isPlayingPlaylist());
+		assertFalse(model.isPlayingQueue());
 	}
 	
 	
@@ -324,7 +330,8 @@ public class Tester {
 	
 	//@Test
 	void test8(){
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("Industry Baby", "Lil Nas X", "pop");
 		Song song2 = new Song("Montero", "Lil Nas X", "pop");
 		//literally the most crucial thing ever, download wav/audio file into audios
@@ -334,15 +341,18 @@ public class Tester {
 				
 
 		model.changeSong(song1);
+		assertFalse(model.isPlayingPlaylist());
+		assertTrue(model.isPlayingQueue());
 	}
 	
 	/*
 	 * Same thing here, should be fine with multi song queue, but will have trouble 
 	 * with queue that has stuff added after its started playing.
 	 */
-	@Test
+	//@Test
 	void test9() {
-		MusicPlayerModel model = new MusicPlayerModel();
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
 		Song song1 = new Song("Industry Baby", "Lil Nas X", "pop");
 		Song song2 = new Song("Montero", "Lil Nas X", "pop");
 		song1.setAudioStream("Audios/Industry-Baby.wav");
@@ -359,6 +369,199 @@ public class Tester {
 		model.addToQueue(song3);
 		model.addToQueue(song2);
 		model.playQueue(model.getCurQueue());
+		assertFalse(model.isPlayingPlaylist());
+		assertTrue(model.isPlayingQueue());
+	}
+	
+	/**
+	 * Tests playPlayList(PlayList)
+	 */
+	//@Test
+	void test10() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		Song song1 = new Song("Deja Vu", "Ateez", "k-pop");
+		Song song2 = new Song("Maniac", "Stray Kids", "k-pop");
+		//literally the most crucial thing ever, download wav/audio file into audios
+		// assign them to songs based on name, ezpz
+		song1.setAudioStream("Audios/Deja-Vu.wav");
+		song2.setAudioStream("Audios/Maniac.wav");
+				
+		PlayList p1 = new PlayList("test1");
+		p1.addSong(song1);
+		p1.addSong(song2);
+		model.addPlaylist(p1);
+		System.out.println("added");
+		model.playPlaylist(p1);
+		assertTrue(model.isPlayingPlaylist());
+		assertFalse(model.isPlayingQueue());
+		
+		assertEquals(model.getCurPlaylist(), p1);
+	}
+	
+	/**
+	 * Begins to test Controller, also tests the ability to search Songs based 
+	 * on Strings 
+	 */
+	//@Test
+	void test11() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController controller = new MusicPlayerController(model);
+		try {
+			controller.search("hello");
+		} catch (IllegalArgumentException e) {
+			System.out.println("success");
+		}
+		Song song = controller.search("Montero");
+		controller.addToFavorites(song);
+		controller.playPlaylist(controller.getFavorites(), false, null);
+		
+		Song song2 = controller.search("Maniac");
+		controller.addToFavorites(song2);
+		controller.playPlaylist(controller.getFavorites(), false, song2);
+
+		
+	}
+	
+	/**
+	 * tests the viability of adding songs to a playlist via the controller
+	 * Also tests getPlaylists and stuff.
+	 */
+	//@Test
+	void test12() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController controller = new MusicPlayerController(model);
+		Song song = controller.search("Deja Vu");
+		Song song2 = controller.search("Maniac");
+		Song song3 = controller.search("Freeze");
+		Song song4 = controller.search("Industry Baby");
+		
+		controller.makePlaylist("Bangers");
+		
+		ArrayList<PlayList> playlists = controller.getAllPlaylists();
+		PlayList p = controller.getPlaylist("Bangers");
+		assertEquals(playlists.get(0), p);
+		
+		controller.addToPlaylist(p, song);
+		controller.addToPlaylist(p, song2);
+		controller.addToPlaylist(p, song3);
+		controller.addToPlaylist(p, song4);
+		
+		controller.playPlaylist(p, true, null);
+		
+	}
+	
+	/**
+	 * Tests removePlayList(PlayLst), removeFrom Favorites, playQEueue
+	 * add to queue
+	 * 
+	 * 
+	 * play pause and stop// doesnt work
+	 * 
+	 * Test
+	 */
+	//@Test
+	void test13() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController controller = new MusicPlayerController(model);
+		
+		Song song = controller.search("Maniac");
+		
+		controller.addToFavorites(song); // adds to favorites 
+		
+		controller.makePlaylist("Kpop"); // makes playlist
+		
+		PlayList p = controller.getPlaylist("Kpop"); // gets playlist from string
+		controller.addToPlaylist(p, song); // adds song to playlist gotten
+		
+		controller.removePlaylist(p); // removes said playlists.
+		assertEquals(controller.getAllPlaylists().size(), 0);
+		
+		//queue testing
+		Song song2 = controller.search("Freeze");	
+		Song song3 = controller.search("Deja Vu");
+		controller.addToQueue(song2);
+		controller.addToQueue(song3);
+		
+		Queue curQueue = controller.getCurQueue();
+		controller.playQueue(curQueue);
+		
+		System.out.println("hi");
+		controller.removeFromFavorites(song);
+		assertFalse(song.isFavorite());
+		
+		
+		// tests calling skip while audio is playing in another thread
+		// and it works!
+		try {
+			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 10);
+			controller.skip();
+			TimeUnit.SECONDS.sleep((long) 10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	/**
+	 * Skips song mid-playlist, also works
+	 */
+	//@Test
+	void test14() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController c = new MusicPlayerController(model);
+		
+		Song song = model.search("Maniac");
+		Song song2 = model.search("Freeze");
+		c.makePlaylist("Kpop");
+		PlayList p = c.getPlaylist("Kpop");
+		c.addToPlaylist(p, song);
+		c.addToPlaylist(p, song2);
+		
+		c.playPlaylist(p, false, null);
+		try {
+			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 10);
+			c.skip();
+			TimeUnit.SECONDS.sleep((long) 10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	
+	@Test
+	void test15() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController c = new MusicPlayerController(model);
+		
+		Song song = model.search("Maniac");
+		Song song2 = model.search("Freeze");
+		c.makePlaylist("Kpop");
+		PlayList p = c.getPlaylist("Kpop");
+		c.addToPlaylist(p, song);
+		c.addToPlaylist(p, song2);
+		
+		c.playPlaylist(p, false, null);
+		try {
+			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 10);
+			c.pause();
+			TimeUnit.SECONDS.sleep((long) 5);
+			c.resume();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 	
 	
