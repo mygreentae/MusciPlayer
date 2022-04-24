@@ -428,7 +428,7 @@ public class Tester {
 	 * tests the viability of adding songs to a playlist via the controller
 	 * Also tests getPlaylists and stuff.
 	 */
-	@Test
+	//@Test
 	void test12() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
@@ -453,9 +453,14 @@ public class Tester {
 		
 	}
 	
-	
 	/**
-	 * Test, play pause and stop// doesnt work
+	 * Tests removePlayList(PlayLst), removeFrom Favorites, playQEueue
+	 * add to queue
+	 * 
+	 * 
+	 * play pause and stop// doesnt work
+	 * 
+	 * Test
 	 */
 	@Test
 	void test13() {
@@ -463,14 +468,66 @@ public class Tester {
 		MusicPlayerModel model = new MusicPlayerModel(s);
 		MusicPlayerController controller = new MusicPlayerController(model);
 		
-		Song song2 = controller.search("Maniac");
-		controller.makePlaylist("Kpop");
+		Song song = controller.search("Maniac");
 		
-		PlayList p = controller.getPlaylist("Kpop");
-		controller.addToPlaylist(p, song2);
+		controller.addToFavorites(song); // adds to favorites 
 		
-		controller.playPlaylist(p, true, null);	
+		controller.makePlaylist("Kpop"); // makes playlist
+		
+		PlayList p = controller.getPlaylist("Kpop"); // gets playlist from string
+		controller.addToPlaylist(p, song); // adds song to playlist gotten
+		
+		controller.removePlaylist(p); // removes said playlists.
+		assertEquals(controller.getAllPlaylists().size(), 0);
+		
+		//queue testing
+		Song song2 = controller.search("Freeze");	
+		Song song3 = controller.search("Deja Vu");
+		controller.addToQueue(song2);
+		controller.addToQueue(song3);
+		
+		Queue curQueue = controller.getCurQueue();
+		controller.playQueue(curQueue);
+		
+		System.out.println("hi");
+		controller.removeFromFavorites(song);
+		assertFalse(song.isFavorite());
+		
+		
+		// tests calling skip while audio is playing in another thread
+		// and it works!
+		try {
+			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 10);
+			controller.skip();
+			TimeUnit.SECONDS.sleep((long) 10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
+	
+	
+	
+	//@Test
+	void test14() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		Song song = model.search("Maniac");
+		model.play(song);
+		
+		try {
+			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	
+	
 	/**
 	 * need to test playing songs when they are in multiple playlists and 
 	 * in the queue so thatll be fun.

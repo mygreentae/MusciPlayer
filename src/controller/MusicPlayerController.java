@@ -13,7 +13,6 @@ public class MusicPlayerController {
 	
 	private MusicPlayerModel model; 
 	
-	
 	/**
 	 * ALL PLAY FUNCTIONS MIGHT haVE TO BE THREADS
 	 * @param model
@@ -41,6 +40,7 @@ public class MusicPlayerController {
 	public void playQueue(Queue queue) { 
 		model.playQueue(queue);
 	}
+			        
 	
 	/**
 	 * Starts playing a Playlist,
@@ -214,19 +214,7 @@ public class MusicPlayerController {
 	}
 	
 	public void skip() {
-		if (model.isPlayingPlaylist()) {
-			Song curSong = model.getCurSong();
-			curSong.stop();
-			PlayList p = model.getCurPlaylist();
-			
-			
-		} else if (model.isPlayingQueue()) {
-			model.getCurSong().stop();
-			Song nextSong = model.getCurSong().getNext();
-			model.changeSong(nextSong);
-		} else {
-			return;
-		}
+		model.skip();
 	}
 	
 	
