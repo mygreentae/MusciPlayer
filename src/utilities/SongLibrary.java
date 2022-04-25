@@ -25,8 +25,6 @@ public class SongLibrary {
 			System.out.println("Error adding songs from Song Library");
 		}
 	}
-	
-	
 
 	private void addSongs() throws IOException {
 		List<String> dataList = Files.readAllLines(Paths.get("data.txt"), StandardCharsets.UTF_8);

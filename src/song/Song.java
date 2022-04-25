@@ -126,7 +126,7 @@ public class Song {
 	
 	/**
 
-	 * Sets the Song to isPlaying status
+	 * Sets the Song to isPlaying status, dont think we need
 	 */
 	public void setPlaying() {
 		isPlaying = true; 
@@ -142,7 +142,7 @@ public class Song {
 	}
 	
 	/**
-	 * Sets the Song to notPlaying status
+	 * Sets the Song to notPlaying status, dont think we need
 	 */
 	public void notPlaying() {
 		isPlaying = false; 
@@ -163,6 +163,7 @@ public class Song {
 	public void setIndex(int index) {
 		this.index = index;
 	}
+	
 	/**
 	 * Gets the next Song if any
 	 * 

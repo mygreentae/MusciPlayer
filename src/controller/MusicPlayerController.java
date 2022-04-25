@@ -75,6 +75,8 @@ public class MusicPlayerController {
 	 * If we use a list of Songs as our Song library, and our user just 
 	 * clicks a Song, we call this method.
 	 * 
+	 * THIS IS BASICALLY JUST CONTROLLER.PLAY()
+	 * 
 	 * If they specifically want to play a PlayList or specifically 
 	 * want to make a new Queue, we use the above two functions. 
 	 * 

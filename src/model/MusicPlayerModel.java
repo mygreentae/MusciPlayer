@@ -68,11 +68,14 @@ public class MusicPlayerModel {
 	 * 
 	 * @param queue, the Queue to be played
 	 */
-	public void playQueue(Queue queue) { 
+	public void playQueue(Queue queue) {
+		//stops other songs playing
+		stopThreads();
 		if (curSong != null) {
 			curSong.stop();
 		}
 		currentQueue = queue;
+		currentPlaylist = null;
 		playingQueue = true;
 		playingPlaylist = false;
     	curSong = queue.getCur();
@@ -106,18 +109,24 @@ public class MusicPlayerModel {
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist) {
+		//stops other songs playing
+		stopThreads();
 		if (curSong != null) {
 			curSong.stop();
 		}
 		currentPlaylist = playlist;
+		currentQueue = null;
 		playingPlaylist = true;
 		playingQueue = false;
+		curSong = playlist.getPlayOrder().get(0);
+		
 		Runnable runnable =
 			    new Runnable(){
 			        public void run(){
 			        	for (Song song : playlist.getPlayOrder()) {
 			    			//plays song for however long it is
 			    			curSong = song;
+			    			System.out.println("playlist curSOng " + song.getName());
 			    			curSong.play();
 			    			curSong.stop();
 			    		}
@@ -130,18 +139,24 @@ public class MusicPlayerModel {
 	}
 	
 	/**
-	 * Starts playing a Playlist from a song.
+	 * Starts playing a Playlist from a song. unsure if this works
+	 * how intended
 	 * 
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist, Song song) {
+		//stops other songs playing
+		stopThreads();
 		if (curSong != null) {
 			curSong.stop();
 		}
 		currentPlaylist = playlist;
+		currentQueue = null;
 		playingPlaylist = true;
 		playingQueue = false;
 		curSong = song;
+		curSong = playlist.getPlayOrder().get(0);
+		
 		playlist.playFirst(song); //sets first song
 		// plays entire playlist
 		Runnable runnable =
@@ -163,13 +178,23 @@ public class MusicPlayerModel {
 	}
 	
 	
+	/**
+	 * 
+	 * @param playlist
+	 * @param index
+	 */
 	public void playPlaylist(PlayList playlist, int index) {
+		//stops other songs playing
+		stopThreads();
 		if (curSong != null) {
 			curSong.stop();
 		}
 		currentPlaylist = playlist;
+		currentQueue = null;
 		playingPlaylist = true;
 		playingQueue = false;
+		curSong = playlist.getPlayOrder().get(0);
+		
 		Runnable runnable =
 			    new Runnable(){
 			        public void run(){
@@ -237,22 +262,48 @@ public class MusicPlayerModel {
      * give to GUI
 	 */
 	
+	/**
+	 * Returns the current Song
+	 * 
+	 * @return the current Song
+	 */
 	public Song getCurSong() {
 		return curSong;
 	}
 	
+	/**
+	 * Returns the current Queue
+	 * 
+	 * @return the current Queue, null if not playing Queue
+	 */
 	public Queue getCurQueue() {
 		return currentQueue;
 	}
 	
+	/**
+	 * Returns the current PlayList
+	 * 
+	 * @return the current PlayList, null if not playing PlayList
+	 */
 	public PlayList getCurPlaylist() {
 		return currentPlaylist;
 	}
 	
+	/**
+	 * Returns all PlayList Objects in model
+	 * 
+	 * @return an ArrayList of all PlayLists
+	 */
 	public ArrayList<PlayList> getAllPlaylists(){
 		return allPlaylists;
 	}
 	
+	/**
+	 * Returns the specific PlayList based on the name
+	 * 
+	 * @param name, the name of the desired PlayList
+	 * @return the corresponding PlayList
+	 */
 	public PlayList getPlaylist(String name) {
 		for (PlayList playlist : allPlaylists) {
 			if (playlist.getName().toLowerCase().equals(name.toLowerCase())) {
@@ -375,6 +426,12 @@ public class MusicPlayerModel {
 			playPlaylist(currentPlaylist, skipIndex);
 		} else {
 			return;
+		}
+	}
+	
+	private void stopThreads() {
+		for (Thread thread : threads) {
+			thread.stop();
 		}
 	}
 	
