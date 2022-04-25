@@ -162,7 +162,7 @@ public class PlayList {
 	
 	/**
 	 * This is used to reassign the song that plays first in the 
-	 * PlayList.
+	 * PlayList. might not be necessary.
 	 * 
 	 * It is mostly used for when a user clicks on a song in a PlayList, 
 	 * whilst playing said PlayList. It just shifts where the song used

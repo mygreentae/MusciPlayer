@@ -68,7 +68,9 @@ public class MusicPlayerModel {
 	 * 
 	 * @param queue, the Queue to be played
 	 */
-	public void playQueue(Queue queue) { 
+	public void playQueue(Queue queue) {
+		//stops other songs playing
+		stopThreads();
 		if (curSong != null) {
 			curSong.stop();
 		}
@@ -106,18 +108,23 @@ public class MusicPlayerModel {
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist) {
+		//stops other songs playing
+		stopThreads();
 		if (curSong != null) {
 			curSong.stop();
 		}
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
+		curSong = playlist.getPlayOrder().get(0);
+		
 		Runnable runnable =
 			    new Runnable(){
 			        public void run(){
 			        	for (Song song : playlist.getPlayOrder()) {
 			    			//plays song for however long it is
 			    			curSong = song;
+			    			System.out.println("playlist curSOng " + song.getName());
 			    			curSong.play();
 			    			curSong.stop();
 			    		}
@@ -130,11 +137,14 @@ public class MusicPlayerModel {
 	}
 	
 	/**
-	 * Starts playing a Playlist from a song.
+	 * Starts playing a Playlist from a song. unsure if this works
+	 * how intended
 	 * 
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist, Song song) {
+		//stops other songs playing
+		stopThreads();
 		if (curSong != null) {
 			curSong.stop();
 		}
@@ -142,6 +152,8 @@ public class MusicPlayerModel {
 		playingPlaylist = true;
 		playingQueue = false;
 		curSong = song;
+		curSong = playlist.getPlayOrder().get(0);
+		
 		playlist.playFirst(song); //sets first song
 		// plays entire playlist
 		Runnable runnable =
@@ -163,13 +175,22 @@ public class MusicPlayerModel {
 	}
 	
 	
+	/**
+	 * 
+	 * @param playlist
+	 * @param index
+	 */
 	public void playPlaylist(PlayList playlist, int index) {
+		//stops other songs playing
+		stopThreads();
 		if (curSong != null) {
 			curSong.stop();
 		}
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		playingQueue = false;
+		curSong = playlist.getPlayOrder().get(0);
+		
 		Runnable runnable =
 			    new Runnable(){
 			        public void run(){
@@ -375,6 +396,12 @@ public class MusicPlayerModel {
 			playPlaylist(currentPlaylist, skipIndex);
 		} else {
 			return;
+		}
+	}
+	
+	private void stopThreads() {
+		for (Thread thread : threads) {
+			thread.stop();
 		}
 	}
 	
