@@ -17,9 +17,13 @@ public class SongLibrary {
 	
 	
 
-	public SongLibrary() throws IOException {
+	public SongLibrary() {
 		songLibrary = new ArrayList<>();
-		addSongs();
+		try {
+			addSongs();
+		} catch (IOException e) {
+			System.out.println("Error adding songs from Song Library");
+		}
 	}
 	
 	
