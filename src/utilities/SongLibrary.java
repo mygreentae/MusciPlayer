@@ -1,5 +1,6 @@
 package utilities;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -8,19 +9,21 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import song.Song;
 
 public class SongLibrary {
 	ArrayList<Song> songLibrary;
 	
 	
-	
+
 	public SongLibrary() throws IOException {
 		songLibrary = new ArrayList<>();
 		addSongs();
 	}
 	
 	
+
 	private void addSongs() throws IOException {
 		List<String> dataList = Files.readAllLines(Paths.get("data.txt"), StandardCharsets.UTF_8);
 		
@@ -71,6 +74,7 @@ public class SongLibrary {
 //		songLibrary.add(maniac);
 //		songLibrary.add(freeze);
 //		//songLibrary.add(yeat);
+
 	}
 	
 	private void addSongs2() {

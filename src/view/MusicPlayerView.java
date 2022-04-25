@@ -1,12 +1,15 @@
 package view;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
+
 
 import controller.MusicPlayerController;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -30,6 +33,7 @@ import javafx.stage.Stage;
 import model.MusicPlayerModel;
 import song.Song;
 import utilities.PlayList;
+
 import utilities.SongLibrary;
 
 public class MusicPlayerView extends Application {
@@ -37,6 +41,7 @@ public class MusicPlayerView extends Application {
 	private static MusicPlayerController controller;
 	private static MusicPlayerModel model; 
 	private static SongLibrary songLibrary;
+
 	
 	private static final int TILE_HEIGHT = 50;
 	private static final int TILE_WIDTH = 100;
@@ -116,6 +121,7 @@ public class MusicPlayerView extends Application {
 		});
 	}
 	
+
 	private ImageView setAlbumArt(Song curSong) {
     	ImageView imageView = new ImageView();
     	if (curSong.getCover() == null) {
@@ -127,11 +133,13 @@ public class MusicPlayerView extends Application {
     	return imageView;
     }
 	
+
 	
 	
 	public static void main(String[] args) {
 		launch(args);
 	}
+
 	
 	private class SongTile extends BorderPane {
 		
