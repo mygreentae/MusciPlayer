@@ -536,7 +536,7 @@ public class Tester {
 	}
 	
 	
-	@Test
+	//@Test
 	void test15() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
@@ -552,7 +552,7 @@ public class Tester {
 		c.playPlaylist(p, false, null);
 		try {
 			System.out.println("played");
-			TimeUnit.SECONDS.sleep((long) 10);
+			TimeUnit.SECONDS.sleep((long) 100);
 			c.pause();
 			TimeUnit.SECONDS.sleep((long) 5);
 			c.resume();
@@ -563,6 +563,29 @@ public class Tester {
 	}
 	
 	
+
+	@Test
+		void test16() {
+			SongLibrary s = new SongLibrary();
+			MusicPlayerModel model = new MusicPlayerModel(s);
+			MusicPlayerController c = new MusicPlayerController(model);
+			
+			Song song = model.search("YOKAZE");
+			Song song2 = model.search("Star Trail");
+			c.makePlaylist("K-Rap");
+			PlayList p = c.getPlaylist("K-Rap");
+			c.addToPlaylist(p, song);
+			c.addToPlaylist(p, song2);
+			
+			c.playPlaylist(p, false, null);
+			try {
+				System.out.println("played");
+				TimeUnit.SECONDS.sleep((long) 1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+		}
 	/**
 	 * need to test playing songs when they are in multiple playlists and 
 	 * in the queue so thatll be fun.
