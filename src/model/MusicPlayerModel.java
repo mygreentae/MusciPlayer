@@ -75,6 +75,7 @@ public class MusicPlayerModel {
 			curSong.stop();
 		}
 		currentQueue = queue;
+		currentPlaylist = null;
 		playingQueue = true;
 		playingPlaylist = false;
     	curSong = queue.getCur();
@@ -114,6 +115,7 @@ public class MusicPlayerModel {
 			curSong.stop();
 		}
 		currentPlaylist = playlist;
+		currentQueue = null;
 		playingPlaylist = true;
 		playingQueue = false;
 		curSong = playlist.getPlayOrder().get(0);
@@ -149,6 +151,7 @@ public class MusicPlayerModel {
 			curSong.stop();
 		}
 		currentPlaylist = playlist;
+		currentQueue = null;
 		playingPlaylist = true;
 		playingQueue = false;
 		curSong = song;
@@ -187,6 +190,7 @@ public class MusicPlayerModel {
 			curSong.stop();
 		}
 		currentPlaylist = playlist;
+		currentQueue = null;
 		playingPlaylist = true;
 		playingQueue = false;
 		curSong = playlist.getPlayOrder().get(0);
@@ -258,22 +262,48 @@ public class MusicPlayerModel {
      * give to GUI
 	 */
 	
+	/**
+	 * Returns the current Song
+	 * 
+	 * @return the current Song
+	 */
 	public Song getCurSong() {
 		return curSong;
 	}
 	
+	/**
+	 * Returns the current Queue
+	 * 
+	 * @return the current Queue, null if not playing Queue
+	 */
 	public Queue getCurQueue() {
 		return currentQueue;
 	}
 	
+	/**
+	 * Returns the current PlayList
+	 * 
+	 * @return the current PlayList, null if not playing PlayList
+	 */
 	public PlayList getCurPlaylist() {
 		return currentPlaylist;
 	}
 	
+	/**
+	 * Returns all PlayList Objects in model
+	 * 
+	 * @return an ArrayList of all PlayLists
+	 */
 	public ArrayList<PlayList> getAllPlaylists(){
 		return allPlaylists;
 	}
 	
+	/**
+	 * Returns the specific PlayList based on the name
+	 * 
+	 * @param name, the name of the desired PlayList
+	 * @return the corresponding PlayList
+	 */
 	public PlayList getPlaylist(String name) {
 		for (PlayList playlist : allPlaylists) {
 			if (playlist.getName().toLowerCase().equals(name.toLowerCase())) {
