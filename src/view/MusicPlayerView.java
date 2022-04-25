@@ -1,7 +1,10 @@
 package view;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Queue;
 
@@ -13,12 +16,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
@@ -29,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -53,7 +59,7 @@ public class MusicPlayerView extends Application {
 	
 	private static final int TILE_HEIGHT = 50;
 	private static final int TILE_WIDTH = 100;
-	private static final int TITLE_FONT_SIZE = 20;
+	private static final int TITLE_FONT_SIZE = 18;
 	private static final int CUR_TITLE_SIZE = 30;
 	private static final int CUR_ARTIST_SIZE = 10;
 	private static final int ARTIST_FONT_SIZE = 10;
@@ -67,13 +73,22 @@ public class MusicPlayerView extends Application {
 
 
 	@Override
-	public void start(Stage stage) throws IOException {
+	public void start(Stage stage) throws IOException, URISyntaxException {
 		songLibrary = new SongLibrary();
 		model = new MusicPlayerModel(songLibrary);
 		controller = new MusicPlayerController(model);
 		
-		Song song = controller.search("400km");
-		controller.changeSong(song);
+//		URI uri = new URI("");
+		File file = new File("Audios/400km.wav");
+		String mediaURL = file.toURI().toString();
+
+		Media media = new Media(mediaURL);
+		player = new MediaPlayer(media);
+		
+		
+		
+//		Song song = controller.search("400km");
+//		controller.changeSong(song);
 
 		VBox root = new VBox();
 		HBox hbox = new HBox();
@@ -100,6 +115,7 @@ public class MusicPlayerView extends Application {
 		curSongView.setAlignment(Pos.CENTER);
 		controls.setAlignment(Pos.CENTER);
 		root.getChildren().addAll(hbox, curSongView, controls);
+//		root.getChildren().add(new MediaView(player));
 		
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -113,9 +129,13 @@ public class MusicPlayerView extends Application {
 	private VBox showCurSong() {
 		VBox vbox = new VBox();
 		
+		String title = "";
+		String artist = "";
 		Song song = controller.getCurSong();
-		String title = song.getName();
-		String artist = song.getArtist();
+		if (song != null) {
+			title = song.getName();
+			artist = song.getArtist();
+		}
 		
 		Text titleText = new Text();
 		Text artistText = new Text();
@@ -131,9 +151,8 @@ public class MusicPlayerView extends Application {
 		artistText.setFill(Color.GRAY);
 		artistText.setStyle("-fx-font-weight: bold");
 		
-		
+		vbox.setPadding(new Insets(0, 0, 20, 0));
 		vbox.getChildren().addAll(titleText, artistText);
-		
 		
 		return vbox;
 	}
@@ -224,13 +243,26 @@ public class MusicPlayerView extends Application {
 		songView.setPadding(new Insets(10, 10, 10, 20));
 		
 		//change to current song queue
+		//ArrayList<Song> songList = controller.getCurPlaylist().getSongList();
+		
 		ArrayList<Song> songList = songLibrary.getSongs();
+		
+		EventHandler<MouseEvent> playSong = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				Node source = (Node)mouseEvent.getTarget();
+				Song song = ((SongTile)source).getSong();
+				controller.changeSong(song);
+			}
+		};
+		
+		
 		for (int i = 0; i < songList.size(); i++) {
-			SongTile songTile = new SongTile();
+			SongTile songTile = new SongTile(songList.get(i));
 			songTile.getIndex().setText(Integer.toString(i+1));
 			songTile.getTitle().setText(songList.get(i).getName());
 			songTile.getArtist().setText(songList.get(i).getArtist());
-			
+			songTile.setOnMouseClicked(playSong);
 			songView.add(songTile, 1, i);
 		}
 		scroller.setContent(songView);
@@ -256,14 +288,20 @@ public class MusicPlayerView extends Application {
 //		});
 //	}
 	
+	private void changePlaylist(String name) {
+		// controller.changePlaylist(String name)
+	}
 
 	private ImageView setAlbumArt(Song curSong) {
     	ImageView imageView = new ImageView();
-    	if (curSong.getCover() == null) {
+    	if (curSong == null) {
+    		imageView.setImage(new Image("images/no-cover-art-found.jpg"));
+    	}
+    	else if (curSong.getCover() == null) {
     		imageView.setImage(new Image("images/no-cover-art-found.jpg"));
     	} 
     	else {
-    		imageView.setImage(new Image("images/no-cover-art-found.jpg")); // change
+    		imageView.setImage(new Image(curSong.getCover())); // change
     	}
     	
     	imageView.setFitHeight(400);
@@ -292,7 +330,10 @@ public class MusicPlayerView extends Application {
 		private StackPane titleStack;
 		private StackPane artistStack;
 		
-		private SongTile() {
+		private Song song;
+		
+		private SongTile(Song song) {
+			this.song = song;
 			index = new Text();
 			title = new Text();
 			artist = new Text();
@@ -366,6 +407,11 @@ public class MusicPlayerView extends Application {
 		private Text getArtist() {
 			return artist;
 		}
+		
+		public Song getSong() {
+			return song;
+		}
+	
 	}
 
 }
