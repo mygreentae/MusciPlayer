@@ -1,6 +1,9 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import song.Song;
@@ -31,15 +34,19 @@ public class MusicPlayerModel {
 	private boolean playingPlaylist;
 	private ArrayList<Thread> threads;
 	
+	private Map<String, Integer> metadata;
+	
 	/**
 	 * Creates the MusicPlayerModel
 	 */
 	public MusicPlayerModel(SongLibrary songLibrary) {
 		this.songLibrary = songLibrary;
 		allPlaylists = new ArrayList<>();
-		favorites = new PlayList("favorites");
-		recommended = new PlayList("recommended");
+		favorites = new PlayList("Favorites");
+		recommended = new PlayList("Recommended");
 		threads = new ArrayList<Thread>();
+		metadata = new HashMap<String, Integer>();
+		createRecommended();
 		
 	}
 	
@@ -179,9 +186,9 @@ public class MusicPlayerModel {
 	
 	
 	/**
+	 * Starts playing a Playlist from a song at a specific index.
 	 * 
-	 * @param playlist
-	 * @param index
+	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist, int index) {
 		//stops other songs playing
@@ -215,6 +222,11 @@ public class MusicPlayerModel {
 		thread.start();
 	}
 	
+	/**
+	 * Method s
+	 * @param playlist
+	 * @return
+	 */
 	public PlayList shufflePlayList(PlayList playlist) {
 		playlist.shuffle();
 		return playlist;
@@ -312,46 +324,124 @@ public class MusicPlayerModel {
 		return null;
 	}
 
+	/**
+	 * Returns a PlayList of Favorite Songs
+	 * 
+	 * @return a PlayList of Favorite Songs
+	 */
 	public PlayList getFavorites(){
 		return favorites;
 	}
 	
+	/**
+	 * Returns a PlayList of Recommended Songs.
+	 * 
+	 * @return
+	 */
 	public PlayList getRecommended(){
 		return recommended;
 	}
 	
+	/**
+	 * Returns true if Queue is Playing
+	 * 
+	 * @return true if Queue is Playing
+	 */
 	public boolean isPlayingQueue() {
 		return playingQueue;
 	}
 	
+	/**
+	 * Returns true if a PlayList is Playing
+	 * 
+	 * @return true if a PlayList is Playing
+	 */
 	public boolean isPlayingPlaylist() {
 		return playingPlaylist;
 	}
 	
-	/*
-	 * All of the create/remove things methods
+	/**
+	 * If the model has no PlayLists, creates recommneded 
+	 * 10 song PlayList
+	 * 
+	 * Else: it uses the metadata map 
 	 */
-	
 	public void createRecommended() {
+		recommended = new PlayList("Recommended");
+		// gets metadata
+		for (PlayList list: allPlaylists) {
+			for (Song song: list.getSongList()) {
+				if (metadata.containsKey(song.getGenre())){
+					metadata.put(song.getGenre(), 1);
+				} else {
+					int value = metadata.get(song.getGenre());
+					metadata.put(song.getGenre(), value + 1);
+				}
+			}
+		}
+		//
+		int count = 0;
+		//makes 10 songs
+		if (allPlaylists.size() == 0) {
+			ArrayList<Song> shuffle = new ArrayList<>();
+			
+			for (Song song : songLibrary.getSongs()) {
+				shuffle.add(song);
+				count += 1;
+			}
+			
+			Random random = new Random();
+			while (count > 0) {
+				int i = random.nextInt(shuffle.size());
+				Song song = shuffle.get(i);
+				recommended.addSong(song);
+				shuffle.remove(i);
+			}		
+		} else {
+			System.out.println("Nope");
+		}
+		
+		
+		
 		// literal ai
 		System.out.println("horrible");
 	}
 		
+	/**
+	 * Adds a PlayList to the model
+	 * 
+	 * @param playlist, the PlayList to be added
+	 */
 	public void addPlaylist(PlayList playlist) {
 		allPlaylists.add(playlist);
 	}
 	
+	/**
+	 * Removes a PlayList to the model
+	 * 
+	 * @param playlist, the PlayList to be removed
+	 */
 	public void removePlaylist(PlayList playlist) {
 		if (allPlaylists.contains(playlist)) {
 			allPlaylists.remove(playlist);
 		}
 	}
 	
+	/**
+	 * Adds a Song to the favorites PlayList
+	 * 
+	 * @param song, the Song to be added
+	 */
 	public void addToFavorites(Song song) {
 		song.makeFavorite();
 		favorites.addSong(song);
 	}
 	
+	/**
+	 * Removes a Song to the favorites PlayList
+	 * 
+	 * @param song, the Song to be removed
+	 */
 	public void removeFromFavorites(Song song) {
 		if (favorites.contains(song)) {
 			song.unFavorite();
@@ -381,6 +471,12 @@ public class MusicPlayerModel {
 		}
 	}
 	
+	/**
+	 * Adds a song to a PlayList
+	 * 
+	 * @param playlist, selected PlayList
+	 * @param song, Song to be added
+	 */
 	public void addToPlaylist(PlayList playlist, Song song) {
 		playlist.addSong(song);
 	}
@@ -390,7 +486,6 @@ public class MusicPlayerModel {
 	 * @param playlist
 	 * @return
 	 */
-	
 	public PlayList copyPlaylist(PlayList playlist) {
 		PlayList copy = new PlayList(playlist.getName());
 		for (Song song: playlist.getSongList()) {
@@ -402,7 +497,7 @@ public class MusicPlayerModel {
 	
 	
 	/**
-	 * This fucking works lets go
+	 * Skips a song
 	 */
 	public void skip() {
 		if (playingQueue) { 
@@ -428,6 +523,9 @@ public class MusicPlayerModel {
 		}
 	}
 	
+	/**
+	 * Stops any running threads
+	 */
 	private void stopThreads() {
 		for (Thread thread : threads) {
 			thread.stop();
