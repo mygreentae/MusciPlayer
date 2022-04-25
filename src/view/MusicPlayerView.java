@@ -106,7 +106,7 @@ public class MusicPlayerView extends Application {
 		playPause.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent ae) {
-				controller.play();
+				controller.resume();
 				
 			}
 			
@@ -114,7 +114,7 @@ public class MusicPlayerView extends Application {
 		stop.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent ae) {
-				controller.stop();
+				controller.pause();
 				
 			}
 			
