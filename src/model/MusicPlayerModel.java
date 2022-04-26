@@ -380,22 +380,22 @@ public class MusicPlayerModel {
 			}
 		}
 		//
-		int count = 0;
 		//makes 10 songs
+		int count = 10;
 		if (allPlaylists.size() == 0) {
 			ArrayList<Song> shuffle = new ArrayList<>();
 			
 			for (Song song : songLibrary.getSongs()) {
 				shuffle.add(song);
-				count += 1;
 			}
-			
 			Random random = new Random();
 			while (count > 0) {
+				System.out.println(shuffle.size());
 				int i = random.nextInt(shuffle.size());
 				Song song = shuffle.get(i);
 				recommended.addSong(song);
 				shuffle.remove(i);
+				count--;
 			}		
 		} else {
 			System.out.println("Nope");

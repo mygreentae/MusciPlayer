@@ -77,6 +77,10 @@ public class MusicPlayerController {
 	 * 
 	 * THIS IS BASICALLY JUST CONTROLLER.PLAY()
 	 * 
+	 * But it is dual function. You can use it to play a single song,
+	 * or to change to a specific song while already playing a PlayList
+	 * or Queue.
+	 * 
 	 * If they specifically want to play a PlayList or specifically 
 	 * want to make a new Queue, we use the above two functions. 
 	 * 
@@ -99,10 +103,18 @@ public class MusicPlayerController {
      * give to GUI
 	 */
 	
+	/**
+	 * Returns the current Song
+	 * @return the current Song
+	 */
 	public Song getCurSong() {
 		return model.getCurSong();
 	}
 	
+	/**
+	 * Returns the currentQueue
+	 * @return
+	 */
 	public Queue getCurQueue() {
 		return model.getCurQueue();
 	}
@@ -130,6 +142,10 @@ public class MusicPlayerController {
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public PlayList getFavorites(){
 		return model.getFavorites();
 	}
@@ -151,11 +167,6 @@ public class MusicPlayerController {
 	/*
 	 * All of the create/remove things methods
 	 */
-	
-	public void createRecommended() {
-		// literal ai
-		System.out.println("horrible");
-	}
 	
 	public void removePlaylist(PlayList playlist) {
 		model.removePlaylist(playlist);;
