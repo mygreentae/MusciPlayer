@@ -11,6 +11,53 @@ import utilities.PlayList;
 import utilities.Queue;
 import utilities.SongLibrary;
 
+
+
+
+
+
+
+/**
+ * @author Seth/Jackson
+ * 	
+ * This is the Model of the music player. It holds all of the 
+ * User data regarding PlayLists, Queues, favorites, recommended
+ * songs, and threads. 
+ * 
+ * 
+ * Properties:
+ * curSong: 
+ * The Song currently playing, when Model is initialized, 
+ * it is null.
+ * 
+ * currentQueue: 
+ * The Queue currently playing, null when initialized/if
+ * PlayList is playing.
+ * 
+ * currentPlayList: 
+ * The PlayList currently playing, null when initialized/
+ * if Queue is playing.
+ * 
+ * allPlaylists: 
+ * an ArrayList of all made PlayLists in the User's library,
+ * Empty ArrayList when initialized until makePlaylist() function 
+ * is called. 
+ * 
+ * favorites:
+ * A PlayList of favorite songs, Empty ArrayList when initialized.
+ * 
+ * playingQueue/playingPlaylist: 
+ * Boolean values for if Queue/PlayList is playing, null when initialized.
+ * 
+ * threads: 
+ * An ArrayList of Thread's that are responsible for playing audio.
+ * Are interrupted()/stop()-ed when a new play....() function is called.
+ * 
+ * metadata:
+ * A Map of Strings mapped to integers of genre's of Songs in a user's 
+ * allPlaylists.
+ *
+ */
 public class MusicPlayerModel {
 
 	
@@ -46,7 +93,8 @@ public class MusicPlayerModel {
 		recommended = new PlayList("Recommended");
 		threads = new ArrayList<Thread>();
 		metadata = new HashMap<String, Integer>();
-		createRecommended();
+		
+		createRecommended(); //creates recommended songs
 		
 	}
 	
@@ -64,7 +112,8 @@ public class MusicPlayerModel {
 	}
 	
 	/**
-	 * Starts a Queue, default if a user clicks on a single song. 
+	 * Starts a Queue, used in changeSong(Song) to handle when not playing
+	 * a Queue or a PlayList.
 	 * 
 	 * Thus, if a user clicks on the first song,
 	 * it must first be added to The Queue, and then this method is called.
@@ -108,7 +157,7 @@ public class MusicPlayerModel {
 	}
 	
 	/**
-	 * Starts playing a Playlist,
+	 * Starts playing a PlayList,
 	 * 
 	 * This function plays PlayLists and only PlayLists. Way easier than the queue one
 	 * Even though the PlayList class is like 5x longer.
@@ -146,7 +195,7 @@ public class MusicPlayerModel {
 	}
 	
 	/**
-	 * Starts playing a Playlist from a song. unsure if this works
+	 * Starts playing a PlayList from a song. unsure if this works
 	 * how intended
 	 * 
 	 * @param playlist, the PlayList to be played
@@ -184,9 +233,8 @@ public class MusicPlayerModel {
 		thread.start();
 	}
 	
-	
 	/**
-	 * Starts playing a Playlist from a song at a specific index.
+	 * Starts playing a PlayList from a song at a specific index.
 	 * 
 	 * @param playlist, the PlayList to be played
 	 */
@@ -223,9 +271,10 @@ public class MusicPlayerModel {
 	}
 	
 	/**
-	 * Method s
-	 * @param playlist
-	 * @return
+	 * Shuffles a PlayList 
+	 * 
+	 * @param playlist, the PlayList to be shuffled
+	 * @return the PlayList after shuffling
 	 */
 	public PlayList shufflePlayList(PlayList playlist) {
 		playlist.shuffle();
@@ -337,7 +386,7 @@ public class MusicPlayerModel {
 	/**
 	 * Returns a PlayList of Recommended Songs.
 	 * 
-	 * @return
+	 * @return the PlayList of Recommended Songs.
 	 */
 	public PlayList getRecommended(){
 		return recommended;
@@ -362,8 +411,8 @@ public class MusicPlayerModel {
 	}
 	
 	/**
-	 * If the model has no PlayLists, creates recommneded 
-	 * 10 song PlayList
+	 * If the model has no PlayLists, creates recommended 
+	 * 10 song PlayList. 
 	 * 
 	 * Else: it uses the metadata map 
 	 */
@@ -451,6 +500,16 @@ public class MusicPlayerModel {
 	}
 	
 	/**
+	 * Adds a song to a PlayList
+	 * 
+	 * @param playlist, selected PlayList
+	 * @param song, Song to be added
+	 */
+	public void addToPlaylist(PlayList playlist, Song song) {
+		playlist.addSong(song);
+	}
+	
+	/**
 	 * Returns the song if its present in the Song Library
 	 * 
 	 * @param name, the name of the song the user wants
@@ -473,17 +532,8 @@ public class MusicPlayerModel {
 	}
 	
 	/**
-	 * Adds a song to a PlayList
-	 * 
-	 * @param playlist, selected PlayList
-	 * @param song, Song to be added
-	 */
-	public void addToPlaylist(PlayList playlist, Song song) {
-		playlist.addSong(song);
-	}
-	
-	/**
 	 * unsure if we need this but ya never know, could be a cool feature
+	 * 
 	 * @param playlist
 	 * @return
 	 */

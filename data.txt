@@ -9,4 +9,4 @@ Error, ASH Island, k-rap, Audios/Error.wav
 Star Trail, SKOLOR, k-rap, Audios/Star-Trail.wav
 YOKAZE, 変態紳士クラブ, j-rap, Audios/YOKAZE.wav
 Routine, Han Yo Han, k-rap, Audios/Routine.wav
-Chinese, Da Zhang Wei, c-pop, Audios/Chinese.wav
+膩歌, 大张伟, c-pop, Audios/膩歌.wav

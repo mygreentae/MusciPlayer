@@ -12,9 +12,27 @@ import java.util.List;
 
 import song.Song;
 
+
+
+/**
+ * @author Leighanna/Jackson
+ * 	
+ * Creates and stores all the Songs that will be used in the Music Player.
+ * 
+ * Accesses data.txt in order to get information to build Songs. 
+ * Uses them to link them to .wav files in the Audio file.
+ * 
+ * Can throw an IOException, but is handled in the constructor.
+ * IOException only occurs if Files don't exist. 
+ * 
+ * 
+ * Properties: 
+ * 
+ * songLibrary:
+ * An ArrayList of all the Songs created when this class is initialized. 
+ */
 public class SongLibrary {
 	ArrayList<Song> songLibrary;
-	
 	
 
 	public SongLibrary() {
@@ -79,16 +97,11 @@ public class SongLibrary {
 
 	}
 	
-	private void addSongs2() {
-		
-	}
-	
-	private void sortLibrary() {
-		for (Song song: songLibrary) {
-			
-		}
-	}
-	
+	/**
+	 * Returns the ArrayList of Songs
+	 * 
+	 * @return the ArrayList of Songs
+	 */
 	public ArrayList<Song> getSongs(){
 		return songLibrary;
 	}
