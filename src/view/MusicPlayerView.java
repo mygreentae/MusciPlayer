@@ -269,26 +269,6 @@ public class MusicPlayerView extends Application {
 		return scroller;
 	}
 	
-<<<<<<< HEAD
-//	private void handleEvents(Button playPause, Button stop) {
-//		playPause.setOnAction(new EventHandler<ActionEvent>() {
-//			@Override
-//			public void handle(ActionEvent ae) {
-//				controller.play();
-//				
-//			}
-//			
-//		});
-//		stop.setOnAction(new EventHandler<ActionEvent>() {
-//			@Override
-//			public void handle(ActionEvent ae) {
-//				controller.stop();
-//				
-//			}
-//			
-//		});
-//	}
-=======
 	private void handleEvents(Button playPause, Button stop) {
 		playPause.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -307,7 +287,7 @@ public class MusicPlayerView extends Application {
 			
 		});
 	}
->>>>>>> 8c532590d02ccec51e9afc41c6369d71407e8355
+
 	
 	private void changePlaylist(String name) {
 		// controller.changePlaylist(String name)
