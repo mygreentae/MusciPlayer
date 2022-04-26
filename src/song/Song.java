@@ -269,6 +269,7 @@ public class Song {
 	public void play() {
 		// if we have to manually hardcode Song objects using setStream that I, jackson
 		// have made just now, we can have play just start the stream
+		isPlaying = true;
 		audio.start();
 		try {
 			TimeUnit.SECONDS.sleep((long) durationInSeconds + 1);
@@ -282,6 +283,7 @@ public class Song {
 	 * Stops the Song audio, resets audio Clip back to beginning
 	 */
 	public void stop() {
+		isPlaying = false;
 		audio.stop();
 		audio.setFramePosition(0);
 	}
@@ -292,6 +294,7 @@ public class Song {
 	 * Time will have to be adjusted accordingly when you use resume function
 	 */
 	public void pause() {
+		isPlaying = false;
 		audio.stop();
 		this.framePosition = audio.getFramePosition();
 	}
@@ -300,6 +303,7 @@ public class Song {
 	 * Theoretically resumes a song from the FramePosition it was paused from
 	 */
 	public void resume() {
+		isPlaying = true;
 		audio.setFramePosition(framePosition);
 		int length = audio.getFrameLength();
 		double resumeTime = (1 - (framePosition / length)) * durationInSeconds;

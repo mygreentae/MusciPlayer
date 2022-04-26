@@ -66,13 +66,17 @@ public class SongLibrary {
 				}
 			}
 		} 
+		
+		// this works, arts have to have the name formatted to match the name 
+		// of the song, including spaces and weird stuff
 		File dir2 = new File("Artwork");
 		File[] paths2 = dir2.listFiles();
 		System.out.println(paths.length);
 		if (paths2 != null) {
 			for (File p : paths2) {
 				for (Song song : songLibrary) {
-					if (p.toString().contains(song.getName())){
+					System.out.println(p.toString());
+					if (p.toString().contains(song.getName().toLowerCase())){
 						song.setCover(p.toString());
 					}
 				}

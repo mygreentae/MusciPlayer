@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Queue;
 
 import controller.MusicPlayerController;
@@ -47,11 +49,13 @@ import utilities.PlayList;
 
 import utilities.SongLibrary;
 
-public class MusicPlayerView extends Application {
+public class MusicPlayerView extends Application implements Observer{
 	
 	private static MusicPlayerController controller;
 	private static MusicPlayerModel model; 
 	private static SongLibrary songLibrary;
+	
+	private static Stage mainstage;
 	
 	private MediaPlayer player;
 	private static final long JUMP_BY = 5000; // this is in milli secs
@@ -74,6 +78,7 @@ public class MusicPlayerView extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException, URISyntaxException {
+		mainstage = stage;
 		songLibrary = new SongLibrary();
 		model = new MusicPlayerModel(songLibrary);
 		controller = new MusicPlayerController(model);
@@ -413,6 +418,41 @@ public class MusicPlayerView extends Application {
 			return song;
 		}
 	
+	}
+
+
+
+
+
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		VBox root = new VBox();
+		HBox hbox = new HBox();
+		ImageView image = setAlbumArt(controller.getCurSong());
+		System.out.println(controller.getCurSong());
+		
+		hbox.setPadding(new Insets(10, 10, 10, 10));
+		
+		ScrollPane songView = playListView();
+		songView.setPrefViewportWidth(SCROLL_MAX_WIDTH);
+		songView.setPrefViewportHeight(SCROLL_MAX_HEIGHT);
+		
+		hbox.getChildren().addAll(image, songView);
+		
+		VBox curSongView = showCurSong();
+		GridPane controls = setButtons();
+		
+		curSongView.setAlignment(Pos.CENTER);
+		controls.setAlignment(Pos.CENTER);
+		root.getChildren().addAll(hbox, curSongView, controls);
+//		root.getChildren().add(new MediaView(player));
+		
+		Scene scene = new Scene(root);
+		mainstage.setScene(scene);
+		mainstage.setTitle("Music Player");
+		mainstage.show();
 	}
 
 }

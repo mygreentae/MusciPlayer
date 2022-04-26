@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -58,7 +59,7 @@ import utilities.SongLibrary;
  * allPlaylists.
  *
  */
-public class MusicPlayerModel {
+public class MusicPlayerModel extends Observable{
 
 	
 	private SongLibrary songLibrary;
@@ -151,8 +152,10 @@ public class MusicPlayerModel {
 		threads.add(thread);
 		System.out.println("yeet");
 		thread.start();
+		setChanged();
+		notifyObservers();
 		
-		
+		System.out.println(curSong.getCover());
 		System.out.println("gonna figure it out later");
 	}
 	
@@ -192,6 +195,8 @@ public class MusicPlayerModel {
 		Thread thread = new Thread(runnable);
 		threads.add(thread);
 		thread.start();
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -231,6 +236,8 @@ public class MusicPlayerModel {
 		Thread thread = new Thread(runnable);
 		threads.add(thread);
 		thread.start();
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -268,6 +275,8 @@ public class MusicPlayerModel {
 		Thread thread = new Thread(runnable);
 		threads.add(thread);
 		thread.start();
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -322,6 +331,18 @@ public class MusicPlayerModel {
 	 * all of the getters that will be needed for the controller to call to
      * give to GUI
 	 */
+	
+	/**
+	 * Used to check if buttons can actually do anything in GUI
+	 * For example, if isPlayingSong(), then the play button shouldnt 
+	 * do anything, but if the song is paused, this should be false.
+	 * @return
+	 */
+	public Boolean isPlayingSong() {
+		return curSong.isPlaying();
+	}
+	
+	
 	
 	/**
 	 * Returns the current Song
