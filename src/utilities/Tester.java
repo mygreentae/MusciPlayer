@@ -567,29 +567,29 @@ public class Tester {
 =======
 
 	@Test
-		void test16() {
-			SongLibrary s = new SongLibrary();
-			MusicPlayerModel model = new MusicPlayerModel(s);
-			MusicPlayerController c = new MusicPlayerController(model);
+	void test16() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController c = new MusicPlayerController(model);
 			
-			Song song = model.search("YOKAZE");
-			Song song2 = model.search("Star Trail");
-			c.makePlaylist("K-Rap");
-			PlayList p = c.getPlaylist("K-Rap");
-			c.addToPlaylist(p, song);
-			c.addToPlaylist(p, song2);
+		Song song = model.search("YOKAZE");
+		Song song2 = model.search("Star Trail");
+		c.makePlaylist("K-Rap");
+		PlayList p = c.getPlaylist("K-Rap");
+		c.addToPlaylist(p, song);
+		c.addToPlaylist(p, song2);
 			
-			c.playPlaylist(p, false, null); //double check
-			System.out.println(c.getCurSong().getName());
-			try { 
-				System.out.println("played");
-				TimeUnit.SECONDS.sleep((long) 5);
-				TimeUnit.SECONDS.sleep((long) 10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}		
-		}
+		c.playPlaylist(p, false, null); //double check
+		System.out.println(c.getCurSong().getName());
+		try { 
+			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 5);
+			TimeUnit.SECONDS.sleep((long) 10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
 	
 	
 	/**
