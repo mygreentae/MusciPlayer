@@ -336,7 +336,8 @@ public class MusicPlayerModel extends Observable{
 	 * Used to check if buttons can actually do anything in GUI
 	 * For example, if isPlayingSong(), then the play button shouldnt 
 	 * do anything, but if the song is paused, this should be false.
-	 * @return
+	 * 
+	 * @return if a Song is playing
 	 */
 	public Boolean isPlayingSong() {
 		return curSong.isPlaying();
@@ -568,12 +569,28 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	
+	
+	/**
+	 * Doesn't call the Model's function, it just handles it. 
+	 * Might be bad design it defintely was bad design but for different 
+	 * reasons.
+	 * 
+	 */
+	public void resume() {
+		Song countSong = curSong.getNext();
+		if (playingQueue) {
+			Queue newQueue = new Queue(countSong, true);
+			playQueue(newQueue);
+		}
+	}
+	
 	/**
 	 * Skips a song
 	 */
 	public void skip() {
 		if (playingQueue) { 
 			curSong.stop();
+			System.out.println("skipped");
 			if (currentQueue.getNext() != null) {
 				curSong = currentQueue.getNext();
 				Queue newQueue = new Queue(curSong);

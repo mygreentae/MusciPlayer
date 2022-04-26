@@ -131,6 +131,19 @@ public class MusicPlayerController {
      * give to GUI
 	 */
 	
+	
+	/**
+	 * Used to check if buttons can actually do anything in GUI
+	 * For example, if isPlayingSong(), then the play button shouldnt 
+	 * do anything, but if the song is paused, this should be false.
+	 * 
+	 * @return if a Song is playing
+	 */
+	public Boolean isPlayingSong() {
+		return model.isPlayingSong();
+	}
+	
+	
 	/**
 	 * Returns the current Song
 	 * 
@@ -306,7 +319,7 @@ public class MusicPlayerController {
 	 * Might be bad design
 	 */
 	public void resume() {
-		model.getCurSong().play();
+		model.resume();
 	}
 	
 	/**

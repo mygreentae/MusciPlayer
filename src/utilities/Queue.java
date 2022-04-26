@@ -38,6 +38,13 @@ public class Queue {
 		this.lastSong = song;
 	}
 	
+	public Queue(Song song, Boolean b){
+		this.curSong = song;
+		this.nextSong = song.getNext();
+		this.prevSong = song.getPrev();
+		this.lastSong = song;
+	}
+	
 	/**
 	 * Adds a song to the back of the Queue
 	 * 

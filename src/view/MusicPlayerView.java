@@ -55,8 +55,6 @@ public class MusicPlayerView extends Application implements Observer{
 	private static MusicPlayerModel model; 
 	private static SongLibrary songLibrary;
 	
-	private static Stage mainstage;
-	
 	private MediaPlayer player;
 	private static final long JUMP_BY = 5000; // this is in milli secs
 
@@ -78,7 +76,6 @@ public class MusicPlayerView extends Application implements Observer{
 
 	@Override
 	public void start(Stage stage) throws IOException, URISyntaxException {
-		mainstage = stage;
 		songLibrary = new SongLibrary();
 		model = new MusicPlayerModel(songLibrary);
 		controller = new MusicPlayerController(model);
@@ -178,9 +175,9 @@ public class MusicPlayerView extends Application implements Observer{
         GridPane.setConstraints(resume, 2,0);
         resume.setOnAction(event -> resumeAudio());
 
-        Button stop = new Button("Stop");
-        GridPane.setConstraints(stop, 3,0);
-        stop.setOnAction(event ->  stopAudio());
+        Button skip = new Button("Skip");
+        GridPane.setConstraints(skip, 3,0);
+        skip.setOnAction(event ->  skipAudio());
 
         Button restart = new Button("Restart");
         GridPane.setConstraints(restart, 4,0);
@@ -196,7 +193,7 @@ public class MusicPlayerView extends Application implements Observer{
 //        GridPane.setConstraints(time, 6,0);
 //        time.textProperty().bind(player.currentTimeProperty().asString("%.4s") );
 
-        gp.getChildren().addAll(play, pause, resume, stop, restart, jump);
+        gp.getChildren().addAll(play, pause, resume, skip, restart, jump);
         
         return gp;
 	}
@@ -208,22 +205,41 @@ public class MusicPlayerView extends Application implements Observer{
 
     //pause audio
     public  void pauseAudio() {
+    	// media player
+    	/*
         if (player.getStatus().equals(Status.PAUSED)) {
             System.out.println("audio is already paused");
             return;
         }
         player.pause();
+        */
+    	
+    	// back-end
+    	if (controller.isPlayingSong()) {
+    		controller.pause();
+    	} else {
+    		System.out.println("audio is already paused");
+    	}
     }
 
     //resume audio
     public void resumeAudio()
-    {
+    {	// media player
+    	/*
         if (player.getStatus().equals(Status.PLAYING))
         {
             System.out.println("Audio is already playing");
             return;
         }
         playAudio();
+       	*/
+    	
+    	// back-end
+    	if (!controller.isPlayingSong()) {
+    		controller.resume();
+    	} else {
+    		System.out.println("audio is already playing");
+    	}
     }
 
     //restart audio
@@ -233,8 +249,9 @@ public class MusicPlayerView extends Application implements Observer{
     }
 
     // stop audio
-    public void stopAudio() {
-       player.stop();
+    public void skipAudio() {
+       //player.stop();
+    	controller.skip();
     }
 
     //jump by c millis 
@@ -428,31 +445,9 @@ public class MusicPlayerView extends Application implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		VBox root = new VBox();
-		HBox hbox = new HBox();
-		ImageView image = setAlbumArt(controller.getCurSong());
-		System.out.println(controller.getCurSong());
+		System.out.println("updated");
 		
-		hbox.setPadding(new Insets(10, 10, 10, 10));
 		
-		ScrollPane songView = playListView();
-		songView.setPrefViewportWidth(SCROLL_MAX_WIDTH);
-		songView.setPrefViewportHeight(SCROLL_MAX_HEIGHT);
-		
-		hbox.getChildren().addAll(image, songView);
-		
-		VBox curSongView = showCurSong();
-		GridPane controls = setButtons();
-		
-		curSongView.setAlignment(Pos.CENTER);
-		controls.setAlignment(Pos.CENTER);
-		root.getChildren().addAll(hbox, curSongView, controls);
-//		root.getChildren().add(new MediaView(player));
-		
-		Scene scene = new Scene(root);
-		mainstage.setScene(scene);
-		mainstage.setTitle("Music Player");
-		mainstage.show();
 	}
 
 }
