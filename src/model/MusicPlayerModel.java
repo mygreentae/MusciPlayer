@@ -250,6 +250,7 @@ public class MusicPlayerModel {
 	 * @param song, the Song we want to change to.
 	 */
 	public void changeSong(Song song) {
+		
 		// if a song is playing, stop it
 		if (curSong != null) {
 			curSong.stop();
