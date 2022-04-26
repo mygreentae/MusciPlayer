@@ -65,7 +65,21 @@ public class SongLibrary {
 					
 				}
 			}
+		} 
+		File dir2 = new File("Artwork");
+		File[] paths2 = dir2.listFiles();
+		System.out.println(paths.length);
+		if (paths2 != null) {
+			for (File p : paths2) {
+				for (Song song : songLibrary) {
+					if (p.toString().contains(song.getName())){
+						song.setCover(p.toString());
+					}
+				}
+			}
 		}
+			
+		
 //		//create songs
 //		Song industryBaby = new Song("Industry Baby", "Lil Nas X", "pop");
 //		industryBaby.setAudioStream("Audios/Industry-Baby.wav");
