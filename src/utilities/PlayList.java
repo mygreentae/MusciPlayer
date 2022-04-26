@@ -14,14 +14,42 @@ import song.Song;
  * 
  * @author Jackson
  *
- *	A data structure used to hold Song objects in a list that can be shuffle played.
- *	Uses indexing ???? to index through and play songs. Maybe does not need to play 
- *	Songs as it returns just an ArrayList Order in which to play/show them. Must
- *	rely on other classes in order to play songs correctly i think.
+ *	A data structure used to hold Song objects in a list that 
+ *	can be shuffle played. Utilizes indexing feature of Song 
+ *	in order to play PlayList Songs. 
+ *	
+ *	NOTE: This class doesn't actually use indexing to go 
+ *	through the Songs, it uses a for each loop. To be able to 
+ *	play a PlayList from a specific Song, Song.getIndex() is 
+ *	required, but is handled in the Model.
+ *	
+ *	
+ *	Properties: 
+ *	name: 
+ *	The name of the PlayList, which is assigned when initialized.
  *
- *	GUI: Only shows songList, its just the order that Songs were added.
- *	Controller: Uses playlist and its own currentSong variable probably.
- *	5
+ *	size:
+ *	The length of the PlayList, 0 when initialized.
+ *	
+ *	songList:
+ *	The list of Songs added to the PlayList. Empty ArrayList
+ *	when initialized. This ArrayList keeps the Songs in the 
+ *	order that they were added to the PlayList.
+ *	
+ *	shuffle:
+ *	This is also an ArrayList of Songs. It's just a temporary
+ *	variable that is used to shuffle a PlayList. It is also used
+ *	in playFirst() but I really don't think I need that function.
+ *
+ *	playOrder:
+ *	The order in which the songs will be played. It is used in
+ *	shuffle because playOrder will be the random order for the 
+ *	PlayList. Also in playFirst() but again, don't think we 
+ *	need it.
+ *	
+ *	genres:
+ *	A HashMap of Strings mapped to Integers, for how many songs
+ *	of a specific genre are in the PlayList.
  */
 public class PlayList {
 	
@@ -32,10 +60,9 @@ public class PlayList {
 	// playing songs;
 	private ArrayList<Song> shuffle;
 	private ArrayList<Song> playOrder;
-	private Song currentSong; //might have to be an int
 	
-	//metadata
-	//Hashmap that allows person to know what dominant genre a playlist is
+	// metadata
+	// HashMap that allows person to know what dominant genre a PlayList is
 	// add meta data to Model to track user data
 	private HashMap<String, Integer> genres;
 	
@@ -78,7 +105,7 @@ public class PlayList {
 	}
 	
 	/**
-	 * Adds a song to the Playlist
+	 * Adds a song to the PlayList
 	 * 
 	 * @param song, the Song to be added to the PlayList
 	 */
@@ -115,7 +142,6 @@ public class PlayList {
 	     PlayList.decrementValue(genres, genre);
 	}
 	
-	
 	/**
 	 * Returns if the PlayList contains the Song
 	 * 
@@ -131,9 +157,9 @@ public class PlayList {
 	}
 	
 	/**
-	 * Returns the genre metadata about the Playlist
+	 * Returns the genre metadata about the PlayList
 	 * 
-	 * @return the genre's within the Playlist
+	 * @return the genre's within the PlayList
 	 */
 	public Map<String, Integer> getGenres(){
 		return genres;
@@ -187,6 +213,7 @@ public class PlayList {
 	
 	/**
 	 * Returns the order in which to play the songs
+	 * 
 	 * @return a List of Songs to play
 	 */
 	public ArrayList<Song> getPlayOrder(){
@@ -200,7 +227,7 @@ public class PlayList {
 	/**
 	 * Increments the value of a key in a Map
 	 * 
-	 * @param <K>, Generics for keys 
+	 * @param <K>, Generic for keys 
 	 * @param map, the Map
 	 * @param key, the specific key whose value is to be incremented
 	 */
@@ -223,7 +250,7 @@ public class PlayList {
 	/**
 	 * Decrements the value of a key in a Map
 	 * 
-	 * @param <K>, Generics for keys 
+	 * @param <K>, Generic for keys 
 	 * @param map, the Map
 	 * @param key, the specific key whose value is to be decremented
 	 */

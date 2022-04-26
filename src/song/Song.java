@@ -43,6 +43,7 @@ public class Song {
 	private double durationInSeconds; // in seconds, needed for song play delay
 	private ArrayList<String> lyrics;
 	private boolean isPlaying; 
+	private int framePosition;
 	
 	//List shit
 	private int index;
@@ -62,6 +63,7 @@ public class Song {
 		this.artist = artist; 
 		this.genre = genre;
 		this.index = 0;
+		this.framePosition = 0;
 		this.favorite = false;
 	}
 	
@@ -125,7 +127,6 @@ public class Song {
 	}
 	
 	/**
-
 	 * Sets the Song to isPlaying status, dont think we need
 	 */
 	public void setPlaying() {
@@ -150,6 +151,7 @@ public class Song {
 	
 	/**
 	 * Returns the Song's index
+	 * 
 	 * @return the Song's index
 	 */
 	public int getIndex() {
@@ -158,6 +160,7 @@ public class Song {
 	
 	/**
 	 * Sets the Song's index to whatever parameter is passed.
+	 * 
 	 * @param index, an int indicating the Song's index in a List
 	 */
 	public void setIndex(int index) {
@@ -216,8 +219,6 @@ public class Song {
 	public double getDuration() {
 		return durationInSeconds;
 	}
-	
-	
 	
 	/*
 	 * will probably have to be used in gui function like displayCover() or something
@@ -284,8 +285,24 @@ public class Song {
 	 */
 	public void pause() {
 		audio.stop();
+		this.framePosition = audio.getFramePosition();
 	}
 	
+	/**
+	 * Theoretically resumes a song from the FramePosition it was paused from
+	 */
+	public void resume() {
+		audio.setFramePosition(framePosition);
+		int length = audio.getFrameLength();
+		double resumeTime = (1 - (framePosition / length)) * durationInSeconds;
+		audio.start();
+		try {
+			TimeUnit.SECONDS.sleep((long) resumeTime + 1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Adds this Song to a playList, also probably not needed

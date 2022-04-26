@@ -82,8 +82,8 @@ public class MusicPlayerView extends Application {
 		File file = new File("Audios/400km.wav");
 		String mediaURL = file.toURI().toString();
 
-		Media media = new Media(mediaURL);
-		player = new MediaPlayer(media);
+		//Media media = new Media(mediaURL);
+		//player = new MediaPlayer(media);
 		
 		
 		

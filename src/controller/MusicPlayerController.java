@@ -8,19 +8,47 @@ import song.Song;
 import utilities.PlayList;
 import utilities.Queue;
 
+
+
+/**
+ * @author Seth/Jackson
+ * 	
+ * Holds a Song and all relevant information relating to it. Has dual functions 
+ * mentioned below. ArrayList compatible, Linked List compatible, 
+ * 
+ * Properties:
+ * name, artist, coverImage, duration, lyrics?, audio file,
+ * 
+ * Linked List Compatibility:
+ * Utilizes .prev and .next in order to use a "live" Queue System
+ * 
+ * ArrayList Compatibility:
+ * Utilizes an index so that it is usable in Lists.
+ * 
+ * Metadata: 
+ * favorite used in model as special playlist
+ * genre used as recommended songs metadata
+ *
+ */
 public class MusicPlayerController {
 
 	
 	private MusicPlayerModel model; 
 	
 	/**
-	 * ALL PLAY FUNCTIONS MIGHT haVE TO BE THREADS
-	 * @param model
+	 * Creates a model
+	 * 
+	 * @param model, the model to be controlled. 
 	 */
 	public MusicPlayerController(MusicPlayerModel model) {
 		this.model = model; 
 	}
 	
+	/**
+	 * Adds a Song to the Queue
+	 * 
+	 * @param song, the Song to be added
+	 */
 	public void addToQueue(Song song) {
 		model.addToQueue(song);
 	}
@@ -105,6 +133,7 @@ public class MusicPlayerController {
 	
 	/**
 	 * Returns the current Song
+	 * 
 	 * @return the current Song
 	 */
 	public Song getCurSong() {
@@ -112,26 +141,37 @@ public class MusicPlayerController {
 	}
 	
 	/**
-	 * Returns the currentQueue
-	 * @return
+	 * Returns the current Queue
+	 * 
+	 * @return the current Queue, null if not playing Queue
 	 */
 	public Queue getCurQueue() {
 		return model.getCurQueue();
 	}
 	
+	/**
+	 * Returns the current PlayList
+	 * 
+	 * @return the current PlayList, null if not playing PlayList
+	 */
 	public PlayList getCurPlaylist() {
 		return model.getCurPlaylist();
 	}
 	
+	/**
+	 * Returns all PlayList Objects in model
+	 * 
+	 * @return an ArrayList of all PlayLists
+	 */
 	public ArrayList<PlayList> getAllPlaylists(){
 		return model.getAllPlaylists();
 	}
 	
 	/**
+	 * Returns the specific PlayList based on the name
 	 * 
-	 * @param name
-	 * @return
-	 * @throws IllegalArgumentException
+	 * @param name, the name of the desired PlayList
+	 * @return the corresponding PlayList
 	 */
 	public PlayList getPlaylist(String name) throws IllegalArgumentException{
 		PlayList playlist = model.getPlaylist(name);
@@ -143,21 +183,37 @@ public class MusicPlayerController {
 	}
 
 	/**
+	 * Returns a PlayList of Favorite Songs
 	 * 
-	 * @return
+	 * @return a PlayList of Favorite Songs
 	 */
 	public PlayList getFavorites(){
 		return model.getFavorites();
 	}
 	
+	/**
+	 * Returns a PlayList of Recommended Songs.
+	 * 
+	 * @return the PlayList of Recommended Songs.
+	 */
 	public PlayList getRecommended(){
 		return model.getRecommended();
 	}
 	
+	/**
+	 * Returns true if Queue is Playing
+	 * 
+	 * @return true if Queue is Playing
+	 */
 	public boolean isPlayingQueue() {
 		return model.isPlayingQueue();
 	}
 	
+	/**
+	 * Returns true if a PlayList is Playing
+	 * 
+	 * @return true if a PlayList is Playing
+	 */
 	public boolean isPlayingPlaylist() {
 		return model.isPlayingPlaylist();
 	}
@@ -168,39 +224,56 @@ public class MusicPlayerController {
 	 * All of the create/remove things methods
 	 */
 	
-	public void removePlaylist(PlayList playlist) {
-		model.removePlaylist(playlist);;
-	}
-	
-	public void addToFavorites(Song song) {
-		model.addToFavorites(song);
-	}
-	
-	public void removeFromFavorites(Song song) {
-		model.removeFromFavorites(song);
-	}
-	
-	
 	/**
-	 * make a playlist function, it will be a new playlist and be empty
+	 * Creates a PlayList with name, name.
+	 * 
+	 * @param name, the name of the PlayList
 	 */
 	public void makePlaylist(String name) {
 		PlayList newPlaylist = new PlayList(name);
 		model.addPlaylist(newPlaylist);
-		
 	}
 	
 	/**
+	 * Removes a PlayList to the model
 	 * 
-	 * @param playlist
-	 * @param song
+	 * @param playlist, the PlayList to be removed
+	 */
+	public void removePlaylist(PlayList playlist) {
+		model.removePlaylist(playlist);;
+	}
+	
+	/**
+	 * Adds a Song to the favorites PlayList
+	 * 
+	 * @param song, the Song to be added
+	 */
+	public void addToFavorites(Song song) {
+		model.addToFavorites(song);
+	}
+	
+	/**
+	 * Removes a Song to the favorites PlayList
+	 * 
+	 * @param song, the Song to be removed
+	 */
+	public void removeFromFavorites(Song song) {
+		model.removeFromFavorites(song);
+	}
+	
+	/**
+	 * Adds a song to a PlayList
+	 * 
+	 * @param playlist, selected PlayList
+	 * @param song, Song to be added
 	 */
 	public void addToPlaylist(PlayList playlist, Song song) {
 		model.addToPlaylist(playlist, song);
 	}
 	
 	/**
-	 * 
+	 * Searches for a specific Song based on a passed String name.
+	 *
 	 * @param name, the name of the Song you want
 	 * @return returns the song if its found
 	 * @throws IllegalArgumentException if song is not found
@@ -214,29 +287,30 @@ public class MusicPlayerController {
 		
 	}
 	
+	
 	/*
 	 * play, pause skip, all need to be handled differently based on threading for 
 	 * Playlists and Queues, so thats a tomorrow problem, skip works tho
 	 */
-	
-	
-	
-	
 	 
-	//
+	/**
+	 * Doesn't call the Model's function, it just handles it. 
+	 * Might be bad design
+	 */
 	public void pause() {
 		model.getCurSong().pause();
 	}
 	
 	/**
-	 * 
+	 * Doesn't call the Model's function, it just handles it. 
+	 * Might be bad design
 	 */
 	public void resume() {
 		model.getCurSong().play();
 	}
 	
 	/**
-	 * Skips the current Song
+	 * Skips a song
 	 */
 	public void skip() {
 		model.skip();
