@@ -95,7 +95,15 @@ public class Song {
 	}
 	
 	/**
-	 * Returns the cover Image
+	 * Sets the cover Image URL
+	 * 
+	 */
+	public void setCover(String url) {
+		cover = url;
+	}
+	
+	/**
+	 * Returns the cover Image URL
 	 * 
 	 * @return the Song  over
 	 */
