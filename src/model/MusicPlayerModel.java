@@ -61,7 +61,6 @@ import utilities.SongLibrary;
  */
 @SuppressWarnings("deprecation")
 public class MusicPlayerModel extends Observable{
-
 	
 	private SongLibrary songLibrary;
 	
@@ -662,6 +661,7 @@ public class MusicPlayerModel extends Observable{
 		}
 	}
 	
+	
 	public void restart() {
 		if (playingQueue) { 
 			curSong.stop();
@@ -677,6 +677,51 @@ public class MusicPlayerModel extends Observable{
 		}
 	}
 	
+	/**
+	 * Sorts either the songLibrary or a PlayList by Artist
+	 */
+	public void sortListByArtist() {
+		if (playingPlaylist) {
+			ArrayList<Song> list = currentPlaylist.getSongList();
+			//songLibrary.sortArtists();
+		} else {
+			ArrayList<Song> list = songLibrary.getSongs();
+			//do the thing
+			songLibrary.setSongs(list);
+		}
+	}
+	
+	/**
+	 * Sorts either the songLibrary or a PlayList by Title
+	 */
+	public void sortListByTitle() {
+		if (playingPlaylist) {
+			ArrayList<Song> list = currentPlaylist.getSongList();
+			//do the thing
+			currentPlaylist.sortPlaylist(list);
+		} else {
+			ArrayList<Song> list = songLibrary.getSongs();
+			//do the thing
+			songLibrary.setSongs(list);	
+		}
+	}
+
+	/**
+	 * Sorts either the songLibrary or a PlayList by Date
+	 */
+	public void sortListByDate() {
+		if (playingPlaylist) {
+			ArrayList<Song> list = currentPlaylist.getSongList();
+			//do the thing
+			currentPlaylist.sortPlaylist(list);
+			
+		} else {
+			ArrayList<Song> list = songLibrary.getSongs();
+			// do the thing
+			songLibrary.setSongs(list);	
+			
+		}
+	}
 	
 	/**
 	 * Stops any running threads

@@ -224,6 +224,15 @@ public class PlayList {
 		}
 	}
 	
+	/*
+	 * Takes in a differently sorted ArrayList<Song> 
+	 */
+	public void sortPlaylist(ArrayList<Song> list) {
+		this.songList = list;
+	}
+	
+	
+	
 	/**
 	 * Increments the value of a key in a Map
 	 * 
