@@ -403,7 +403,8 @@ public class MusicPlayerView extends Application implements Observer{
     		System.out.println(curSong.getCover().substring(4));
     		System.out.println("curSong cover");
     		//imageView.setImage(new Image("images/monteroArt.jpg"));
-    		//imageView.setImage(new Image(curSong.getCover().substring(4).strip())); // change
+    		//imageView.setImage(new Image("images/monteroArt.jpg"));
+    		imageView.setImage(new Image(curSong.getCover().substring(4).strip())); // change
     	}
     	
     	imageView.setFitHeight(400);
