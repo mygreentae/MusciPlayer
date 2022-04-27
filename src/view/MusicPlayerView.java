@@ -26,9 +26,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -286,6 +289,27 @@ public class MusicPlayerView extends Application implements Observer{
 			}
 		};
 		
+		EventHandler<MouseEvent> highlightSong = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				Node source = (Node)mouseEvent.getTarget();
+				SongTile t = (SongTile)source;
+				Background highlight = new Background(new BackgroundFill(Color.RED, new CornerRadii(0), Insets.EMPTY));
+				t.setBackground(highlight);
+				//controller.changeSong(song);
+			}
+		};
+		
+		EventHandler<MouseEvent> unhighlightSong = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				Node source = (Node)mouseEvent.getTarget();
+				SongTile t = (SongTile)source;
+				Background highlight = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0), Insets.EMPTY));
+				t.setBackground(highlight);
+				//controller.changeSong(song);
+			}
+		};
 		
 		for (int i = 0; i < songList.size(); i++) {
 			SongTile songTile = new SongTile(songList.get(i));
@@ -293,6 +317,10 @@ public class MusicPlayerView extends Application implements Observer{
 			songTile.getTitle().setText(songList.get(i).getName());
 			songTile.getArtist().setText(songList.get(i).getArtist());
 			songTile.setOnMouseClicked(playSong);
+			songTile.setOnMouseEntered(highlightSong);
+			songTile.setOnMouseExited(unhighlightSong);
+			
+			//songTile.setOnMo
 			songView.add(songTile, 1, i);
 		}
 		scroller.setContent(songView);
@@ -337,7 +365,7 @@ public class MusicPlayerView extends Application implements Observer{
     	else {
     		System.out.println(curSong.getCover().substring(4));
     		System.out.println("curSong cover");
-    		imageView.setImage(new Image("images/industrybabyArt.jpg"));
+    		//imageView.setImage(new Image("images/monteroArt.jpg"));
     		//imageView.setImage(new Image(curSong.getCover().substring(4).strip())); // change
     	}
     	
@@ -358,7 +386,7 @@ public class MusicPlayerView extends Application implements Observer{
 		private Text title;
 		private Text artist;
 		
-		private BorderPane border;
+		public BorderPane border;
 		private Rectangle indexRect;
 		private Rectangle titleRect;
 		private Rectangle artistRect;
