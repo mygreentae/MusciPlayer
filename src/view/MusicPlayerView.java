@@ -75,6 +75,7 @@ public class MusicPlayerView extends Application implements Observer{
 	private static final int SCROLL_MAX_WIDTH = 250;
 	private static Stage mainStage;
 	
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -227,7 +228,8 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	//play audio 
     public void playAudio() {
-        player.play();
+        //player.play();
+    	controller.changeSong(controller.getCurSong());
     }
 
     //pause audio
@@ -314,7 +316,7 @@ public class MusicPlayerView extends Application implements Observer{
 				Node source = (Node)mouseEvent.getTarget();
 				Node p = source.getParent();
 				Song song = ((SongTile)source).getSong();
-				controller.changeSong(song);	
+				controller.changeSong(song);
 			}
 		};
 		
@@ -405,9 +407,12 @@ public class MusicPlayerView extends Application implements Observer{
     		//imageView.setImage(new Image("images/monteroArt.jpg"));
     		//imageView.setImage(new Image("images/monteroArt.jpg"));
     		try {
-    			imageView.setImage(new Image(curSong.getCover().substring(4).strip()));
+    			Image i = new Image(curSong.getCover().substring(4).strip());
+    			imageView.setImage(i);
+    			System.out.println("image pat");
+    			System.out.println(i.getUrl());
     		} catch (IllegalArgumentException e) {
-    			System.out.println();
+    			System.out.println("error with album image");
     		}
     		// change
     	}
