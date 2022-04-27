@@ -648,6 +648,9 @@ public class MusicPlayerModel extends Observable{
 					}
 				}
 				playQueue(newQueue);
+			} else {
+				setChanged();
+				notifyObservers();
 			}
 			
 		} else if (playingPlaylist) {

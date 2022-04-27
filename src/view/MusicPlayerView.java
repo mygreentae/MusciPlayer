@@ -284,8 +284,10 @@ public class MusicPlayerView extends Application implements Observer{
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				Node source = (Node)mouseEvent.getTarget();
+				Node p = source.getParent();
 				Song song = ((SongTile)source).getSong();
 				controller.changeSong(song);
+				
 			}
 		};
 		
@@ -294,8 +296,9 @@ public class MusicPlayerView extends Application implements Observer{
 			public void handle(MouseEvent mouseEvent) {
 				Node source = (Node)mouseEvent.getTarget();
 				SongTile t = (SongTile)source;
-				Background highlight = new Background(new BackgroundFill(Color.RED, new CornerRadii(0), Insets.EMPTY));
+				Background highlight = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
 				t.setBackground(highlight);
+				t.getTitle().setFill(Color.AQUA);
 				//controller.changeSong(song);
 			}
 		};
@@ -307,6 +310,13 @@ public class MusicPlayerView extends Application implements Observer{
 				SongTile t = (SongTile)source;
 				Background highlight = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0), Insets.EMPTY));
 				t.setBackground(highlight);
+				t.getTitle().setFill(Color.BLACK);
+				
+				if (t.getSong() == controller.getCurSong()) {
+					System.out.println("song is playing");
+					Background highlight2 = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
+					t.setBackground(highlight2);
+				};			
 				//controller.changeSong(song);
 			}
 		};
@@ -316,6 +326,8 @@ public class MusicPlayerView extends Application implements Observer{
 			songTile.getIndex().setText(Integer.toString(i+1));
 			songTile.getTitle().setText(songList.get(i).getName());
 			songTile.getArtist().setText(songList.get(i).getArtist());
+			
+			songTile.setOnMouseClicked(playSong);
 			songTile.setOnMouseClicked(playSong);
 			songTile.setOnMouseEntered(highlightSong);
 			songTile.setOnMouseExited(unhighlightSong);
@@ -391,6 +403,11 @@ public class MusicPlayerView extends Application implements Observer{
 		private Rectangle titleRect;
 		private Rectangle artistRect;
 		
+		private Rectangle playRect1;
+		private Rectangle playRect2;
+		private Rectangle playRect3;
+		
+		
 		private StackPane indexStack;
 		private StackPane titleStack;
 		private StackPane artistStack;
@@ -403,10 +420,20 @@ public class MusicPlayerView extends Application implements Observer{
 			title = new Text();
 			artist = new Text();
 			
+			
 			border = new BorderPane();
+			
+			if (song == controller.getCurSong()) {
+				Background highlight = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
+				this.setBackground(highlight);
+			};
+			
 			indexRect = new Rectangle();
 			titleRect = new Rectangle();
 			artistRect = new Rectangle();
+			playRect1 = new Rectangle();
+			playRect2 = new Rectangle();
+			playRect3 = new Rectangle();
 			
 			indexStack = new StackPane();
 			titleStack = new StackPane();
