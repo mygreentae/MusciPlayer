@@ -409,7 +409,7 @@ public class MusicPlayerView extends Application implements Observer{
     		try {
     			Image i = new Image(curSong.getCover().substring(4).strip());
     			imageView.setImage(i);
-    			System.out.println("image pat");
+    			System.out.println("image path");
     			System.out.println(i.getUrl());
     		} catch (IllegalArgumentException e) {
     			System.out.println("error with album image");
@@ -564,7 +564,7 @@ public class MusicPlayerView extends Application implements Observer{
 //		imageView.setFitWidth(400);
 		
 		ImageView image = setAlbumArt(controller.getCurSong());
-		
+
 		hbox.setPadding(new Insets(10, 10, 10, 10));
 		
 		ScrollPane songView = playListView();
