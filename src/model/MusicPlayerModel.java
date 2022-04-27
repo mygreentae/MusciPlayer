@@ -59,6 +59,7 @@ import utilities.SongLibrary;
  * allPlaylists.
  *
  */
+@SuppressWarnings("deprecation")
 public class MusicPlayerModel extends Observable{
 
 	

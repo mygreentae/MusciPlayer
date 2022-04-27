@@ -69,7 +69,7 @@ public class SongLibrary {
 		
 		// this works, arts have to have the name formatted to match the name 
 		// of the song, including spaces and weird stuff
-		File dir2 = new File("Artwork");
+		File dir2 = new File("src/images");
 		File[] paths2 = dir2.listFiles();
 		System.out.println(paths.length);
 		if (paths2 != null) {
