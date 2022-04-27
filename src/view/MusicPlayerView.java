@@ -1,7 +1,7 @@
 package view;
 
 
-import java.awt.Event;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -25,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -45,6 +46,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -53,6 +55,8 @@ import javafx.util.Duration;
 import model.MusicPlayerModel;
 import song.Song;
 import utilities.PlayList;
+import javafx.scene.control.ProgressBar;
+
 
 import utilities.SongLibrary;
 
@@ -130,8 +134,6 @@ public class MusicPlayerView extends Application implements Observer{
 		hbox.setPadding(new Insets(10, 10, 10, 10));
 		
 		
-		
-		
 		ScrollPane songView = playListView();
 		songView.setPrefViewportWidth(SCROLL_MAX_WIDTH);
 		songView.setPrefViewportHeight(SCROLL_MAX_HEIGHT);
@@ -141,11 +143,15 @@ public class MusicPlayerView extends Application implements Observer{
 		VBox curSongView = showCurSong();
 		GridPane controls = setButtons();
 		
+		
+		//MediaBar bar = new MediaBar(player);
+		
 		curSongView.setAlignment(Pos.CENTER);
 		controls.setAlignment(Pos.CENTER);
 		root.getChildren().addAll(hbox, curSongView, controls);
 //		root.getChildren().add(new MediaView(player));
 		
+		//root.getChildren().add(p2);
 		Scene scene = new Scene(root);
 //		scene.setOnKeyReleased(pausePlay);
 		stage.setScene(scene);
@@ -191,22 +197,31 @@ public class MusicPlayerView extends Application implements Observer{
 		GridPane gp = new GridPane();
         gp.setHgap(10);
 
-        Button play = new Button("Play");
-        GridPane.setConstraints(play, 0,0);
-        play.setOnAction(event->  playAudio());
+        // play/pause/resume can all be the same button
+ //       Button play = new Button("Play");
+//        play.setShape(new Circle(15));
+//        GridPane.setConstraints(play, 0,0);
+//        play.setOnAction(event->  playAudio());
 
-        Button pause = new Button("Pause");
+        Button pause = new Button("Play/Pause");
         GridPane.setConstraints(pause, 1,0);
         pause.setOnAction(event -> pauseAudio());
+        if (controller.getCurSong() == null){
+        	pause.setText("Pick Song");
+        }
 
-        Button resume = new Button("Resume");
-        GridPane.setConstraints(resume, 2,0);
-        resume.setOnAction(event -> resumeAudio());
+//        Button resume = new Button("Resume");
+//        resume.setShape(new Circle(15));
+//        GridPane.setConstraints(resume, 2,0);
+//        resume.setOnAction(event -> resumeAudio());
 
+        //right side of play, also need a back button
         Button skip = new Button("Skip");
         GridPane.setConstraints(skip, 3,0);
         skip.setOnAction(event ->  skipAudio());
 
+        
+        //idk what we need these for
         Button restart = new Button("Restart");
         GridPane.setConstraints(restart, 4,0);
         restart.setOnAction(event ->  restartAudio());
@@ -221,7 +236,8 @@ public class MusicPlayerView extends Application implements Observer{
 //        GridPane.setConstraints(time, 6,0);
 //        time.textProperty().bind(player.currentTimeProperty().asString("%.4s") );
 
-        gp.getChildren().addAll(play, pause, resume, skip, restart, jump);
+//        gp.getChildren().addAll(play, pause, resume, skip, restart, jump);
+        gp.getChildren().addAll(pause, skip);
         
         return gp;
 	}
@@ -251,7 +267,7 @@ public class MusicPlayerView extends Application implements Observer{
     	if (controller.isPlayingSong()) {
     		controller.pause();
     	} else {
-    		System.out.println("audio is already paused");
+    		controller.resume();
     	}
     }
 
@@ -277,8 +293,9 @@ public class MusicPlayerView extends Application implements Observer{
 
     //restart audio
     public void restartAudio() {
-        player.seek(Duration.ZERO);
-        playAudio();
+        //player.seek(Duration.ZERO);
+        //playAudio();
+    	controller.restart();
     }
 
     // stop audio

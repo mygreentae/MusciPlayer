@@ -662,6 +662,22 @@ public class MusicPlayerModel extends Observable{
 		}
 	}
 	
+	public void restart() {
+		if (playingQueue) { 
+			curSong.stop();
+			Queue q = new Queue(curSong, true);
+			resumeQueue(q);
+			
+		} else if (playingPlaylist) {
+			curSong.stop();
+			int index = curSong.getIndex();
+			playPlaylist(currentPlaylist, index);
+		} else {
+			return;
+		}
+	}
+	
+	
 	/**
 	 * Stops any running threads
 	 */

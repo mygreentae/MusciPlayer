@@ -329,6 +329,10 @@ public class MusicPlayerController {
 		model.skip();
 	}
 	
+	public void restart() {
+		model.restart();
+	}
+	
 	
 	
 }
