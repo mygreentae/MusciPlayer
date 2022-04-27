@@ -15,7 +15,7 @@ import song.Song;
 
 
 /**
- * @author Leighanna/Jackson
+ * @author Leighanna/Jackson/Paris
  * 	
  * Creates and stores all the Songs that will be used in the Music Player.
  * 
@@ -32,6 +32,7 @@ import song.Song;
  * An ArrayList of all the Songs created when this class is initialized. 
  */
 public class SongLibrary {
+	
 	ArrayList<Song> songLibrary;
 	
 
@@ -122,5 +123,14 @@ public class SongLibrary {
 	 */
 	public ArrayList<Song> getSongs(){
 		return songLibrary;
+	}
+	
+	/**
+	 * Returns the ArrayList of Songs
+	 * 
+	 * @return the ArrayList of Songs
+	 */
+	public void setSongs(ArrayList<Song> list){
+		songLibrary = list;
 	}
 }
