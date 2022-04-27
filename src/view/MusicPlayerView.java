@@ -1,6 +1,7 @@
 package view;
 
 
+import java.awt.Event;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -20,11 +21,14 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -91,8 +95,23 @@ public class MusicPlayerView extends Application implements Observer{
 		//Media media = new Media(mediaURL);
 		//player = new MediaPlayer(media);
 		
-		
-		
+		/*
+		EventHandler<KeyEvent> pausePlay = new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent keyEvent) {
+
+				if (keyEvent.getCode() == KeyCode.SPACE) {
+					if (controller.getCurSong() != null) {
+						if (controller.getCurSong().isPlaying()) {
+							controller.pause();
+						} else {
+							controller.resume();
+						}
+					}
+				}
+			}
+		};
+		*/
 //		Song song = controller.search("400km");
 //		controller.changeSong(song);
 
@@ -109,6 +128,9 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		hbox.setPadding(new Insets(10, 10, 10, 10));
 		
+		
+		
+		
 		ScrollPane songView = playListView();
 		songView.setPrefViewportWidth(SCROLL_MAX_WIDTH);
 		songView.setPrefViewportHeight(SCROLL_MAX_HEIGHT);
@@ -124,6 +146,7 @@ public class MusicPlayerView extends Application implements Observer{
 //		root.getChildren().add(new MediaView(player));
 		
 		Scene scene = new Scene(root);
+//		scene.setOnKeyReleased(pausePlay);
 		stage.setScene(scene);
 		stage.setTitle("Music Player");
 		stage.show();
@@ -187,7 +210,7 @@ public class MusicPlayerView extends Application implements Observer{
         GridPane.setConstraints(restart, 4,0);
         restart.setOnAction(event ->  restartAudio());
 
-        Button jump = new Button("Jump >");
+        Button jump = new Button("Jump");
         GridPane.setConstraints(jump, 5,0);
         jump.setOnAction(event ->  jump(JUMP_BY));
         
@@ -269,6 +292,11 @@ public class MusicPlayerView extends Application implements Observer{
     public void jump(long c) {
         player.seek(player.getCurrentTime().add(Duration.millis(c)));
     }
+    
+    public void makePlayList() {
+    	String name = "";
+    	controller.makePlaylist(name);
+    }
 
 	private ScrollPane playListView() {
 		ScrollPane scroller = new ScrollPane();
@@ -284,8 +312,9 @@ public class MusicPlayerView extends Application implements Observer{
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				Node source = (Node)mouseEvent.getTarget();
+				Node p = source.getParent();
 				Song song = ((SongTile)source).getSong();
-				controller.changeSong(song);
+				controller.changeSong(song);	
 			}
 		};
 		
@@ -294,8 +323,9 @@ public class MusicPlayerView extends Application implements Observer{
 			public void handle(MouseEvent mouseEvent) {
 				Node source = (Node)mouseEvent.getTarget();
 				SongTile t = (SongTile)source;
-				Background highlight = new Background(new BackgroundFill(Color.RED, new CornerRadii(0), Insets.EMPTY));
+				Background highlight = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
 				t.setBackground(highlight);
+				t.getTitle().setFill(Color.AQUA);
 				//controller.changeSong(song);
 			}
 		};
@@ -307,6 +337,12 @@ public class MusicPlayerView extends Application implements Observer{
 				SongTile t = (SongTile)source;
 				Background highlight = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0), Insets.EMPTY));
 				t.setBackground(highlight);
+				t.getTitle().setFill(Color.BLACK);
+				
+				if (t.getSong() == controller.getCurSong()) {
+					Background highlight2 = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
+					t.setBackground(highlight2);
+				};			
 				//controller.changeSong(song);
 			}
 		};
@@ -316,6 +352,7 @@ public class MusicPlayerView extends Application implements Observer{
 			songTile.getIndex().setText(Integer.toString(i+1));
 			songTile.getTitle().setText(songList.get(i).getName());
 			songTile.getArtist().setText(songList.get(i).getArtist());
+			
 			songTile.setOnMouseClicked(playSong);
 			songTile.setOnMouseEntered(highlightSong);
 			songTile.setOnMouseExited(unhighlightSong);
@@ -391,6 +428,11 @@ public class MusicPlayerView extends Application implements Observer{
 		private Rectangle titleRect;
 		private Rectangle artistRect;
 		
+		private Rectangle playRect1;
+		private Rectangle playRect2;
+		private Rectangle playRect3;
+		
+		
 		private StackPane indexStack;
 		private StackPane titleStack;
 		private StackPane artistStack;
@@ -403,10 +445,20 @@ public class MusicPlayerView extends Application implements Observer{
 			title = new Text();
 			artist = new Text();
 			
+			
 			border = new BorderPane();
+			
+			if (song == controller.getCurSong()) {
+				Background highlight = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
+				this.setBackground(highlight);
+			};
+			
 			indexRect = new Rectangle();
 			titleRect = new Rectangle();
 			artistRect = new Rectangle();
+			playRect1 = new Rectangle();
+			playRect2 = new Rectangle();
+			playRect3 = new Rectangle();
 			
 			indexStack = new StackPane();
 			titleStack = new StackPane();

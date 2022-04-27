@@ -184,8 +184,8 @@ public class MusicPlayerModel extends Observable{
 		threads.add(thread);
 		System.out.println("yeet");
 		thread.start();
-		setChanged();
-		notifyObservers();
+		//setChanged();
+		//notifyObservers();
 		
 		System.out.println(curSong.getCover());
 		System.out.println("gonna figure it out later");
@@ -648,6 +648,9 @@ public class MusicPlayerModel extends Observable{
 					}
 				}
 				playQueue(newQueue);
+			} else {
+				setChanged();
+				notifyObservers();
 			}
 			
 		} else if (playingPlaylist) {
