@@ -413,6 +413,7 @@ public class MusicPlayerView extends Application implements Observer{
     			System.out.println(i.getUrl());
     		} catch (IllegalArgumentException e) {
     			System.out.println("error with album image");
+    			imageView.setImage(new Image("images/no-cover-art-found.jpg"));
     		}
     		// change
     	}
