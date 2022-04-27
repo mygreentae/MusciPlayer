@@ -1,0 +1,13 @@
+Industry Baby, Lil Nas X, pop, Audios/Industry-Baby.wav
+Montero, Lil Nas X, pop, Audios/Montero.wav
+Deja Vu, Ateez, k-pop, Audios/Deja-Vu.wav
+Maniac, Stray Kids, k-pop, Audios/Maniac.wav
+Freeze, Stray Kids, k-pop, Audios/Freeze.wav
+yeat, Seth, rap, Audios/yeat.wav
+400km, Han Yo Han, k-rap, Audios/400km.wav
+Error, ASH Island, k-rap, Audios/Error.wav
+Star Trail, SKOLOR, k-rap, Audios/Star-Trail.wav
+YOKAZE, 変態紳士クラブ, j-rap, Audios/YOKAZE.wav
+Routine, Han Yo Han, k-rap, Audios/Routine.wav
+Tired Song, 大张伟, c-pop, Audios/Tired-Song.wav
+I Hate You, SZA, RNB, Audios/I-Hate-You.wav
