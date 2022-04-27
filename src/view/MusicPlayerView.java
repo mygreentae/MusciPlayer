@@ -55,11 +55,8 @@ public class MusicPlayerView extends Application implements Observer{
 	private static MusicPlayerModel model; 
 	private static SongLibrary songLibrary;
 	
-	private static Stage mainstage;
-	
 	private MediaPlayer player;
 	private static final long JUMP_BY = 5000; // this is in milli secs
-
 	
 	private static final int TILE_HEIGHT = 50;
 	private static final int TILE_WIDTH = 100;
@@ -69,7 +66,7 @@ public class MusicPlayerView extends Application implements Observer{
 	private static final int ARTIST_FONT_SIZE = 10;
 	private static final int SCROLL_MAX_HEIGHT = 350;
 	private static final int SCROLL_MAX_WIDTH = 250;
-	
+	private static Stage mainStage;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -78,10 +75,11 @@ public class MusicPlayerView extends Application implements Observer{
 
 	@Override
 	public void start(Stage stage) throws IOException, URISyntaxException {
-		mainstage = stage;
+		mainStage = stage;
 		songLibrary = new SongLibrary();
 		model = new MusicPlayerModel(songLibrary);
 		controller = new MusicPlayerController(model);
+		model.addObserver(this);
 		
 //		URI uri = new URI("");
 		File file = new File("Audios/400km.wav");
@@ -178,9 +176,9 @@ public class MusicPlayerView extends Application implements Observer{
         GridPane.setConstraints(resume, 2,0);
         resume.setOnAction(event -> resumeAudio());
 
-        Button stop = new Button("Stop");
-        GridPane.setConstraints(stop, 3,0);
-        stop.setOnAction(event ->  stopAudio());
+        Button skip = new Button("Skip");
+        GridPane.setConstraints(skip, 3,0);
+        skip.setOnAction(event ->  skipAudio());
 
         Button restart = new Button("Restart");
         GridPane.setConstraints(restart, 4,0);
@@ -196,7 +194,7 @@ public class MusicPlayerView extends Application implements Observer{
 //        GridPane.setConstraints(time, 6,0);
 //        time.textProperty().bind(player.currentTimeProperty().asString("%.4s") );
 
-        gp.getChildren().addAll(play, pause, resume, stop, restart, jump);
+        gp.getChildren().addAll(play, pause, resume, skip, restart, jump);
         
         return gp;
 	}
@@ -208,22 +206,45 @@ public class MusicPlayerView extends Application implements Observer{
 
     //pause audio
     public  void pauseAudio() {
+    	// media player
+    	/*
         if (player.getStatus().equals(Status.PAUSED)) {
             System.out.println("audio is already paused");
             return;
         }
         player.pause();
+        */
+    	
+    	// back-end
+    	
+    	if (controller.getCurSong() == null) {
+    		return;
+    	}
+    	if (controller.isPlayingSong()) {
+    		controller.pause();
+    	} else {
+    		System.out.println("audio is already paused");
+    	}
     }
 
     //resume audio
     public void resumeAudio()
-    {
+    {	// media player
+    	/*
         if (player.getStatus().equals(Status.PLAYING))
         {
             System.out.println("Audio is already playing");
             return;
         }
         playAudio();
+       	*/
+    	
+    	// back-end
+    	if (!controller.isPlayingSong()) {
+    		controller.resume();
+    	} else {
+    		System.out.println("audio is already playing");
+    	}
     }
 
     //restart audio
@@ -233,8 +254,12 @@ public class MusicPlayerView extends Application implements Observer{
     }
 
     // stop audio
-    public void stopAudio() {
-       player.stop();
+    public void skipAudio() {
+    	if (controller.getCurSong() == null) {
+    		return;
+    	}
+       //player.stop();
+    	controller.skip();
     }
 
     //jump by c millis 
@@ -299,6 +324,9 @@ public class MusicPlayerView extends Application implements Observer{
 	}
 
 	private ImageView setAlbumArt(Song curSong) {
+		System.out.println("cursong");
+		System.out.println(curSong);
+		
     	ImageView imageView = new ImageView();
     	if (curSong == null) {
     		imageView.setImage(new Image("images/no-cover-art-found.jpg"));
@@ -307,7 +335,10 @@ public class MusicPlayerView extends Application implements Observer{
     		imageView.setImage(new Image("images/no-cover-art-found.jpg"));
     	} 
     	else {
-    		imageView.setImage(new Image(curSong.getCover())); // change
+    		System.out.println(curSong.getCover().substring(4));
+    		System.out.println("curSong cover");
+    		imageView.setImage(new Image("images/industrybabyArt.jpg"));
+    		//imageView.setImage(new Image(curSong.getCover().substring(4).strip())); // change
     	}
     	
     	imageView.setFitHeight(400);
@@ -428,10 +459,19 @@ public class MusicPlayerView extends Application implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
+		System.out.println("updated");
+		
+		
 		VBox root = new VBox();
 		HBox hbox = new HBox();
+		
+		// get and set cover art
+//		ImageView imageView = new ImageView();
+//		imageView.setImage(new Image("images/no-cover-art-found.jpg"));
+//		imageView.setFitHeight(400);
+//		imageView.setFitWidth(400);
+		
 		ImageView image = setAlbumArt(controller.getCurSong());
-		System.out.println(controller.getCurSong());
 		
 		hbox.setPadding(new Insets(10, 10, 10, 10));
 		
@@ -447,12 +487,10 @@ public class MusicPlayerView extends Application implements Observer{
 		curSongView.setAlignment(Pos.CENTER);
 		controls.setAlignment(Pos.CENTER);
 		root.getChildren().addAll(hbox, curSongView, controls);
-//		root.getChildren().add(new MediaView(player));
 		
 		Scene scene = new Scene(root);
-		mainstage.setScene(scene);
-		mainstage.setTitle("Music Player");
-		mainstage.show();
+		mainStage.setScene(scene);
+		
 	}
 
 }
