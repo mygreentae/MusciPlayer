@@ -75,6 +75,7 @@ public class MusicPlayerView extends Application implements Observer{
 	private static final int SCROLL_MAX_WIDTH = 250;
 	private static Stage mainStage;
 	
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -227,7 +228,8 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	//play audio 
     public void playAudio() {
-        player.play();
+        //player.play();
+    	controller.changeSong(controller.getCurSong());
     }
 
     //pause audio
@@ -314,7 +316,7 @@ public class MusicPlayerView extends Application implements Observer{
 				Node source = (Node)mouseEvent.getTarget();
 				Node p = source.getParent();
 				Song song = ((SongTile)source).getSong();
-				controller.changeSong(song);	
+				controller.changeSong(song);
 			}
 		};
 		
@@ -404,7 +406,16 @@ public class MusicPlayerView extends Application implements Observer{
     		System.out.println("curSong cover");
     		//imageView.setImage(new Image("images/monteroArt.jpg"));
     		//imageView.setImage(new Image("images/monteroArt.jpg"));
-    		imageView.setImage(new Image(curSong.getCover().substring(4).strip())); // change
+    		try {
+    			Image i = new Image(curSong.getCover().substring(4).strip());
+    			imageView.setImage(i);
+    			System.out.println("image path");
+    			System.out.println(i.getUrl());
+    		} catch (IllegalArgumentException e) {
+    			System.out.println("error with album image");
+    			imageView.setImage(new Image("images/no-cover-art-found.jpg"));
+    		}
+    		// change
     	}
     	
     	imageView.setFitHeight(400);
@@ -553,7 +564,7 @@ public class MusicPlayerView extends Application implements Observer{
 //		imageView.setFitWidth(400);
 		
 		ImageView image = setAlbumArt(controller.getCurSong());
-		
+
 		hbox.setPadding(new Insets(10, 10, 10, 10));
 		
 		ScrollPane songView = playListView();
