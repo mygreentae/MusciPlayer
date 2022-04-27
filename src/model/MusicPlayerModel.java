@@ -731,5 +731,47 @@ public class MusicPlayerModel extends Observable{
 			thread.stop();
 		}
 	}
+	/**
+	 * Sorts the songLibrary by song Name
+	 */
+	public ArrayList<Song> sortTitle(ArrayList<Song> songList){
+		
+		ArrayList<Song> tempList = new ArrayList<Song>();
+		tempList.add(songList.get(0));
+		//insertion sort
+		for(int i = 1; i < songList.size(); i++) {
+			for(int j = 0; j < tempList.size(); j++) {
+				try {
+					if(tempList.get(j).getName().compareTo(songList.get(i).getName()) < 0) {
+						tempList.add(j + 1, songList.get(i));
+					}
+				} catch(Exception IndexOutOfBoundsException) {
+					tempList.add(songList.get(i));
+				}
+			}
+		}
+		return tempList;
+	}
 	
+	/**
+	 * Sorts the songLibrary by song Artist
+	 */
+	public ArrayList<Song> sortArtist(ArrayList<Song> songList){
+		
+		ArrayList<Song> tempList = new ArrayList<Song>();
+		tempList.add(songList.get(0));
+		//insertion sort
+		for(int i = 1; i < songList.size(); i++) {
+			for(int j = 0; j < tempList.size(); j++) {
+				try {
+					if(tempList.get(j).getArtist().compareTo(songList.get(i).getArtist()) < 0) {
+						tempList.add(j + 1, songList.get(i));
+					}
+				} catch(Exception IndexOutOfBoundsException) {
+					tempList.add(songList.get(i));
+				}
+			}
+		}
+		return tempList;
+	}
 }
