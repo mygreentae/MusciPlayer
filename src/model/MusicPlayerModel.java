@@ -159,6 +159,39 @@ public class MusicPlayerModel extends Observable{
 		System.out.println("gonna figure it out later");
 	}
 	
+	public void resumeQueue(Queue queue) {
+		//stops other songs playing
+		stopThreads();
+		currentQueue = queue;
+		currentPlaylist = null;
+		playingQueue = true;
+		playingPlaylist = false;
+    	curSong = queue.getCur();
+		Runnable runnable =
+			    new Runnable(){
+			        public void run(){
+			        	while (curSong != null) {
+			    			curSong.play();
+			    			curSong.stop();
+			    			queue.next();
+			    			curSong = queue.getCur();
+			    		}  
+			        }
+			    };
+			  
+		Thread thread = new Thread(runnable);
+		threads.add(thread);
+		System.out.println("yeet");
+		thread.start();
+		setChanged();
+		notifyObservers();
+		
+		System.out.println(curSong.getCover());
+		System.out.println("gonna figure it out later");
+	}
+	
+	
+	
 	/**
 	 * Starts playing a PlayList,
 	 * 
@@ -569,6 +602,20 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	
+	/*
+	 * play, pause skip, all need to be handled differently based on threading for 
+	 * Playlists and Queues, so thats a tomorrow problem, skip works tho
+	 */
+	 
+	/**
+	 * Doesn't call the Model's function, it just handles it. 
+	 * Might be bad design
+	 */
+	public void pause() {
+		curSong.pause();
+	}
+	
+	
 	
 	/**
 	 * Doesn't call the Model's function, it just handles it. 
@@ -577,10 +624,9 @@ public class MusicPlayerModel extends Observable{
 	 * 
 	 */
 	public void resume() {
-		Song countSong = curSong.getNext();
 		if (playingQueue) {
-			Queue newQueue = new Queue(countSong, true);
-			playQueue(newQueue);
+			Queue newQueue = new Queue(curSong, true);
+			resumeQueue(newQueue);
 		}
 	}
 	

@@ -311,7 +311,7 @@ public class MusicPlayerController {
 	 * Might be bad design
 	 */
 	public void pause() {
-		model.getCurSong().pause();
+		model.pause();
 	}
 	
 	/**
