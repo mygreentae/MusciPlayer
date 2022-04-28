@@ -131,6 +131,7 @@ public class MusicPlayerController {
      * give to GUI
 	 */
 	
+<<<<<<< HEAD
 	
 	/**
 	 * Used to check if buttons can actually do anything in GUI
@@ -147,6 +148,10 @@ public class MusicPlayerController {
 	/**
 	 * Returns the current Song
 	 * 
+=======
+	/**
+	 * Returns the current Song
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 * @return the current Song
 	 */
 	public Song getCurSong() {
@@ -232,10 +237,6 @@ public class MusicPlayerController {
 	}
 	
 	
-	
-	/*
-	 * All of the create/remove things methods
-	 */
 	
 	/**
 	 * Creates a PlayList with name, name.

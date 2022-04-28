@@ -135,6 +135,10 @@ public class Song {
 	}
 	
 	/**
+<<<<<<< HEAD
+=======
+
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 * Sets the Song to isPlaying status, dont think we need
 	 */
 	public void setPlaying() {

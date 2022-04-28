@@ -3,7 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+<<<<<<< HEAD
 import java.util.Observable;
+=======
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -94,8 +97,12 @@ public class MusicPlayerModel extends Observable{
 		recommended = new PlayList("Recommended");
 		threads = new ArrayList<Thread>();
 		metadata = new HashMap<String, Integer>();
+<<<<<<< HEAD
 		
 		createRecommended(); //creates recommended songs
+=======
+		createRecommended();
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 		
 	}
 	
@@ -233,7 +240,11 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * Starts playing a PlayList from a song. unsure if this works
+=======
+	 * Starts playing a Playlist from a song. unsure if this works
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 * how intended
 	 * 
 	 * @param playlist, the PlayList to be played
@@ -273,8 +284,14 @@ public class MusicPlayerModel extends Observable{
 		notifyObservers();
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Starts playing a PlayList from a song at a specific index.
+=======
+	
+	/**
+	 * Starts playing a Playlist from a song at a specific index.
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 * 
 	 * @param playlist, the PlayList to be played
 	 */
@@ -313,10 +330,16 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * Shuffles a PlayList 
 	 * 
 	 * @param playlist, the PlayList to be shuffled
 	 * @return the PlayList after shuffling
+=======
+	 * Method s
+	 * @param playlist
+	 * @return
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 */
 	public PlayList shufflePlayList(PlayList playlist) {
 		playlist.shuffle();
@@ -366,6 +389,7 @@ public class MusicPlayerModel extends Observable{
 	 */
 	
 	/**
+<<<<<<< HEAD
 	 * Used to check if buttons can actually do anything in GUI
 	 * For example, if isPlayingSong(), then the play button shouldnt 
 	 * do anything, but if the song is paused, this should be false.
@@ -379,6 +403,8 @@ public class MusicPlayerModel extends Observable{
 	
 	
 	/**
+=======
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 * Returns the current Song
 	 * 
 	 * @return the current Song
@@ -441,7 +467,11 @@ public class MusicPlayerModel extends Observable{
 	/**
 	 * Returns a PlayList of Recommended Songs.
 	 * 
+<<<<<<< HEAD
 	 * @return the PlayList of Recommended Songs.
+=======
+	 * @return
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 */
 	public PlayList getRecommended(){
 		return recommended;
@@ -466,8 +496,13 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * If the model has no PlayLists, creates recommended 
 	 * 10 song PlayList. 
+=======
+	 * If the model has no PlayLists, creates recommneded 
+	 * 10 song PlayList
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 * 
 	 * Else: it uses the metadata map 
 	 */
@@ -586,6 +621,19 @@ public class MusicPlayerModel extends Observable{
 		}
 	}
 	
+<<<<<<< HEAD
+=======
+	/**
+	 * Adds a song to a PlayList
+	 * 
+	 * @param playlist, selected PlayList
+	 * @param song, Song to be added
+	 */
+	public void addToPlaylist(PlayList playlist, Song song) {
+		playlist.addSong(song);
+	}
+	
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	/**
 	 * unsure if we need this but ya never know, could be a cool feature
 	 * 
@@ -618,6 +666,7 @@ public class MusicPlayerModel extends Observable{
 	
 	
 	/**
+<<<<<<< HEAD
 	 * Doesn't call the Model's function, it just handles it. 
 	 * Might be bad design it defintely was bad design but for different 
 	 * reasons.
@@ -631,6 +680,8 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	/**
+=======
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 * Skips a song
 	 */
 	public void skip() {
@@ -661,6 +712,7 @@ public class MusicPlayerModel extends Observable{
 		}
 	}
 	
+<<<<<<< HEAD
 	
 	public void restart() {
 		if (playingQueue) { 
@@ -723,6 +775,8 @@ public class MusicPlayerModel extends Observable{
 		}
 	}
 	
+=======
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	/**
 	 * Stops any running threads
 	 */
@@ -731,6 +785,7 @@ public class MusicPlayerModel extends Observable{
 			thread.stop();
 		}
 	}
+<<<<<<< HEAD
 	/**
 	 * Sorts the songLibrary by song Name
 	 */
@@ -774,4 +829,7 @@ public class MusicPlayerModel extends Observable{
 		}
 		return tempList;
 	}
+=======
+	
+>>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 }
