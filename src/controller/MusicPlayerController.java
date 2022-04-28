@@ -130,8 +130,7 @@ public class MusicPlayerController {
 	 * all of the getters that will be needed for the controller to call to
      * give to GUI
 	 */
-	
-<<<<<<< HEAD
+
 	
 	/**
 	 * Used to check if buttons can actually do anything in GUI
@@ -148,10 +147,6 @@ public class MusicPlayerController {
 	/**
 	 * Returns the current Song
 	 * 
-=======
-	/**
-	 * Returns the current Song
->>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 * @return the current Song
 	 */
 	public Song getCurSong() {
