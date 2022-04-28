@@ -130,7 +130,7 @@ public class MusicPlayerController {
 	 * all of the getters that will be needed for the controller to call to
      * give to GUI
 	 */
-	
+
 	
 	/**
 	 * Used to check if buttons can actually do anything in GUI
@@ -232,10 +232,6 @@ public class MusicPlayerController {
 	}
 	
 	
-	
-	/*
-	 * All of the create/remove things methods
-	 */
 	
 	/**
 	 * Creates a PlayList with name, name.

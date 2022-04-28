@@ -94,7 +94,7 @@ public class MusicPlayerModel extends Observable{
 		recommended = new PlayList("Recommended");
 		threads = new ArrayList<Thread>();
 		metadata = new HashMap<String, Integer>();
-		
+
 		createRecommended(); //creates recommended songs
 		
 	}
@@ -233,7 +233,7 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	/**
-	 * Starts playing a PlayList from a song. unsure if this works
+	 * Starts playing a Playlist from a song. unsure if this works
 	 * how intended
 	 * 
 	 * @param playlist, the PlayList to be played
@@ -273,8 +273,9 @@ public class MusicPlayerModel extends Observable{
 		notifyObservers();
 	}
 	
+	
 	/**
-	 * Starts playing a PlayList from a song at a specific index.
+	 * Starts playing a Playlist from a song at a specific index.
 	 * 
 	 * @param playlist, the PlayList to be played
 	 */
@@ -466,8 +467,8 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	/**
-	 * If the model has no PlayLists, creates recommended 
-	 * 10 song PlayList. 
+	 * If the model has no PlayLists, creates recommneded 
+	 * 10 song PlayList
 	 * 
 	 * Else: it uses the metadata map 
 	 */
@@ -660,7 +661,7 @@ public class MusicPlayerModel extends Observable{
 			return;
 		}
 	}
-	
+
 	
 	public void restart() {
 		if (playingQueue) { 

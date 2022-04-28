@@ -639,6 +639,84 @@ public class Tester {
 		}		
 	}
 	
+=======
+
+	@Test
+	void test16() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController c = new MusicPlayerController(model);
+			
+		Song song = model.search("YOKAZE");
+		Song song2 = model.search("Star Trail");
+		c.makePlaylist("K-Rap");
+		PlayList p = c.getPlaylist("K-Rap");
+		c.addToPlaylist(p, song);
+		c.addToPlaylist(p, song2);
+			
+		c.playPlaylist(p, false, null); //double check
+		System.out.println(c.getCurSong().getName());
+		try { 
+			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 5);
+			TimeUnit.SECONDS.sleep((long) 10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	
+	/**
+	 * thread Testing curSong() for changeSong() aka singleSongQueues
+	 */
+	//@Test
+	void test17() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController c = new MusicPlayerController(model);
+		
+		Song song = model.search("YOKAZE");
+		
+		c.changeSong(song);
+		System.out.println(c.getCurSong().getName());
+		try { 
+			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	
+	/**
+	 * thread testing curSong() for Queues
+	 */
+	//@Test
+	void test19() {
+		SongLibrary s = new SongLibrary();
+		MusicPlayerModel model = new MusicPlayerModel(s);
+		MusicPlayerController c = new MusicPlayerController(model);
+		
+		Song song = model.search("YOKAZE");
+		Song song2 = model.search("Maniac");
+		
+		c.changeSong(song);
+		c.addToQueue(song2);
+		System.out.println(c.getCurSong().getName());
+		try { 
+			System.out.println("played");
+			TimeUnit.SECONDS.sleep((long) 20);
+			c.skip();
+			System.out.println(c.getCurSong().getName());
+			TimeUnit.SECONDS.sleep((long) 100);
+			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
 	/**
 	 * need to test playing songs when they are in multiple playlists and 
 	 * in the queue so thatll be fun.

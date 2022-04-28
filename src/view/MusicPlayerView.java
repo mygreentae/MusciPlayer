@@ -401,7 +401,6 @@ public class MusicPlayerView extends Application implements Observer{
 			
 		});
 	}
-
 	
 	private void changePlaylist(String name) {
 		// controller.changePlaylist(String name)
