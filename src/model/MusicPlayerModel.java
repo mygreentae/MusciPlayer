@@ -696,13 +696,13 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public void sortListByTitle() {
 		if (playingPlaylist) {
-			ArrayList<Song> list = currentPlaylist.getSongList();
-			//do the thing
-			currentPlaylist.sortPlaylist(list);
+			ArrayList<Song> songList = currentPlaylist.getSongList();
+			songList = sortTitle(songList);
+			currentPlaylist.sortPlaylist(songList);
 		} else {
-			ArrayList<Song> list = songLibrary.getSongs();
-			//do the thing
-			songLibrary.setSongs(list);	
+			ArrayList<Song> songList = songLibrary.getSongs();
+			songList = sortTitle(songList);
+			songLibrary.setSongs(songList);	
 		}
 	}
 
@@ -731,6 +731,7 @@ public class MusicPlayerModel extends Observable{
 			thread.stop();
 		}
 	}
+	
 	/**
 	 * Sorts the songLibrary by song Name
 	 */
