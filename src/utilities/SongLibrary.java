@@ -59,7 +59,7 @@ public class SongLibrary {
 						if (data.endsWith(p.toString())) {
 							String[] info = data.split(",");
 							Song song = new Song(info[0].trim(), info[1].trim(), info[2].trim(), info[3].trim(), info[4].trim());
-							song.setAudioStream(info[3].trim());
+							song.setAudioStream(info[4].trim());
 							songLibrary.add(song);
 						}
 					}
