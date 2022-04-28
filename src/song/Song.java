@@ -53,19 +53,32 @@ public class Song {
 	//metadata
 	private String genre;
 	private Boolean favorite;
+	private String art;
+	private String audioPath; 
 
 	/**
 	 * @param name, the name of the Song
 	 * @param artist, the artist of the Song
 	 */
-	public Song(String name, String artist, String genre) {
+	public Song(String name, String artist, String genre, String artPath, String audioPath) {
 		this.name = name;
 		this.artist = artist; 
 		this.genre = genre;
 		this.index = 0;
 		this.framePosition = 0;
 		this.favorite = false;
+		this.art = artPath;
+		this.audioPath = audioPath; 
 	}
+	
+	public String getArtPath() {
+		return art;
+	}
+	
+	public String getAudioPath() {
+		return audioPath; 
+	}
+	
 	
 	/**
 	 * Returns the name of the Song
@@ -135,10 +148,6 @@ public class Song {
 	}
 	
 	/**
-<<<<<<< HEAD
-=======
-
->>>>>>> ae10aaf6075c713e20ee09f74cbe49b0e7a83baf
 	 * Sets the Song to isPlaying status, dont think we need
 	 */
 	public void setPlaying() {
@@ -248,7 +257,7 @@ public class Song {
 	 * 
 	 * @param fileName, the name of the liked .wav file
 	 */
-	public void setAudioStream(String fileName) {
+	public void setAudioStream(String fileName) { // can likely get rid of this parameter and use the audioPath field. 
 		try {
 			stream = AudioSystem.getAudioInputStream(new File(fileName).getAbsoluteFile());
 			audio = AudioSystem.getClip();
@@ -329,4 +338,3 @@ public class Song {
 		playlist.addSong(this);
 	}	
 }
-
