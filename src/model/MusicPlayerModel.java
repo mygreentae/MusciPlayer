@@ -249,18 +249,20 @@ public class MusicPlayerModel extends Observable{
 		playingPlaylist = true;
 		playingQueue = false;
 		curSong = song;
-		curSong = playlist.getPlayOrder().get(0);
 		
-		playlist.playFirst(song); //sets first song
+		//playlist.playFirst(song); //sets first song
 		// plays entire playlist
 		Runnable runnable =
 			    new Runnable(){
 			        public void run(){
-			        	for (Song song : playlist.getPlayOrder()) {
+			        	for (Song pSong : playlist.getPlayOrder()) {
 			    			//plays song for however long it is
-			    			curSong = song;
-			    			curSong.play();
-			    			curSong.stop();
+			        		if (pSong.getIndex() > song.getIndex()) {
+				    			curSong = song;
+				    			curSong.play();
+				    			curSong.stop();
+			        		}
+
 			    		}
 			        }
 			    };
@@ -289,7 +291,7 @@ public class MusicPlayerModel extends Observable{
 		currentQueue = null;
 		playingPlaylist = true;
 		playingQueue = false;
-		curSong = playlist.getPlayOrder().get(0);
+		curSong = playlist.getPlayOrder().get(index);
 		
 		Runnable runnable =
 			    new Runnable(){
@@ -313,6 +315,41 @@ public class MusicPlayerModel extends Observable{
 		notifyObservers();
 	}
 	
+	
+	public void resumePlaylist(PlayList playlist) {
+		stopThreads();
+		currentPlaylist = playlist;
+		currentQueue = null;
+		playingPlaylist = true;
+		playingQueue = false;
+		Song song = curSong;
+		
+		//playlist.playFirst(song); //sets first song
+		// plays entire playlist
+		Runnable runnable =
+			    new Runnable(){
+			        public void run(){
+			        	for (Song pSong : playlist.getPlayOrder()) {
+			    			//plays song for however long it is
+			        		if (pSong.getIndex() >= song.getIndex()) {
+				    			curSong = song;
+				    			curSong.play();
+				    			curSong.stop();
+			        		}
+
+			    		}
+			        }
+			    };
+	
+		System.out.println("gonna figure it out later");
+		Thread thread = new Thread(runnable);
+		threads.add(thread);
+		thread.start();
+		setChanged();
+		notifyObservers();
+	}
+	
+	
 	/**
 	 * Shuffles a PlayList 
 	 * 
@@ -322,6 +359,10 @@ public class MusicPlayerModel extends Observable{
 	public PlayList shufflePlayList(PlayList playlist) {
 		playlist.shuffle();
 		return playlist;
+	}
+	
+	public void unShuffle(PlayList playlist) {
+		playlist.unshuffle();
 	}
 	
 	/**
@@ -613,6 +654,7 @@ public class MusicPlayerModel extends Observable{
 	 * Might be bad design
 	 */
 	public void pause() {
+		stopThreads();
 		curSong.pause();
 	}
 	
@@ -628,6 +670,8 @@ public class MusicPlayerModel extends Observable{
 		if (playingQueue) {
 			Queue newQueue = new Queue(curSong, true);
 			resumeQueue(newQueue);
+		} else if(playingPlaylist) {
+			resumePlaylist(currentPlaylist);
 		}
 	}
 	
@@ -638,6 +682,14 @@ public class MusicPlayerModel extends Observable{
 		if (playingQueue) { 
 			curSong.stop();
 			System.out.println("skipped");
+			//arbitrary time delay
+			try {
+				TimeUnit.SECONDS.sleep((long) 0.3);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+			//if playingQueue, otherwise if playingPlaylist
 			if (currentQueue.getNext() != null) {
 				curSong = currentQueue.getNext();
 				Queue newQueue = new Queue(curSong);
@@ -656,6 +708,9 @@ public class MusicPlayerModel extends Observable{
 		} else if (playingPlaylist) {
 			curSong.stop();
 			int skipIndex = curSong.getIndex() + 1;
+			if (skipIndex >= currentPlaylist.getSize()) {
+				return;
+			}
 			playPlaylist(currentPlaylist, skipIndex);
 		} else {
 			return;

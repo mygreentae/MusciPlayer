@@ -68,10 +68,6 @@ public class SongLibrary {
 			}
 		} 
 		
-		for (Song song: songLibrary) {
-			System.out.println(song.getName());
-		}
-		
 		// this works, arts have to have the name formatted to match the name 
 		// of the song, including spaces and weird stuff
 		File dir2 = new File("src/images");
