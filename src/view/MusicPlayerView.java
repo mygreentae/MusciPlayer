@@ -653,8 +653,9 @@ private class Menu extends BorderPane {
 					PlayList librarySongs = new PlayList(songLibrary.getSongs());
 					if (controller.getCurPlaylist() == null) {
 						controller.playPlaylist(librarySongs, false, null);
+					} else {
+						controller.playPlaylist(controller.getCurPlaylist(), false, null);
 					}
-					controller.playPlaylist(controller.getCurPlaylist(), false, null);
 				} 
 				
 			};
@@ -666,10 +667,11 @@ private class Menu extends BorderPane {
 					PlayList librarySongs = new PlayList(songLibrary.getSongs());
 					if (controller.getCurPlaylist() == null) {
 						controller.playPlaylist(librarySongs, true, null);
+					} else {
+						controller.playPlaylist(controller.getCurPlaylist(), true, null);
 					}
-					controller.playPlaylist(controller.getCurPlaylist(), true, null);
-				} 
-				
+
+				}
 			};
 			
 			playButton.addEventHandler(MouseEvent.MOUSE_CLICKED, playPlaylist);
@@ -711,9 +713,6 @@ private class Menu extends BorderPane {
 		
 		ImageView image = setAlbumArt(controller.getCurSong());
 
-		hbox.setPadding(new Insets(10, 10, 10, 10));
-		
-		
 		VBox UI = new VBox();
 		BorderPane menu = new Menu(songLibrary);
 		
@@ -723,9 +722,9 @@ private class Menu extends BorderPane {
 		
 		UI.getChildren().addAll(menu, songView);
 		
+		
+		
 		hbox.getChildren().addAll(image, UI);
-		
-		
 		
 		VBox curSongView = showCurSong();
 		GridPane controls = setButtons();

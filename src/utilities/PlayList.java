@@ -82,11 +82,15 @@ public class PlayList {
 	
 	public PlayList(ArrayList<Song> songList) {
 		this.name = "Song Library";
-		this.size = songList.size();
-		this.songList = songList;
+		this.size = 0;
+		this.songList = new ArrayList<Song>();
 		this.shuffle = new ArrayList<Song>();
-		this.playOrder = songList;
+		this.playOrder = new ArrayList<Song>();
 		this.genres = new HashMap<String, Integer>();
+		
+		for (Song song: songList) {
+			addSong(song);
+		}
 	}
 	
 	/**
