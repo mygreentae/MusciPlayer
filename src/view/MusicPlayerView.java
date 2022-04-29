@@ -26,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -48,6 +49,7 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -133,12 +135,18 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		hbox.setPadding(new Insets(10, 10, 10, 10));
 		
+		VBox UI = new VBox();
+		BorderPane menu = new Menu();
 		
 		ScrollPane songView = playListView();
 		songView.setPrefViewportWidth(SCROLL_MAX_WIDTH);
 		songView.setPrefViewportHeight(SCROLL_MAX_HEIGHT);
 		
-		hbox.getChildren().addAll(image, songView);
+		UI.getChildren().addAll(menu, songView);
+		
+		
+		
+		hbox.getChildren().addAll(image, UI);
 		
 		VBox curSongView = showCurSong();
 		GridPane controls = setButtons();
@@ -227,17 +235,21 @@ public class MusicPlayerView extends Application implements Observer{
         restart.setOnAction(event ->  restartAudio());
 
         Button jump = new Button("Jump");
-        GridPane.setConstraints(jump, 5,0);
+        //GridPane.setConstraints(jump, 5,0);
         jump.setOnAction(event ->  jump(JUMP_BY));
         
-        
+        Label searchLabel = new Label();
+        searchLabel.setText("Search");
+        GridPane.setConstraints(searchLabel, 5, 0);
+        TextField search = new TextField();
+        GridPane.setConstraints(search, 6, 0);
         // figure out!
 //        Label time = new Label();
 //        GridPane.setConstraints(time, 6,0);
 //        time.textProperty().bind(player.currentTimeProperty().asString("%.4s") );
 
 //        gp.getChildren().addAll(play, pause, resume, skip, restart, jump);
-        gp.getChildren().addAll(pause, skip);
+        gp.getChildren().addAll(pause, skip, search);
         
         return gp;
 	}
@@ -331,8 +343,8 @@ public class MusicPlayerView extends Application implements Observer{
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				Node source = (Node)mouseEvent.getTarget();
-				Node p = source.getParent();
-				Song song = ((SongTile)source).getSong();
+				Node p = source.getParent(); //idk why SongTile is double parent.
+				Song song = ((SongTile)p).getSong();
 				controller.changeSong(song);
 			}
 		};
@@ -344,6 +356,7 @@ public class MusicPlayerView extends Application implements Observer{
 				SongTile t = (SongTile)source;
 				Background highlight = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
 				t.setBackground(highlight);
+				t.getPlayButton().setVisible(true);
 				t.getTitle().setFill(Color.AQUA);
 				//controller.changeSong(song);
 			}
@@ -357,6 +370,7 @@ public class MusicPlayerView extends Application implements Observer{
 				Background highlight = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0), Insets.EMPTY));
 				t.setBackground(highlight);
 				t.getTitle().setFill(Color.BLACK);
+				t.getPlayButton().setVisible(false);
 				
 				if (t.getSong() == controller.getCurSong()) {
 					Background highlight2 = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
@@ -372,7 +386,9 @@ public class MusicPlayerView extends Application implements Observer{
 			songTile.getTitle().setText(songList.get(i).getName());
 			songTile.getArtist().setText(songList.get(i).getArtist());
 			
-			songTile.setOnMouseClicked(playSong);
+			//songTile.setOnMouseClicked(playSong);
+			songTile.getPlayButton().addEventFilter(MouseEvent.MOUSE_CLICKED, playSong);
+
 			songTile.setOnMouseEntered(highlightSong);
 			songTile.setOnMouseExited(unhighlightSong);
 			
@@ -461,6 +477,8 @@ public class MusicPlayerView extends Application implements Observer{
 		private Rectangle playRect3;
 		
 		
+		private Button playButton;
+		
 		private StackPane indexStack;
 		private StackPane titleStack;
 		private StackPane artistStack;
@@ -508,14 +526,29 @@ public class MusicPlayerView extends Application implements Observer{
 			setAlignment(title, Pos.TOP_RIGHT);
 			setAlignment(artist, Pos.BOTTOM_RIGHT);
 			
-			setMargin(border, new Insets(5, 5, 20, 5));
-			setMargin(index, new Insets(10, 5, 5, 5));
+			setMargin(border, new Insets(10, 8, 20, 50));
+			//setMargin(index, new Insets(10, 5, 5, 5));
 			
 			border.setTop(title);
 			border.setBottom(artist);
 			
-			setLeft(index);
-			setRight(border);
+			
+			playButton = new Button();
+			playButton.setVisible(false);
+			//Button button= new Button();
+			playButton.setPrefHeight(40);
+			playButton.setPrefWidth(40);
+			playButton.setStyle("-fx-shape: 'M 0 0 0 40 20 20 z'; -fx-border-color: rgb(49, 89, 23); -fx-border-radius: 5");
+			//playButton.setStyle("-fx-padding: 3 6 6 6");
+		   // "-fx-border-radius: 5"
+		    //"-fx-padding: 3 6 6 6"
+
+			setMargin(playButton, new Insets(10, 10, 10, 5));
+			
+			setLeft(playButton);
+			playButton.setAlignment(Pos.CENTER);
+			//setLeft(index);
+			setCenter(border);
 			
 			setStyle("-fx-border-color: black; -fx-border-style: solid hidden solid hidden;");
 		}
@@ -542,6 +575,10 @@ public class MusicPlayerView extends Application implements Observer{
 			return title;
 		}
 		
+		private Button getPlayButton() {
+			return playButton;
+		}
+		
 		/**
 		 * Returns the artist object that is placed in the middle
 		 * of the rectangle
@@ -559,8 +596,72 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	}
 
+	
+	
+private class Menu extends BorderPane {
+		
+		
+		public BorderPane border;
+		private GridPane menu;
 
+		
+		
+		private Button playButton;
+		private Button shuffleButton;
+		private Button editButton;
+		private Button playlistButton;
+		
+		private Song song;
+		
+		private Menu() {
+			border = new BorderPane();
+			playButton = new Button("Play");
+			shuffleButton = new Button("Shuffle");
+			editButton = new Button("Edit");
+			playlistButton = new Button("Playlists");
+			menu = new GridPane();
+			
+			GridPane.setConstraints(playButton, 1, 0);
+			GridPane.setConstraints(shuffleButton, 2, 0);
+			GridPane.setConstraints(editButton, 3, 0);
+			GridPane.setConstraints(playlistButton, 4, 0);
+			
+			menu.getChildren().addAll(playButton, shuffleButton, editButton, playlistButton);
+			
+			menu.setHgap(10);
+	        menu.setVgap(10);
+			
+			
+			
+			border.setCenter(menu);
+			
+			Background highlight = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
+			this.setBackground(highlight);
+			
+			setCenter(border);
+			
+			
+		}
+		
+		
+		private Button getPlayButton() {
+			return playButton;
+		}
+		
+		/**
+		 * Returns the artist object that is placed in the middle
+		 * of the rectangle
+		 * @return
+		 * 		The artist object that appears in the center of the
+		 * 		rectangle
+		 */
 
+		public Song getSong() {
+			return song;
+		}
+	
+	}
+	
 
 
 
