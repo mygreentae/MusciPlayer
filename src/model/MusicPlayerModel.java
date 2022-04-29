@@ -139,9 +139,8 @@ public class MusicPlayerModel extends Observable {
 			        public void run(){
 			        	while (curSong != null) {
 			    			curSong.play();
-			    			curSong.stop();
-			    			queue.next();
-			    			curSong = queue.getCur();
+			    			//queue.next();
+			    			//curSong = queue.getCur();
 			    		}  
 			        }
 			    };
@@ -201,6 +200,8 @@ public class MusicPlayerModel extends Observable {
 		playingQueue = false;
 		curSong = playlist.getPlayOrder().get(0);
 		
+		curSong.play();
+		/*
 		Runnable runnable =
 			    new Runnable(){
 			        public void run(){
@@ -208,7 +209,7 @@ public class MusicPlayerModel extends Observable {
 			    			//plays song for however long it is
 			    			curSong = song;
 			    			curSong.play();
-			    			curSong.stop();
+			    			//curSong.stop();
 			    			setChanged();
 			    		}
 			        }
@@ -217,6 +218,7 @@ public class MusicPlayerModel extends Observable {
 		Thread thread = new Thread(runnable);
 		threads.add(thread);
 		thread.start();
+		*/
 		setChanged();
 		notifyObservers();
 	}
@@ -377,8 +379,7 @@ public class MusicPlayerModel extends Observable {
 		// if in Playlist, and playlist is currently being played
 		if (playingPlaylist && currentPlaylist.contains(song)) {
 			curSong = song;
-			currentPlaylist.playFirst(song);
-			playPlaylist(currentPlaylist);
+			playPlaylist(currentPlaylist, song);
 			
 		} else {
 			// starts new queue, basically this handles the 1st song pick

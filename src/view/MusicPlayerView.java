@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 import controller.MusicPlayerController;
 import javafx.application.Application;
@@ -89,10 +90,11 @@ public class MusicPlayerView extends Application implements Observer{
 	private MediaPlayer mediaPlayer;
 	private MediaView mediaView;
 	
+	
 	private String MEDIA_URL = "";
 	
 	
-	
+	private ArrayList<Thread> threads;
 	
 	
 	
@@ -128,7 +130,17 @@ public class MusicPlayerView extends Application implements Observer{
 		//media = new Media("Audios/400km.wav");
 		//mediaPlayer = new MediaPlayer(media);
 		//mediaView = new MediaView(mediaPlayer);
-		
+		if (controller.getCurSong() != null) {
+			 String path = controller.getCurSong().getAudioPath();
+		     File file = new File(path);
+		     String path2 = file.toURI().toString();
+		     //Instantiating Media class  
+		     Media media = new Media(path2); 
+		     mediaPlayer = new MediaPlayer(media);  
+	          
+	        //by setting this property to true, the audio will be played   
+	        mediaPlayer.setAutoPlay(true); 
+		}
 		
 		model.addObserver(this);
 		
@@ -423,9 +435,9 @@ public class MusicPlayerView extends Application implements Observer{
 				Song song = ((SongTile)p).getSong();
 				
 				
-				//Media file = new Media(new File(song.getAudioPath()).toURI().toString());
-				//mediaPlayer = new MediaPlayer(file);
-				//mediaPlayer.play();
+				Media file = new Media(new File(song.getAudioPath()).toURI().toString());
+				mediaPlayer = new MediaPlayer(file);
+				mediaPlayer.setAutoPlay(true);
 				controller.changeSong(song);
 			}
 		};
@@ -727,13 +739,39 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	private void addEventHandlers() {
 		
+		
+		
 		EventHandler<MouseEvent> playPlaylist = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
+				stopThreads();
 				System.out.println("played playlist");
 				PlayList librarySongs = new PlayList(songLibrary.getSongs());
 				if (controller.getCurPlaylist() == null) {
-					controller.playPlaylist(librarySongs, false, null);
+					
+					Runnable runnable =
+						    new Runnable(){
+						        public void run(){
+						        	for (Song song : librarySongs.getSongList()) {
+						        		Media file = new Media(new File(song.getAudioPath()).toURI().toString());
+										mediaPlayer = new MediaPlayer(file);
+										mediaPlayer.setAutoPlay(true);
+										try {
+											TimeUnit.SECONDS.sleep((long) song.getDuration());
+										} catch (InterruptedException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}	
+										
+						        	}
+						        }
+						    };
+					//controller.playPlaylist(librarySongs, false, null);  
+					Thread thread = new Thread(runnable);
+					threads.add(thread);
+					thread.start();
+					
+					//controller.playPlaylist(librarySongs, false, null);
 				} else {
 					controller.playPlaylist(controller.getCurPlaylist(), false, null);
 				}
@@ -845,9 +883,19 @@ public class MusicPlayerView extends Application implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		System.out.println("updated");
-		
-		
+		/*
+		if (controller.getCurSong() != null) {
+			 String path = controller.getCurSong().getAudioPath();
+		     File file = new File(path);
+		     String path2 = file.toURI().toString();
+		     //Instantiating Media class  
+		     Media media = new Media(path2); 
+		     mediaPlayer = new MediaPlayer(media);  
+	          
+	        //by setting this property to true, the audio will be played   
+	        mediaPlayer.setAutoPlay(true); 
+		}
+		*/
 		VBox root = new VBox();
 		HBox hbox = new HBox();
 		
@@ -885,6 +933,15 @@ public class MusicPlayerView extends Application implements Observer{
 		Scene scene = new Scene(root);
 		mainStage.setScene(scene);
 		
+	}
+	
+	/**
+	 * Stops any running threads
+	 */
+	private void stopThreads() {
+		for (Thread thread : threads) {
+			thread.stop();
+		}
 	}
 
 }

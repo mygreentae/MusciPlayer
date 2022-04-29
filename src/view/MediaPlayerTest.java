@@ -1,18 +1,32 @@
 package view;
-import java.awt.Color;
 import java.io.File;  
 
-import javafx.application.Application;  
+import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;  
 import javafx.scene.media.MediaPlayer;  
-import javafx.scene.media.MediaView;  
-import javafx.stage.Stage;  
+import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage; 
 
 public class MediaPlayerTest extends Application{
 	
-	
+
+
+
+     MediaPlayer mediaPlayer; 
+       
 	@Override
 	public void start (Stage primaryStage) throws Exception {  
 	        // TODO Auto-generated method stub  
@@ -27,14 +41,30 @@ public class MediaPlayerTest extends Application{
 	        //Instantiating MediaPlayer class   
 	        
 
-	        //MediaPlayer mediaPlayer = new MediaPlayer(media);  
+	        mediaPlayer = new MediaPlayer(media);  
 	          
-	        //Scene scene = new Scene();
 	        //by setting this property to true, the audio will be played   
-	        // mediaPlayer.setAutoPlay(true);  
+	        mediaPlayer.setAutoPlay(true); 
+	        
+	        //VBox v = new VBox();
+			
+	       // Button pause = new Button("Play/Pause");
+	       // pause.setOnAction(event -> playAudio());
+
+	        
+	       // v.getChildren().add(pause);
+	        
+	        
+	        
 	        primaryStage.setTitle("Playing Audio");  
 	        primaryStage.show();  
+	        
 	    } 
+	
+	
+	public void playAudio() {
+		mediaPlayer.play();
+	}
 	
 	public static void main(String[] args) {  
 	    launch(args);  
