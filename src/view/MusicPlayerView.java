@@ -136,7 +136,7 @@ public class MusicPlayerView extends Application implements Observer{
 		hbox.setPadding(new Insets(10, 10, 10, 10));
 		
 		VBox UI = new VBox();
-		BorderPane menu = new Menu();
+		BorderPane menu = new Menu(songLibrary);
 		
 		ScrollPane songView = playListView();
 		songView.setPrefViewportWidth(SCROLL_MAX_WIDTH);
@@ -336,7 +336,8 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		//change to current song queue
 		//ArrayList<Song> songList = controller.getCurPlaylist().getSongList();
-		
+		// add if (curPlaylist == null) {
+		// then this line, otherwise, songList == curPlaylist;
 		ArrayList<Song> songList = songLibrary.getSongs();
 		
 		EventHandler<MouseEvent> playSong = new EventHandler<MouseEvent>() {
@@ -491,7 +492,6 @@ public class MusicPlayerView extends Application implements Observer{
 			title = new Text();
 			artist = new Text();
 			
-			
 			border = new BorderPane();
 			
 			if (song == controller.getCurSong()) {
@@ -612,8 +612,10 @@ private class Menu extends BorderPane {
 		private Button playlistButton;
 		
 		private Song song;
+		private SongLibrary songLibrary;
 		
-		private Menu() {
+		private Menu(SongLibrary songLibrary) {
+			this.songLibrary = songLibrary;
 			border = new BorderPane();
 			playButton = new Button("Play");
 			shuffleButton = new Button("Shuffle");
@@ -628,24 +630,50 @@ private class Menu extends BorderPane {
 			
 			menu.getChildren().addAll(playButton, shuffleButton, editButton, playlistButton);
 			
-			menu.setHgap(10);
+			menu.setHgap(15);
 	        menu.setVgap(10);
-			
-			
 			
 			border.setCenter(menu);
 			
 			Background highlight = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
 			this.setBackground(highlight);
-			
-			setCenter(border);
+			addEventHandlers();
+			setCenter(border); 
 			
 			
 		}
 		
 		
-		private Button getPlayButton() {
-			return playButton;
+		private void addEventHandlers() {
+			
+			EventHandler<MouseEvent> playPlaylist = new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent mouseEvent) {
+					System.out.println("played playlist");
+					PlayList librarySongs = new PlayList(songLibrary.getSongs());
+					if (controller.getCurPlaylist() == null) {
+						controller.playPlaylist(librarySongs, false, null);
+					}
+					controller.playPlaylist(controller.getCurPlaylist(), false, null);
+				} 
+				
+			};
+			
+			EventHandler<MouseEvent> shufflePlaylist = new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent mouseEvent) {
+					System.out.println("shuffled");
+					PlayList librarySongs = new PlayList(songLibrary.getSongs());
+					if (controller.getCurPlaylist() == null) {
+						controller.playPlaylist(librarySongs, true, null);
+					}
+					controller.playPlaylist(controller.getCurPlaylist(), true, null);
+				} 
+				
+			};
+			
+			playButton.addEventHandler(MouseEvent.MOUSE_CLICKED, playPlaylist);
+			shuffleButton.addEventHandler(MouseEvent.MOUSE_CLICKED, shufflePlaylist);
 		}
 		
 		/**
@@ -680,15 +708,24 @@ private class Menu extends BorderPane {
 //		imageView.setFitHeight(400);
 //		imageView.setFitWidth(400);
 		
+		
 		ImageView image = setAlbumArt(controller.getCurSong());
 
 		hbox.setPadding(new Insets(10, 10, 10, 10));
+		
+		
+		VBox UI = new VBox();
+		BorderPane menu = new Menu(songLibrary);
 		
 		ScrollPane songView = playListView();
 		songView.setPrefViewportWidth(SCROLL_MAX_WIDTH);
 		songView.setPrefViewportHeight(SCROLL_MAX_HEIGHT);
 		
-		hbox.getChildren().addAll(image, songView);
+		UI.getChildren().addAll(menu, songView);
+		
+		hbox.getChildren().addAll(image, UI);
+		
+		
 		
 		VBox curSongView = showCurSong();
 		GridPane controls = setButtons();

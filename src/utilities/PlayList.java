@@ -80,6 +80,15 @@ public class PlayList {
 		this.genres = new HashMap<String, Integer>();
 	}
 	
+	public PlayList(ArrayList<Song> songList) {
+		this.name = "Song Library";
+		this.size = songList.size();
+		this.songList = songList;
+		this.shuffle = new ArrayList<Song>();
+		this.playOrder = songList;
+		this.genres = new HashMap<String, Integer>();
+	}
+	
 	/**
 	 * Returns the name of the PlayList
 	 * @return the name of the PlayList
