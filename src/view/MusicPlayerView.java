@@ -23,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
@@ -198,17 +199,50 @@ public class MusicPlayerView extends Application implements Observer{
         gp.setHgap(10);
 
         // play/pause/resume can all be the same button
- //       Button play = new Button("Play");
-//        play.setShape(new Circle(15));
-//        GridPane.setConstraints(play, 0,0);
-//        play.setOnAction(event->  playAudio());
+        Button pause = new Button();
+        ImageView imageView = new ImageView(new Image ("utilities/util-img/play.png"));
+        pause.setGraphic(imageView);
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(50);
+        imageView.setPreserveRatio(true);
+        //Important otherwise button will wrap to text + graphic size (no resizing on scaling).
+        pause.setMaxWidth(Double.MAX_VALUE);    
+        pause.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+        pause.setShape(new Circle(50));
+        GridPane.setConstraints(pause, 0,0);
+        pause.setOnAction(event->  playAudio());
+        EventHandler<MouseEvent> highlightPause = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				Node source = (Node)mouseEvent.getTarget();
+				Button t = (Button)source;
+				Background highlight = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
+				t.setBackground(highlight);
+//				t.getTitle().setFill(Color.AQUA);
+				//controller.changeSong(song);
+			}
+		};
+		
+		EventHandler<MouseEvent> unhighlightPause = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				Node source = (Node)mouseEvent.getTarget();
+				Button t = (Button)source;
+				Background highlight = new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(0), Insets.EMPTY));
+				t.setBackground(highlight);		
+				//controller.changeSong(song);
+			}
+		};
+		
+		pause.setOnMouseEntered(highlightPause);
+		pause.setOnMouseExited(unhighlightPause);
 
-        Button pause = new Button("Play/Pause");
-        GridPane.setConstraints(pause, 1,0);
-        pause.setOnAction(event -> pauseAudio());
-        if (controller.getCurSong() == null){
-        	pause.setText("Pick Song");
-        }
+//        Button pause = new Button("Play/Pause");
+//        GridPane.setConstraints(pause, 1,0);
+//        pause.setOnAction(event -> pauseAudio());
+//        if (controller.getCurSong() == null){
+//        	pause.setText("Pick Song");
+//        }
 
 //        Button resume = new Button("Resume");
 //        resume.setShape(new Circle(15));
@@ -327,15 +361,15 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		ArrayList<Song> songList = songLibrary.getSongs();
 		
-		EventHandler<MouseEvent> playSong = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				Node source = (Node)mouseEvent.getTarget();
-				Node p = source.getParent();
-				Song song = ((SongTile)source).getSong();
-				controller.changeSong(song);
-			}
-		};
+//		EventHandler<MouseEvent> playSong = new EventHandler<MouseEvent>() {
+//			@Override
+//			public void handle(MouseEvent mouseEvent) {
+//				Node source = (Node)mouseEvent.getTarget();
+//				Node p = source.getParent();
+//				Song song = ((SongTile)source).getSong();
+//				controller.changeSong(song);
+//			}
+//		};
 		
 		EventHandler<MouseEvent> highlightSong = new EventHandler<MouseEvent>() {
 			@Override
@@ -368,11 +402,11 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		for (int i = 0; i < songList.size(); i++) {
 			SongTile songTile = new SongTile(songList.get(i));
-			songTile.getIndex().setText(Integer.toString(i+1));
+//			songTile.getIndex().setText(Integer.toString(i+1));
 			songTile.getTitle().setText(songList.get(i).getName());
 			songTile.getArtist().setText(songList.get(i).getArtist());
 			
-			songTile.setOnMouseClicked(playSong);
+//			songTile.setOnMouseClicked(playSong);
 			songTile.setOnMouseEntered(highlightSong);
 			songTile.setOnMouseExited(unhighlightSong);
 			
@@ -447,21 +481,14 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	private class SongTile extends BorderPane {
 		
-		private Text index;
+		private Button button;
 		private Text title;
 		private Text artist;
 		
 		public BorderPane border;
-		private Rectangle indexRect;
 		private Rectangle titleRect;
 		private Rectangle artistRect;
 		
-		private Rectangle playRect1;
-		private Rectangle playRect2;
-		private Rectangle playRect3;
-		
-		
-		private StackPane indexStack;
 		private StackPane titleStack;
 		private StackPane artistStack;
 		
@@ -469,7 +496,7 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		private SongTile(Song song) {
 			this.song = song;
-			index = new Text();
+			button = new Button();
 			title = new Text();
 			artist = new Text();
 			
@@ -481,24 +508,33 @@ public class MusicPlayerView extends Application implements Observer{
 				this.setBackground(highlight);
 			};
 			
-			indexRect = new Rectangle();
+			button.setShape(new Circle(10));
+//			button.setText("play");
+	        ImageView imageView = new ImageView(new Image ("utilities/util-img/play.png"));
+	        button.setGraphic(imageView);
+	        imageView.setFitHeight(25);
+	        imageView.setFitWidth(25);
+	        imageView.setPreserveRatio(true);
+	        //Important otherwise button will wrap to text + graphic size (no resizing on scaling).
+	        button.setMaxWidth(Double.MAX_VALUE);    
+	        button.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+			button.setOnAction(new EventHandler<ActionEvent> () {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					controller.changeSong(song);	
+				}
+				
+			}) ;
+			
 			titleRect = new Rectangle();
 			artistRect = new Rectangle();
-			playRect1 = new Rectangle();
-			playRect2 = new Rectangle();
-			playRect3 = new Rectangle();
 			
-			indexStack = new StackPane();
 			titleStack = new StackPane();
 			artistStack = new StackPane();
 			
-			indexStack.getChildren().addAll(indexRect, index);
 			titleStack.getChildren().addAll(titleRect, title);
 			artistStack.getChildren().addAll(artistRect, artist);
-			
-			index.setFont(new Font(TITLE_FONT_SIZE));
-			index.setStyle("-fx-font-weight: bold");
-			index.setFill(Color.GRAY);
 			
 			title.setFont(new Font(TITLE_FONT_SIZE));
 			
@@ -509,12 +545,12 @@ public class MusicPlayerView extends Application implements Observer{
 			setAlignment(artist, Pos.BOTTOM_RIGHT);
 			
 			setMargin(border, new Insets(5, 5, 20, 5));
-			setMargin(index, new Insets(10, 5, 5, 5));
+			setMargin(button, new Insets(10, 5, 5, 5));
 			
 			border.setTop(title);
 			border.setBottom(artist);
 			
-			setLeft(index);
+			setLeft(button);
 			setRight(border);
 			
 			setStyle("-fx-border-color: black; -fx-border-style: solid hidden solid hidden;");
@@ -527,8 +563,8 @@ public class MusicPlayerView extends Application implements Observer{
 		 * 		The index object that appears in the center of the
 		 * 		rectangle
 		 */
-		private Text getIndex() {
-			return index;
+		private Button getButton() {
+			return button;
 		}
 		
 		/**
