@@ -14,7 +14,6 @@ import java.util.Queue;
 import controller.MusicPlayerController;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -73,7 +72,6 @@ public class MusicPlayerView extends Application implements Observer{
 	private MediaPlayer player;
 	private static final long JUMP_BY = 5000; // this is in milli secs
 	
-	private Thread th;
 	
 	//edit modes/ control what is shown in playlistView
 	private static Boolean editMode;
@@ -83,16 +81,6 @@ public class MusicPlayerView extends Application implements Observer{
 	//probably edits these to be either true or false.
 	//that makes sense i think, click like "Back" and it makes edit mode 
 	//false which changes the view
-	
-	//media player stuff
-	private Media media;
-	private MediaPlayer mediaPlayer;
-	private MediaView mediaView;
-	
-	private String MEDIA_URL = "";
-	
-	
-	
 	
 	
 	
@@ -119,22 +107,11 @@ public class MusicPlayerView extends Application implements Observer{
 		songLibrary = new SongLibrary();
 		model = new MusicPlayerModel(songLibrary);
 		controller = new MusicPlayerController(model);
-		
-		//Song song = songLibrary.getSongs().get(0);
-		//String path = song.getAudioPath();
-		//File file = new File(path);
-		//String MEDIA_URL = file.toURI().toString();
-		//System.out.println(MEDIA_URL);
-		//media = new Media("Audios/400km.wav");
-		//mediaPlayer = new MediaPlayer(media);
-		//mediaView = new MediaView(mediaPlayer);
-		
-		
 		model.addObserver(this);
 		
 //		URI uri = new URI("");
-		//File file = new File("Audios/400km.wav");
-		//String mediaURL = file.toURI().toString();
+		File file = new File("Audios/400km.wav");
+		String mediaURL = file.toURI().toString();
 
 		//Media media = new Media(mediaURL);
 		//player = new MediaPlayer(media);
@@ -198,20 +175,7 @@ public class MusicPlayerView extends Application implements Observer{
 		root.getChildren().addAll(hbox, curSongView, controls);
 //		root.getChildren().add(new MediaView(player));
 		
-		MusicPlayerView j = this;
 		
-		Task<Void> task = new Task<Void>() {
-	         @Override protected Void call() throws Exception {
-	        	 Song curSong = controller.getCurSong();
-	             while (true) {
-	            	curSong.addObserver(j);
-	             }
-	         }
-	     };
-	     
-	     th = new Thread(task);
-         th.setDaemon(true);
-         th.start();
 		//root.getChildren().add(p2);
 		Scene scene = new Scene(root);
 //		scene.setOnKeyReleased(pausePlay);
@@ -421,11 +385,6 @@ public class MusicPlayerView extends Application implements Observer{
 				Node source = (Node)mouseEvent.getTarget();
 				Node p = source.getParent(); //idk why SongTile is double parent.
 				Song song = ((SongTile)p).getSong();
-				
-				
-				//Media file = new Media(new File(song.getAudioPath()).toURI().toString());
-				//mediaPlayer = new MediaPlayer(file);
-				//mediaPlayer.play();
 				controller.changeSong(song);
 			}
 		};
@@ -707,9 +666,8 @@ public class MusicPlayerView extends Application implements Observer{
 		GridPane.setConstraints(shuffleButton, 2, 0);
 		GridPane.setConstraints(editButton, 3, 0);
 		GridPane.setConstraints(playlistButton, 4, 0);
-		GridPane.setConstraints(dateButton, 5, 0);
 		
-		menu.getChildren().addAll(playButton, shuffleButton, editButton, playlistButton, dateButton);
+		menu.getChildren().addAll(playButton, shuffleButton, editButton, playlistButton);
 		
 		menu.setHgap(10);
         menu.setVgap(10);
@@ -754,10 +712,6 @@ public class MusicPlayerView extends Application implements Observer{
 
 			}
 		};
-		
-		
-		
-		
 		playButton.addEventHandler(MouseEvent.MOUSE_CLICKED, playPlaylist);
 		shuffleButton.addEventHandler(MouseEvent.MOUSE_CLICKED, shufflePlaylist);
 		}	
@@ -784,9 +738,9 @@ public class MusicPlayerView extends Application implements Observer{
 			this.songLibrary = songLibrary;
 			border = new BorderPane();
 			playButton = new Button("Back");
-			shuffleButton = new Button("Edit");
-			editButton = new Button("Playlists");
-			playlistButton = new Button("Queue");
+			shuffleButton = new Button("idk2");
+			editButton = new Button("Search?");
+			playlistButton = new Button("Playlists");
 			menu = new GridPane();
 			
 			GridPane.setConstraints(playButton, 1, 0);
@@ -880,7 +834,6 @@ public class MusicPlayerView extends Application implements Observer{
 		curSongView.setAlignment(Pos.CENTER);
 		controls.setAlignment(Pos.CENTER);
 		root.getChildren().addAll(hbox, curSongView, controls);
-		
 		
 		Scene scene = new Scene(root);
 		mainStage.setScene(scene);
