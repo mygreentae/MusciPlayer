@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.concurrent.TimeUnit;
 
 import javax.sound.sampled.*;
@@ -32,7 +33,7 @@ import utilities.PlayList;
  *
  */
 
-public class Song {
+public class Song extends Observable{
 
 	//properties
 	private Clip audio;
@@ -283,6 +284,8 @@ public class Song {
 		// if we have to manually hardcode Song objects using setStream that I, jackson
 		// have made just now, we can have play just start the stream
 		isPlaying = true;
+		setChanged();
+		notifyObservers();
 		try {
 			TimeUnit.SECONDS.sleep((long) 0.5);
 		} catch (InterruptedException e) {

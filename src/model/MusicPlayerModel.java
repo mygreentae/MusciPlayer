@@ -61,7 +61,7 @@ import utilities.SongLibrary;
  *
  */
 @SuppressWarnings("deprecation")
-public class MusicPlayerModel extends Observable{
+public class MusicPlayerModel extends Observable {
 	
 	private SongLibrary songLibrary;
 	
@@ -142,7 +142,6 @@ public class MusicPlayerModel extends Observable{
 			    			curSong.stop();
 			    			queue.next();
 			    			curSong = queue.getCur();
-			    			Platform.runLater(() -> {notifyObservers();});
 			    		}  
 			        }
 			    };
@@ -210,7 +209,7 @@ public class MusicPlayerModel extends Observable{
 			    			curSong = song;
 			    			curSong.play();
 			    			curSong.stop();
-			    			Platform.runLater(() -> {notifyObservers();});
+			    			setChanged();
 			    		}
 			        }
 			    };
@@ -704,6 +703,10 @@ public class MusicPlayerModel extends Observable{
 		}
 	}
 
+	public void update() {
+		setChanged();
+		notifyObservers();
+	}
 	
 	public void restart() {
 		if (playingQueue) { 
