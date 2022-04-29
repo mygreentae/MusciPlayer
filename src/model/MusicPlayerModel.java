@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import javafx.application.Platform;
 import song.Song;
 import utilities.PlayList;
 import utilities.Queue;
@@ -69,12 +70,9 @@ public class MusicPlayerModel extends Observable{
 	private Queue currentQueue; 
 	private PlayList currentPlaylist;
 	
-	//private Song[] songLibrary;
-	private int numSongs; 
-	
 	//features maybe?
-	private ArrayList<PlayList> allPlaylists;
-	private PlayList favorites;
+	private ArrayList<PlayList> allPlaylists; 
+	private PlayList favorites; 
 	private PlayList recommended;
 
 	//model state
@@ -144,19 +142,16 @@ public class MusicPlayerModel extends Observable{
 			    			curSong.stop();
 			    			queue.next();
 			    			curSong = queue.getCur();
+			    			Platform.runLater(() -> {notifyObservers();});
 			    		}  
 			        }
 			    };
 			  
 		Thread thread = new Thread(runnable);
 		threads.add(thread);
-		System.out.println("yeet");
 		thread.start();
 		setChanged();
 		notifyObservers();
-		
-		System.out.println(curSong.getCover());
-		System.out.println("gonna figure it out later");
 	}
 	
 	public void resumeQueue(Queue queue) {
@@ -181,15 +176,10 @@ public class MusicPlayerModel extends Observable{
 			  
 		Thread thread = new Thread(runnable);
 		threads.add(thread);
-		System.out.println("yeet");
 		thread.start();
-		//setChanged();
-		//notifyObservers();
-		
-		System.out.println(curSong.getCover());
-		System.out.println("gonna figure it out later");
+		setChanged();
+		notifyObservers();
 	}
-	
 	
 	
 	/**
@@ -218,9 +208,9 @@ public class MusicPlayerModel extends Observable{
 			        	for (Song song : playlist.getPlayOrder()) {
 			    			//plays song for however long it is
 			    			curSong = song;
-			    			System.out.println("playlist curSOng " + song.getName());
 			    			curSong.play();
 			    			curSong.stop();
+			    			Platform.runLater(() -> {notifyObservers();});
 			    		}
 			        }
 			    };
@@ -324,7 +314,6 @@ public class MusicPlayerModel extends Observable{
 		playingQueue = false;
 		Song song = curSong;
 		
-		//playlist.playFirst(song); //sets first song
 		// plays entire playlist
 		Runnable runnable =
 			    new Runnable(){
@@ -340,8 +329,6 @@ public class MusicPlayerModel extends Observable{
 			    		}
 			        }
 			    };
-	
-		System.out.println("gonna figure it out later");
 		Thread thread = new Thread(runnable);
 		threads.add(thread);
 		thread.start();
