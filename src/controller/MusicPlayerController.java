@@ -87,7 +87,10 @@ public class MusicPlayerController {
 	public void playPlaylist(PlayList playlist, Boolean shuffle, Song song) {
 		if(shuffle) {
 			model.shufflePlayList(playlist);
+		} else {
+			model.unShuffle(playlist);
 		}
+		
 		if (song == null) {
 			model.playPlaylist(playlist);
 		} else {

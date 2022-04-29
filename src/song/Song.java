@@ -283,6 +283,12 @@ public class Song {
 		// if we have to manually hardcode Song objects using setStream that I, jackson
 		// have made just now, we can have play just start the stream
 		isPlaying = true;
+		try {
+			TimeUnit.SECONDS.sleep((long) 0.5);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 		audio.start();
 		try {
 			TimeUnit.SECONDS.sleep((long) durationInSeconds + 1);

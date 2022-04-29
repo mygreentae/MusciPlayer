@@ -186,17 +186,30 @@ public class PlayList {
 		//shuffles with Set
 		playOrder = new ArrayList<Song>();
 		shuffle = new ArrayList<Song>();
-		
 		for (Song song : songList) {
 			shuffle.add(song);
 		}
+		
 		Random random = new Random();
+		int index = 0;
 		while (shuffle.size() > 0) {
 			int i = random.nextInt(shuffle.size());
 			Song song = shuffle.get(i);
+			song.setIndex(index);
+			index += 1;
 			playOrder.add(song);
 			shuffle.remove(i);
 		}		
+	}
+	
+	
+	public void unshuffle() {
+		playOrder = songList;
+		int count = 0;
+		for (Song song : songList) {
+			song.setIndex(count);
+			count += 1;
+		}
 	}
 	
 	/**
