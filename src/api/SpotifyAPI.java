@@ -75,7 +75,7 @@ public class SpotifyAPI {
 	private static String downloadAudio(String prevLink, String artist, String name) {
 		try {
 			URL url = new URL(prevLink);
-			fetchContent(url, "audios/"+ artist + "_" + name +  ".wav"); // likely will get rid of artist maybe? 
+			fetchContent(url, "Audios/"+ artist + "_" + name +  ".wav"); // likely will get rid of artist maybe? 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public class SpotifyAPI {
 	private static String downloadArt(String coverLink, String artist, String name) {
 		try {
 			URL url = new URL(coverLink);
-			fetchContent(url, "art/"+ artist + "_" + name +  ".jpg");
+			fetchContent(url, "src/images/"+ artist + "_" + name +  ".jpg");
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,11 +102,11 @@ public class SpotifyAPI {
 			System.out.println("some bullshit");
 			Platform.exit();
 		}
-		return "art/"+ artist + "_" + name +  ".jpg"; 
+		return "src/images/"+ artist + "_" + name +  ".jpg"; 
 	}
 	
 	
-	// LIKELY NEED NEW THREAD HERE 
+	
 	private static void fetchContent(URL url, String outputFileName) {
 		Runnable download = new Runnable() {
 			@Override
