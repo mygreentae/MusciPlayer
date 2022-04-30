@@ -113,7 +113,7 @@ public class MusicPlayerView extends Application implements Observer{
 	private static final int CUR_ARTIST_SIZE = 10;
 	private static final int ARTIST_FONT_SIZE = 10;
 	private static final int SCROLL_MAX_HEIGHT = 332;
-	private static final int SCROLL_MAX_WIDTH = 250;
+	private static final int SCROLL_MAX_WIDTH = 280;
 	private static Stage mainStage;
 	
 	
@@ -415,8 +415,7 @@ public class MusicPlayerView extends Application implements Observer{
 			setAlignment(title, Pos.TOP_RIGHT);
 			setAlignment(artist, Pos.BOTTOM_RIGHT);
 			
-
-			setMargin(border, new Insets(5, 5, 5, 5));
+			setMargin(border, new Insets(5, 5, 20, 30));
 
 			//setMargin(border, new Insets(5, 5, 20, SCROLL_MAX_WIDTH/5));
 
