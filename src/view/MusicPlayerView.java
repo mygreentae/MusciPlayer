@@ -725,9 +725,9 @@ public class MusicPlayerView extends Application implements Observer{
 		setCenter(border); 
 		
 		Background active = new Background(new BackgroundFill(Color.LIGHTGREEN, new CornerRadii(0), Insets.EMPTY));
-		if (controller.isPlayingSong() && shuffle == false) {
+		if (controller.getCurSong() != null && shuffle == false) {
 			playButton.setBackground(active);
-		} else if (controller.isPlayingSong() && shuffle == true) {
+		} else if (controller.getCurSong() != null && shuffle == true) {
 			shuffleButton.setBackground(active);
 		}
 		
@@ -972,7 +972,6 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		VBox curSongView = showCurSong();
 
-		mediaBar = new MediaBar(mediaPlayers);
 		
 
 		controls = new ControlMenu();
