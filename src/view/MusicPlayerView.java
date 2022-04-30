@@ -41,6 +41,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.ConstraintsBase;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -93,8 +94,8 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	private String MEDIA_URL = "";
 	
-	
 	private ArrayList<Thread> threads;
+	private ArrayList<MediaPlayer> mediaPlayers;
 	
 
 	
@@ -124,31 +125,20 @@ public class MusicPlayerView extends Application implements Observer{
 		controller = new MusicPlayerController(model);
 
 		threads = new ArrayList<>();
-		//Song song = songLibrary.getSongs().get(0);
-		//String path = song.getAudioPath();
-		//File file = new File(path);
-		//String MEDIA_URL = file.toURI().toString();
+		mediaPlayers = new ArrayList<>();
+		
+		Song song = songLibrary.getSongs().get(0);
+		String path = song.getAudioPath();
+		File file = new File(path);
+		String MEDIA_URL = file.toURI().toString();
 		//System.out.println(MEDIA_URL);
-		//media = new Media("Audios/400km.wav");
-		//mediaPlayer = new MediaPlayer(media);
-		//mediaView = new MediaView(mediaPlayer);
-		if (controller.getCurSong() != null) {
-			 String path = controller.getCurSong().getAudioPath();
-		     File file = new File(path);
-		     String path2 = file.toURI().toString();
-		     //Instantiating Media class  
-		     Media media = new Media(path2); 
-		     mediaPlayer = new MediaPlayer(media);  
-	          
-	        //by setting this property to true, the audio will be played   
-	        mediaPlayer.setAutoPlay(true); 
-		}
+		media = new Media(MEDIA_URL);
+		mediaPlayer = new MediaPlayer(media);
+		mediaView = new MediaView(mediaPlayer);
 
 		model.addObserver(this);
 		
 //		URI uri = new URI("");
-		File file = new File("Audios/400km.wav");
-		String mediaURL = file.toURI().toString();
 
 		//Media media = new Media(mediaURL);
 		//player = new MediaPlayer(media);
@@ -420,6 +410,8 @@ public class MusicPlayerView extends Application implements Observer{
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				stopThreads();
+				mediaPlayers = new ArrayList<>();
+				
 				Node source = (Node)mouseEvent.getTarget();
 				Node p = source.getParent(); //idk why SongTile is double parent.
 				Song song = ((SongTile)p).getSong();
@@ -427,9 +419,11 @@ public class MusicPlayerView extends Application implements Observer{
 				
 				Media file = new Media(new File(song.getAudioPath()).toURI().toString());
 				mediaPlayer = new MediaPlayer(file);
+				mediaView = new MediaView(mediaPlayer);
+				mediaPlayers.add(mediaPlayer);
 				Runnable runnable =
 					    new Runnable(){
-					        public void run() {
+							public void run() {
 								mediaPlayer.setAutoPlay(true);
 					        }
 					    };
@@ -769,6 +763,7 @@ public class MusicPlayerView extends Application implements Observer{
 					        		Media file = new Media(new File(song.getAudioPath()).toURI().toString());
 									mediaPlayer = new MediaPlayer(file);
 									mediaPlayer.setAutoPlay(true);
+									mediaView = new MediaView(mediaPlayer);
 									try {
 										TimeUnit.SECONDS.sleep((long) song.getDuration());
 									} catch (InterruptedException e) {
@@ -943,14 +938,12 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		UI.getChildren().addAll(menu, songView, bottomMenu);
 		
-		
-		
 		hbox.getChildren().addAll(image, UI);
 		
 		VBox curSongView = showCurSong();
 		GridPane controls = setButtons();
 		
-		mediaBar = new MediaBar(mediaPlayer);
+		mediaBar = new MediaBar(mediaPlayers);
 		
 		curSongView.setAlignment(Pos.CENTER);
 		controls.setAlignment(Pos.CENTER);
