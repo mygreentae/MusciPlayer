@@ -24,7 +24,9 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -70,12 +72,11 @@ import utilities.SongLibrary;
 public class MusicPlayerView extends Application implements Observer{
 	
 	private static MusicPlayerController controller;
-	private static MusicPlayerModel model; 
 	private static SongLibrary songLibrary;
 	
 	private MediaPlayer player;
-	private static final long JUMP_BY = 5000; // this is in milli secs
 	
+	private ControlMenu controls;
 	
 	//edit modes/ control what is shown in playlistView
 	private static Boolean editMode;
@@ -103,6 +104,7 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	
 	
+
 	private static final int TILE_HEIGHT = 50;
 	private static final int TILE_WIDTH = 100;
 	private static final int TITLE_FONT_SIZE = 18;
@@ -123,7 +125,7 @@ public class MusicPlayerView extends Application implements Observer{
 	public void start(Stage stage) throws IOException, URISyntaxException {
 		mainStage = stage;
 		songLibrary = new SongLibrary();
-		model = new MusicPlayerModel(songLibrary);
+		MusicPlayerModel model = new MusicPlayerModel(songLibrary);
 		controller = new MusicPlayerController(model);
 
 		threads = new ArrayList<>();
@@ -140,6 +142,7 @@ public class MusicPlayerView extends Application implements Observer{
 
 		model.addObserver(this);
 		
+
 //		URI uri = new URI("");
 
 		//Media media = new Media(mediaURL);
@@ -165,15 +168,10 @@ public class MusicPlayerView extends Application implements Observer{
 //		Song song = controller.search("400km");
 //		controller.changeSong(song);
 
+
 		
 		VBox root = new VBox();
 		HBox hbox = new HBox();
-		
-		// get and set cover art
-//		ImageView imageView = new ImageView();
-//		imageView.setImage(new Image("images/no-cover-art-found.jpg"));
-//		imageView.setFitHeight(400);		model.unShuffle(playlist);
-//		imageView.setFitWidth(400);
 		
 		ImageView image = setAlbumArt(controller.getCurSong());
 		
@@ -188,31 +186,24 @@ public class MusicPlayerView extends Application implements Observer{
 		songView.setPrefViewportHeight(SCROLL_MAX_HEIGHT);
 		
 		UI.getChildren().addAll(menu, songView, bottomMenu);
-		
-		
-		
 		hbox.getChildren().addAll(image, UI);
 		
 		VBox curSongView = showCurSong();
-		GridPane controls = setButtons();
 		
-		
-		//MediaBar bar = new MediaBar(player);
-		
+		controls = new ControlMenu();
 		curSongView.setAlignment(Pos.CENTER);
+
 		controls.setAlignment(Pos.CENTER);
-		root.getChildren().addAll(hbox, curSongView);
 //		root.getChildren().add(new MediaView(player));
+
+//		controls.setAlignment(Pos.CENTER);
+		root.getChildren().addAll(hbox, curSongView, controls);
+
 		
-		
-		//root.getChildren().add(p2);
 		Scene scene = new Scene(root);
-//		scene.setOnKeyReleased(pausePlay);
 		stage.setScene(scene);
 		stage.setTitle("Music Player");
 		stage.show();
-//		handleEvents(playPause, stop);
-		
 	}
 	
 	private VBox showCurSong() {
@@ -298,13 +289,13 @@ public class MusicPlayerView extends Application implements Observer{
 
         
         //idk what we need these for
-        Button restart = new Button("Restart");
-        GridPane.setConstraints(restart, 4,0);
-        restart.setOnAction(event ->  restartAudio());
+//        Button restart = new Button("Restart");
+//        GridPane.setConstraints(restart, 4,0);
+//        restart.setOnAction(event ->  restartAudio());
 
-        Button jump = new Button("Jump");
-        //GridPane.setConstraints(jump, 5,0);
-        jump.setOnAction(event ->  jump(JUMP_BY));
+//        Button jump = new Button("Jump");
+//        //GridPane.setConstraints(jump, 5,0);
+//        jump.setOnAction(event ->  jump(JUMP_BY));
         
         Label searchLabel = new Label();
         searchLabel.setText("Search");
@@ -400,7 +391,8 @@ public class MusicPlayerView extends Application implements Observer{
 	private ScrollPane playListView() {
 		ScrollPane scroller = new ScrollPane();
 		GridPane songView = new GridPane();
-//		songView.setPadding(new Insets(5, 10, 0, 20));
+		songView.setPadding(new Insets(5, 10, 0, 20));
+		scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		
 		//change to current song queue
 		//ArrayList<Song> songList = controller.getCurPlaylist().getSongList();
@@ -456,6 +448,7 @@ public class MusicPlayerView extends Application implements Observer{
 //			}
 //		};
 		
+
 		EventHandler<MouseEvent> highlightSong = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
@@ -493,7 +486,7 @@ public class MusicPlayerView extends Application implements Observer{
 			songTile.getArtist().setText(songList.get(i).getArtist());
 			
 			//songTile.setOnMouseClicked(playSong);
-			songTile.getPlayButton().addEventFilter(MouseEvent.MOUSE_CLICKED, playSong);
+//			songTile.getPlayButton().addEventFilter(MouseEvent.MOUSE_CLICKED, playSong);
 
 			songTile.setOnMouseEntered(highlightSong);
 			songTile.setOnMouseExited(unhighlightSong);
@@ -563,12 +556,8 @@ public class MusicPlayerView extends Application implements Observer{
     	return imageView;
     }
 	
-
-	
-	
-	
-	
 	private class SongTile extends BorderPane {
+		private static final int PLAY_BUTTON_SIZE = 25;
 		
 		private Button playButton;
 		private Text title;
@@ -598,52 +587,47 @@ public class MusicPlayerView extends Application implements Observer{
 				this.setBackground(highlight);
 			};
 			
-			
-			
 			titleRect = new Rectangle();
 			artistRect = new Rectangle();
-			
 			titleStack = new StackPane();
 			artistStack = new StackPane();
-			
 			titleStack.getChildren().addAll(titleRect, title);
 			artistStack.getChildren().addAll(artistRect, artist);
 			
 			title.setFont(new Font(TITLE_FONT_SIZE));
-			
 			artist.setFont(new Font(ARTIST_FONT_SIZE));
 			artist.setFill(Color.GRAY);
 			
 			setAlignment(title, Pos.TOP_RIGHT);
 			setAlignment(artist, Pos.BOTTOM_RIGHT);
 			
-			setMargin(border, new Insets(5, 5, 5, 5));
+
+			//mine setMargin(border, new Insets(5, 5, 5, 5));
+
+			setMargin(border, new Insets(5, 5, 20, SCROLL_MAX_WIDTH/5));
+
 			setMargin(playButton, new Insets(10, 5, 5, 5));
 			
 			border.setTop(title);
 			border.setBottom(artist);
-		
+	
 			
-			playButton = new Button();
+	        playButton = new Button();
 			playButton.setVisible(false);
-			//Button button= new Button();
-//			playButton.setPrefHeight(40);
-//			playButton.setPrefWidth(40);
-//			playButton.setStyle("-fx-shape: 'M 0 0 0 40 20 20 z'; -fx-border-color: rgb(49, 89, 23); -fx-border-radius: 5");
-			//playButton.setStyle("-fx-padding: 3 6 6 6");
-		   // "-fx-border-radius: 5"
-		    //"-fx-padding: 3 6 6 6"
-
 			playButton.setShape(new Circle(10));
-//			button.setText("play");
-	        ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
-	        playButton.setGraphic(imageView);
-	        imageView.setFitHeight(25);
-	        imageView.setFitWidth(25);
+			
+			// has to be this order or the button will be messed up
+			// idk why lol
+			ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
+	        imageView.setFitHeight(PLAY_BUTTON_SIZE);
+	        imageView.setFitWidth(PLAY_BUTTON_SIZE);
 	        imageView.setPreserveRatio(true);
-	        //Important otherwise button will wrap to text + graphic size (no resizing on scaling).
+	        playButton.setGraphic(imageView);
 	        playButton.setMaxWidth(Double.MAX_VALUE);    
 	        playButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+
+	        
+			//playButton.setOnAction(new EventHandler<ActionEvent> () {};
 
 	        
 			setMargin(playButton, new Insets(10, 10, 10, 5));
@@ -698,8 +682,191 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	}
 	
-	
-	
+
+	private class ControlMenu extends HBox {
+		private static final int BUTTON_SIZE_1 = 60;
+		private static final int BUTTON_SIZE_2 = 45;
+		private static final int BUTTON_SIZE_3 = 30;
+		
+		private Button playPauseButton;
+		private Button shuffleButton;
+		private Button fastForwardButton;
+		private Button backwardButton;
+		private Button prevSongButton;
+		private Button nextSongButton;
+		
+		private ControlMenu() {
+			playPauseButton = new Button();
+			shuffleButton = new Button();
+			fastForwardButton = new Button();
+			backwardButton = new Button();
+			prevSongButton = new Button();
+			nextSongButton = new Button();
+			
+			setPausePlayButton();
+			setShuffleButton();
+			setFastForwardButton();
+			setBackwardButton();
+			setPrevSongButton();
+			setNextSongButton();
+			
+			getChildren().addAll(prevSongButton, backwardButton, playPauseButton, fastForwardButton, nextSongButton, shuffleButton);
+			setAlignment(Pos.CENTER);
+		}
+		
+		private void setPausePlayButton() {
+			playPauseButton.setShape(new Circle(10));
+						
+			ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
+	        imageView.setFitHeight(BUTTON_SIZE_1);
+	        imageView.setFitWidth(BUTTON_SIZE_1);
+	        imageView.setPreserveRatio(true);
+	        playPauseButton.setGraphic(imageView);
+	        playPauseButton.setMaxWidth(Double.MAX_VALUE);    
+	        playPauseButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+	        
+			playPauseButton.setOnAction(new EventHandler<ActionEvent> () {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					if (controller.getCurSong() == null) {
+						ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
+				        
+				        Platform.runLater(() -> {
+					        Alert dialog = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
+					        dialog.show();
+					    });
+					}
+					
+					else if (controller.isPlayingSong()) {
+						ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
+						controller.pause();
+						
+					}
+					else if (!controller.isPlayingSong()) {
+						ImageView imageView = new ImageView(new Image ("utilities/buttons/pause.png"));
+						controller.resume();
+						
+					}
+					
+					imageView.setFitHeight(BUTTON_SIZE_1);
+			        imageView.setFitWidth(BUTTON_SIZE_1);
+			        imageView.setPreserveRatio(true);
+			        playPauseButton.setGraphic(imageView);
+			        playPauseButton.setMaxWidth(Double.MAX_VALUE);    
+			        playPauseButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+				
+				}
+				
+			}) ;
+		}
+		
+		private void setFastForwardButton() {
+			fastForwardButton.setShape(new Circle(10));
+			
+			ImageView imageView = new ImageView(new Image ("utilities/buttons/forward.png"));
+	        imageView.setFitHeight(BUTTON_SIZE_2);
+	        imageView.setFitWidth(BUTTON_SIZE_2);
+	        imageView.setPreserveRatio(true);
+	        fastForwardButton.setGraphic(imageView);
+	        fastForwardButton.setMaxWidth(Double.MAX_VALUE);    
+	        fastForwardButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+	        
+			fastForwardButton.setOnAction(new EventHandler<ActionEvent> () {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					// TODO	
+				}
+			}) ;
+		}
+		
+		private void setBackwardButton() {
+			backwardButton.setShape(new Circle(10));
+			
+			ImageView imageView = new ImageView(new Image ("utilities/buttons/backward.png"));
+	        imageView.setFitHeight(BUTTON_SIZE_2);
+	        imageView.setFitWidth(BUTTON_SIZE_2);
+	        imageView.setPreserveRatio(true);
+	        backwardButton.setGraphic(imageView);
+	        backwardButton.setMaxWidth(Double.MAX_VALUE);    
+	        backwardButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+	        
+			backwardButton.setOnAction(new EventHandler<ActionEvent> () {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					// TODO	
+				}
+			});
+		}
+		
+		private void setNextSongButton() {
+			nextSongButton.setShape(new Circle(10));
+			
+			ImageView imageView = new ImageView(new Image ("utilities/buttons/next-song.png"));
+	        imageView.setFitHeight(BUTTON_SIZE_2);
+	        imageView.setFitWidth(BUTTON_SIZE_2);
+	        imageView.setPreserveRatio(true);
+	        nextSongButton.setGraphic(imageView);
+	        nextSongButton.setMaxWidth(Double.MAX_VALUE);    
+	        nextSongButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+	        
+			nextSongButton.setOnAction(new EventHandler<ActionEvent> () {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					// TODO	
+				}
+			});
+		}
+		
+		private void setPrevSongButton() {
+			shuffleButton.setShape(new Circle(10));
+			
+			ImageView imageView = new ImageView(new Image ("utilities/buttons/prev-song.png"));
+	        imageView.setFitHeight(BUTTON_SIZE_2);
+	        imageView.setFitWidth(BUTTON_SIZE_2);
+	        imageView.setPreserveRatio(true);
+	        prevSongButton.setGraphic(imageView);
+	        prevSongButton.setMaxWidth(Double.MAX_VALUE);    
+	        prevSongButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+	        
+			prevSongButton.setOnAction(new EventHandler<ActionEvent> () {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					// TODO	
+				}
+			}) ;
+		}
+		
+		private void setShuffleButton() {
+			shuffleButton.setShape(new Circle(10));
+			
+			ImageView imageView = new ImageView(new Image ("utilities/buttons/shuffle.png"));
+	        imageView.setFitHeight(BUTTON_SIZE_3);
+	        imageView.setFitWidth(BUTTON_SIZE_3);
+	        imageView.setPreserveRatio(true);
+	        shuffleButton.setGraphic(imageView);
+	        shuffleButton.setMaxWidth(Double.MAX_VALUE);    
+	        shuffleButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+	        
+			shuffleButton.setOnAction(new EventHandler<ActionEvent> () {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					PlayList librarySongs = new PlayList(songLibrary.getSongs());
+					if (controller.getCurPlaylist() == null) {
+						controller.playPlaylist(librarySongs, true, null);
+					} else {
+						controller.playPlaylist(controller.getCurPlaylist(), true, null);
+					}	
+				}
+			}) ;
+		}
+	}
+
 	
 	private class Menu extends BorderPane {
 	
@@ -707,8 +874,6 @@ public class MusicPlayerView extends Application implements Observer{
 	public BorderPane border;
 	private GridPane menu;
 
-	
-	
 	private Button playButton;
 	private Button shuffleButton;
 	private Button artistButton;
@@ -874,18 +1039,15 @@ public class MusicPlayerView extends Application implements Observer{
 		shuffleButton.addEventHandler(MouseEvent.MOUSE_CLICKED, shufflePlaylist);
 		artistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyArtist);
 		titleButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyTitle);
+
 		}	
 	}
 
 	
 	private class BottomMenu extends BorderPane {
-		
-		
 		public BorderPane border;
 		private GridPane menu;
 
-		
-		
 		private Button playButton;
 		private Button shuffleButton;
 		private Button editButton;
@@ -975,19 +1137,13 @@ public class MusicPlayerView extends Application implements Observer{
 		}
 		*/
 		
-		
 		VBox root = new VBox();
 		HBox hbox = new HBox();
 		
-		// get and set cover art
-//		ImageView imageView = new ImageView();
-//		imageView.setImage(new Image("images/no-cover-art-found.jpg"));
-//		imageView.setFitHeight(400);
-//		imageView.setFitWidth(400);
+		ImageView image = setAlbumArt(controller.getCurSong());
+		
 		hbox.setPadding(new Insets(10, 10, 10, 10));
 		
-		ImageView image = setAlbumArt(controller.getCurSong());
-
 		VBox UI = new VBox();
 		BorderPane menu = new Menu(songLibrary);
 		BorderPane bottomMenu = new BottomMenu(songLibrary);
@@ -997,24 +1153,30 @@ public class MusicPlayerView extends Application implements Observer{
 		songView.setPrefViewportHeight(SCROLL_MAX_HEIGHT);
 		
 		UI.getChildren().addAll(menu, songView, bottomMenu);
-		
+
 		hbox.getChildren().addAll(image, UI);
 		
 		VBox curSongView = showCurSong();
-		GridPane controls = setButtons();
+
+		mediaBar = new MediaBar(mediaPlayers);
 		
+
+		controls = new ControlMenu();
+
 		if (controller.getCurSong() != null && mediaPlayers.size() > 0) {
 			mediaBar = new MediaBar(mediaPlayers);
 			curSongView.setAlignment(Pos.CENTER);
 			controls.setAlignment(Pos.CENTER);
-			root.getChildren().addAll(hbox, curSongView, mediaBar);
+			root.getChildren().addAll(hbox, curSongView, controls, mediaBar);
 		} else {
 			curSongView.setAlignment(Pos.CENTER);
 			controls.setAlignment(Pos.CENTER);
-			root.getChildren().addAll(hbox, curSongView);
+			root.getChildren().addAll(hbox, curSongView, controls);
 		}
+
 		Scene scene = new Scene(root);
 		mainStage.setScene(scene);
+		mainStage.show();
 		
 	}
 	
@@ -1036,3 +1198,4 @@ public class MusicPlayerView extends Application implements Observer{
 	}
 
 }
+
