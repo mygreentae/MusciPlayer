@@ -70,7 +70,7 @@ import javafx.scene.control.ProgressBar;
 import utilities.SongLibrary;
 
 public class MusicPlayerView extends Application implements Observer{
-	
+	private static MusicPlayerModel model;
 	private static MusicPlayerController controller;
 	private static SongLibrary songLibrary;
 	
@@ -112,7 +112,7 @@ public class MusicPlayerView extends Application implements Observer{
 	private static final int CUR_ARTIST_SIZE = 10;
 	private static final int ARTIST_FONT_SIZE = 10;
 	private static final int SCROLL_MAX_HEIGHT = 332;
-	private static final int SCROLL_MAX_WIDTH = 250;
+	private static final int SCROLL_MAX_WIDTH = 280;
 	private static Stage mainStage;
 	
 	
@@ -125,7 +125,7 @@ public class MusicPlayerView extends Application implements Observer{
 	public void start(Stage stage) throws IOException, URISyntaxException {
 		mainStage = stage;
 		songLibrary = new SongLibrary();
-		MusicPlayerModel model = new MusicPlayerModel(songLibrary);
+		model = new MusicPlayerModel(songLibrary);
 		controller = new MusicPlayerController(model);
 
 		threads = new ArrayList<>();
@@ -141,33 +141,6 @@ public class MusicPlayerView extends Application implements Observer{
 		mediaView = new MediaView(mediaPlayer);
 
 		model.addObserver(this);
-		
-
-//		URI uri = new URI("");
-
-		//Media media = new Media(mediaURL);
-		//player = new MediaPlayer(media);
-		
-		/*
-		EventHandler<KeyEvent> pausePlay = new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent keyEvent) {
-
-				if (keyEvent.getCode() == KeyCode.SPACE) {
-					if (controller.getCurSong() != null) {
-						if (controller.getCurSong().isPlaying()) {
-							controller.pause();
-						} else {
-							controller.resume();
-						}
-					}
-				}
-			}
-		};
-		*/
-//		Song song = controller.search("400km");
-//		controller.changeSong(song);
-
 
 		
 		VBox root = new VBox();
@@ -249,144 +222,6 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		return vbox;
 	}
-	
-	private GridPane setButtons() {
-		GridPane gp = new GridPane();
-        gp.setHgap(10);
-
-        // play/pause/resume can all be the same button
- //       Button play = new Button("Play");
-//        play.setShape(new Circle(15));
-//        GridPane.setConstraints(play, 0,0);
-//        play.setOnAction(event->  playAudio());
-
-        Button back = new Button("Unskip");
-        GridPane.setConstraints(back, 1,0);
-        back.setOnAction(event -> pauseAudio());
-        if (controller.getCurSong() == null){
-        	back.setText("Back");
-        }
-        
-        
-        Button pause = new Button("Play/Pause");
-        GridPane.setConstraints(pause, 2,0);
-        pause.setOnAction(event -> pauseAudio());
-        if (controller.getCurSong() == null){
-        	pause.setText("Pick Song");
-        } else {
-        	pause.setText("Play/Pause");
-        }
-
-//        Button resume = new Button("Resume");
-//        resume.setShape(new Circle(15));
-//        GridPane.setConstraints(resume, 2,0);
-//        resume.setOnAction(event -> resumeAudio());
-
-        //right side of play, also need a back button
-        Button skip = new Button("Skip");
-        GridPane.setConstraints(skip, 3,0);
-        skip.setOnAction(event ->  skipAudio());
-
-        
-        //idk what we need these for
-//        Button restart = new Button("Restart");
-//        GridPane.setConstraints(restart, 4,0);
-//        restart.setOnAction(event ->  restartAudio());
-
-//        Button jump = new Button("Jump");
-//        //GridPane.setConstraints(jump, 5,0);
-//        jump.setOnAction(event ->  jump(JUMP_BY));
-        
-        Label searchLabel = new Label();
-        searchLabel.setText("Search");
-        GridPane.setConstraints(searchLabel, 5, 0);
-        TextField search = new TextField();
-        GridPane.setConstraints(search, 6, 0);
-        // figure out!
-//        Label time = new Label();
-//        GridPane.setConstraints(time, 6,0);
-//        time.textProperty().bind(player.currentTimeProperty().asString("%.4s") );
-
-//        gp.getChildren().addAll(play, pause, resume, skip, restart, jump);
-        gp.getChildren().addAll(back, pause, skip, search);
-        
-        return gp;
-	}
-	
-	//play audio 
-    public void playAudio() {
-        //player.play();
-    	controller.changeSong(controller.getCurSong());
-    }
-
-    //pause audio
-    public  void pauseAudio() {
-    	// media player
-    	/*
-        if (player.getStatus().equals(Status.PAUSED)) {
-            System.out.println("audio is already paused");
-            return;
-        }
-        player.pause();
-        */
-    	
-    	// back-end
-    	
-    	if (controller.getCurSong() == null) {
-    		return;
-    	}
-    	if (controller.isPlayingSong()) {
-    		controller.pause();
-    	} else {
-    		controller.resume();
-    	}
-    }
-
-    //resume audio
-    public void resumeAudio()
-    {	// media player
-    	/*
-        if (player.getStatus().equals(Status.PLAYING))
-        {
-            System.out.println("Audio is already playing");
-            return;
-        }
-        playAudio();
-       	*/
-    	
-    	// back-end
-    	if (!controller.isPlayingSong()) {
-    		controller.resume();
-    	} else {
-    		System.out.println("audio is already playing");
-    	}
-    }
-
-    //restart audio
-    public void restartAudio() {
-        //player.seek(Duration.ZERO);
-        //playAudio();
-    	controller.restart();
-    }
-
-    // stop audio
-    public void skipAudio() {
-    	if (controller.getCurSong() == null) {
-    		return;
-    	}
-       //player.stop();
-    	controller.skip();
-    }
-
-    //jump by c millis 
-    public void jump(long c) {
-        player.seek(player.getCurrentTime().add(Duration.millis(c)));
-    }
-    
-    public void makePlayList() {
-    	String name = "";
-    	controller.makePlaylist(name);
-    }
 
 	private ScrollPane playListView() {
 		ScrollPane scroller = new ScrollPane();
@@ -490,6 +325,7 @@ public class MusicPlayerView extends Application implements Observer{
 
 			songTile.setOnMouseEntered(highlightSong);
 			songTile.setOnMouseExited(unhighlightSong);
+			songTile.getPlayButton().setOnMouseClicked(playSong);
 			songTile.setPrefWidth(250);
 			songView.add(songTile, 1, i);
 			songTile.border.autosize();
@@ -497,29 +333,6 @@ public class MusicPlayerView extends Application implements Observer{
 		//songView.getColumnConstraints().add(new ColumnConstraints(75));
 		scroller.setContent(songView);
 		return scroller;
-	}
-	
-	private void handleEvents(Button playPause, Button stop) {
-		playPause.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent ae) {
-				controller.resume();
-				
-			}
-			
-		});
-		stop.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent ae) {
-				controller.pause();
-				
-			}
-			
-		});
-	}
-	
-	private void changePlaylist(String name) {
-		// controller.changePlaylist(String name)
 	}
 
 	private ImageView setAlbumArt(Song curSong) {
@@ -602,11 +415,11 @@ public class MusicPlayerView extends Application implements Observer{
 			setAlignment(artist, Pos.BOTTOM_RIGHT);
 			
 
-			//mine setMargin(border, new Insets(5, 5, 5, 5));
+			setMargin(border, new Insets(5, 5, 20, 30));
 
-			setMargin(border, new Insets(5, 5, 20, SCROLL_MAX_WIDTH/5));
+			//setMargin(border, new Insets(5, 5, 20, SCROLL_MAX_WIDTH/5));
 
-			setMargin(playButton, new Insets(10, 5, 5, 5));
+			setMargin(playButton, new Insets(15, 5, 5, 5));
 			
 			border.setTop(title);
 			border.setBottom(artist);
@@ -621,6 +434,7 @@ public class MusicPlayerView extends Application implements Observer{
 			ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
 	        imageView.setFitHeight(PLAY_BUTTON_SIZE);
 	        imageView.setFitWidth(PLAY_BUTTON_SIZE);
+	        
 	        imageView.setPreserveRatio(true);
 	        playButton.setGraphic(imageView);
 	        playButton.setMaxWidth(Double.MAX_VALUE);    
@@ -731,6 +545,12 @@ public class MusicPlayerView extends Application implements Observer{
 				public void handle(ActionEvent arg0) {
 					if (controller.getCurSong() == null) {
 						ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
+						imageView.setFitHeight(BUTTON_SIZE_1);
+				        imageView.setFitWidth(BUTTON_SIZE_1);
+				        imageView.setPreserveRatio(true);
+				        playPauseButton.setGraphic(imageView);
+				        playPauseButton.setMaxWidth(Double.MAX_VALUE);    
+				        playPauseButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 				        
 				        Platform.runLater(() -> {
 					        Alert dialog = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
@@ -740,21 +560,28 @@ public class MusicPlayerView extends Application implements Observer{
 					
 					else if (controller.isPlayingSong()) {
 						ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
+						imageView.setFitHeight(BUTTON_SIZE_1);
+				        imageView.setFitWidth(BUTTON_SIZE_1);
+				        imageView.setPreserveRatio(true);
+				        playPauseButton.setGraphic(imageView);
+				        playPauseButton.setMaxWidth(Double.MAX_VALUE);    
+				        playPauseButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 						controller.pause();
 						
 					}
 					else if (!controller.isPlayingSong()) {
 						ImageView imageView = new ImageView(new Image ("utilities/buttons/pause.png"));
+						imageView.setFitHeight(BUTTON_SIZE_1);
+				        imageView.setFitWidth(BUTTON_SIZE_1);
+				        imageView.setPreserveRatio(true);
+				        playPauseButton.setGraphic(imageView);
+				        playPauseButton.setMaxWidth(Double.MAX_VALUE);    
+				        playPauseButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 						controller.resume();
 						
 					}
 					
-					imageView.setFitHeight(BUTTON_SIZE_1);
-			        imageView.setFitWidth(BUTTON_SIZE_1);
-			        imageView.setPreserveRatio(true);
-			        playPauseButton.setGraphic(imageView);
-			        playPauseButton.setMaxWidth(Double.MAX_VALUE);    
-			        playPauseButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+					
 				
 				}
 				
@@ -911,9 +738,9 @@ public class MusicPlayerView extends Application implements Observer{
 		setCenter(border); 
 		
 		Background active = new Background(new BackgroundFill(Color.LIGHTGREEN, new CornerRadii(0), Insets.EMPTY));
-		if (controller.isPlayingSong() && shuffle == false) {
+		if (controller.getCurSong() != null && shuffle == false) {
 			playButton.setBackground(active);
-		} else if (controller.isPlayingSong() && shuffle == true) {
+		} else if (controller.getCurSong() != null && shuffle == true) {
 			shuffleButton.setBackground(active);
 		}
 		
@@ -1158,7 +985,6 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		VBox curSongView = showCurSong();
 
-		mediaBar = new MediaBar(mediaPlayers);
 		
 
 		controls = new ControlMenu();
