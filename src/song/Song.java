@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.concurrent.TimeUnit;
 
 import javax.sound.sampled.*;
@@ -33,7 +32,7 @@ import utilities.PlayList;
  *
  */
 
-public class Song extends Observable{
+public class Song {
 
 	//properties
 	private Clip audio;
