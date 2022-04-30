@@ -11,3 +11,4 @@ YOKAZE, 変態紳士クラブ, j-rap, src/images/i hate you.jpg, Audios/YOKAZE.w
 Routine, Han Yo Han, k-rap, src/images/i hate you.jpg, Audios/Routine.wav
 Tired Song, 大张伟, c-pop, src/images/i hate you.jpg, Audios/Tired-Song.wav
 I Hate You, SZA, RNB, src/images/i hate you.jpg, Audios/I-Hate-You.wav
+Survival, Muse, IDK, src/images/survival/jpg, Audios/Survival.wav
