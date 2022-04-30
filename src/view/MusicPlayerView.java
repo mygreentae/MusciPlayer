@@ -94,6 +94,8 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	private String MEDIA_URL = "";
 	
+	private Boolean shuffle = false;
+	
 	private ArrayList<Thread> threads;
 	private ArrayList<MediaPlayer> mediaPlayers;
 	
@@ -404,19 +406,22 @@ public class MusicPlayerView extends Application implements Observer{
 		//ArrayList<Song> songList = controller.getCurPlaylist().getSongList();
 		// add if (curPlaylist == null) {
 		// then this line, otherwise, songList == curPlaylist;
+		
 		ArrayList<Song> songList = songLibrary.getSongs();
+		PlayList playlist = controller.getCurPlaylist();
+		if (playlist != null) {
+			songList = playlist.getSongList();
+		} 
 		
 		EventHandler<MouseEvent> playSong = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				stopThreads();
 				mediaPlayers = new ArrayList<>();
-				
 				Node source = (Node)mouseEvent.getTarget();
 				Node p = source.getParent(); //idk why SongTile is double parent.
 				Song song = ((SongTile)p).getSong();
 
-				
 				Media file = new Media(new File(song.getAudioPath()).toURI().toString());
 				mediaPlayer = new MediaPlayer(file);
 				mediaView = new MediaView(mediaPlayer);
@@ -427,12 +432,17 @@ public class MusicPlayerView extends Application implements Observer{
 								mediaPlayer.setAutoPlay(true);
 					        }
 					    };
-				//controller.playPlaylist(librarySongs, false, null);  
+				//controller.(librarySongs, false, null);  
 				Thread thread = new Thread(runnable);
 				threads.add(thread);
 				thread.start();
-
-				controller.changeSong(song);
+				
+				if (controller.isPlayingQueue() || !controller.isPlayingSong()) {
+					controller.changeSong(song);
+				} else {
+					PlayList playlist = controller.getCurPlaylist();
+					controller.playPlaylist(playlist, false, song);
+				}
 			}
 		};
 
@@ -701,8 +711,8 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	private Button playButton;
 	private Button shuffleButton;
-	private Button editButton;
-	private Button playlistButton;
+	private Button artistButton;
+	private Button titleButton;
 	private Button dateButton;
 	
 	private Song song;
@@ -713,17 +723,17 @@ public class MusicPlayerView extends Application implements Observer{
 		border = new BorderPane();
 		playButton = new Button("Play");
 		shuffleButton = new Button("Shuffle");
-		editButton = new Button("Artist");
-		playlistButton = new Button("Title");
+		artistButton = new Button("Artist");
+		titleButton = new Button("Title");
 		dateButton = new Button("Date");
 		menu = new GridPane();
 		
 		GridPane.setConstraints(playButton, 1, 0);
 		GridPane.setConstraints(shuffleButton, 2, 0);
-		GridPane.setConstraints(editButton, 3, 0);
-		GridPane.setConstraints(playlistButton, 4, 0);
+		GridPane.setConstraints(artistButton, 3, 0);
+		GridPane.setConstraints(titleButton, 4, 0);
 		
-		menu.getChildren().addAll(playButton, shuffleButton, editButton, playlistButton);
+		menu.getChildren().addAll(playButton, shuffleButton, artistButton, titleButton);
 		
 		menu.setHgap(10);
         menu.setVgap(10);
@@ -735,6 +745,13 @@ public class MusicPlayerView extends Application implements Observer{
 		addEventHandlers();
 		setCenter(border); 
 		
+		Background active = new Background(new BackgroundFill(Color.LIGHTGREEN, new CornerRadii(0), Insets.EMPTY));
+		if (controller.isPlayingSong() && shuffle == false) {
+			playButton.setBackground(active);
+		} else if (controller.isPlayingSong() && shuffle == true) {
+			shuffleButton.setBackground(active);
+		}
+		
 		
 	}
 	
@@ -744,13 +761,14 @@ public class MusicPlayerView extends Application implements Observer{
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				stopThreads();
+				shuffle = false;
 				System.out.println("played playlist");
 				PlayList librarySongs = new PlayList(songLibrary.getSongs());
 				if (controller.getCurPlaylist() == null) {
-					controller.playPlaylist(librarySongs, false, null);
+					controller.playPlaylist(librarySongs, shuffle, null);
 					//controller.playPlaylist(librarySongs, false, null);
 				} else {
-					controller.playPlaylist(controller.getCurPlaylist(), false, null);			
+					controller.playPlaylist(controller.getCurPlaylist(), shuffle, null);			
 				}
 				
 				Song song = controller.getCurPlaylist().getSongList().get(0);
@@ -762,16 +780,10 @@ public class MusicPlayerView extends Application implements Observer{
 					        		//controller.changeSong(song);
 					        		Media file = new Media(new File(song.getAudioPath()).toURI().toString());
 									mediaPlayer = new MediaPlayer(file);
-									mediaPlayer.setAutoPlay(true);
 									mediaView = new MediaView(mediaPlayer);
-									try {
-										TimeUnit.SECONDS.sleep((long) song.getDuration());
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}	
-									
+									mediaPlayers.add(mediaPlayer);
 					        	}
+					        	mediaPlayers.get(0).play();
 					        }
 					    };
 				//controller.playPlaylist(librarySongs, false, null);  
@@ -786,36 +798,82 @@ public class MusicPlayerView extends Application implements Observer{
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				stopThreads();
-				System.out.println("shuffled playlist");
-				
+				shuffle = true;
+				System.out.println("played playlist");
 				PlayList librarySongs = new PlayList(songLibrary.getSongs());
 				if (controller.getCurPlaylist() == null) {
-					controller.playPlaylist(librarySongs, true, null);
+					controller.playPlaylist(librarySongs, shuffle, null);
+					//controller.playPlaylist(librarySongs, false, null);
 				} else {
-					controller.playPlaylist(controller.getCurPlaylist(), true, song);			
+					controller.playPlaylist(controller.getCurPlaylist(), shuffle, null);			
 				}
 				
 				Song song = controller.getCurPlaylist().getSongList().get(0);
-
-			}
+				controller.changeSong(song);
+				Runnable runnable =
+					    new Runnable(){
+					        public void run(){
+					        	for (Song song : controller.getCurPlaylist().getSongList()) {
+					        		//controller.changeSong(song);
+					        		Media file = new Media(new File(song.getAudioPath()).toURI().toString());
+									mediaPlayer = new MediaPlayer(file);
+									mediaView = new MediaView(mediaPlayer);
+									mediaPlayers.add(mediaPlayer);
+					        	}
+					        	mediaPlayers.get(0).play();
+					        }
+					    };
+				//controller.playPlaylist(librarySongs, false, null);  
+				Thread thread = new Thread(runnable);
+				threads.add(thread);
+				thread.start();
+			} 
 		};
 		
 		EventHandler<MouseEvent> sortPlaylistbyArtist = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				System.out.println("shuffled");
-				PlayList librarySongs = new PlayList(songLibrary.getSongs());
-				if (controller.getCurPlaylist() == null) {
-					controller.playPlaylist(librarySongs, true, null);
+				System.out.println("sorted by artist");
+				PlayList curPlaylist = controller.getCurPlaylist();
+				
+				ArrayList<Song> songs = songLibrary.getSongs();
+				if (curPlaylist != null){
+					songs = curPlaylist.getSongList();
+					curPlaylist.setSongList(controller.sortArtist(songs));
 				} else {
-					controller.playPlaylist(controller.getCurPlaylist(), true, null);
+					songLibrary.setSongs(controller.sortArtist(songs));
+					for (Song song : songLibrary.getSongs()) {
+						System.out.println(song.getName());
+					}
 				}
-
+				update(model, null);
+			}
+		};
+		
+		EventHandler<MouseEvent> sortPlaylistbyTitle = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				System.out.println("sorted by artist");
+				PlayList curPlaylist = controller.getCurPlaylist();
+				
+				ArrayList<Song> songs = songLibrary.getSongs();
+				if (curPlaylist != null){
+					songs = curPlaylist.getSongList();
+					curPlaylist.setSongList(controller.sortTitle(songs));
+					
+				} else {
+					songLibrary.setSongs(controller.sortTitle(songs));
+					for (Song song : songLibrary.getSongs()) {
+						System.out.println(song.getName());
+					}
+				}
+				update(model, null);
 			}
 		};
 		playButton.addEventHandler(MouseEvent.MOUSE_CLICKED, playPlaylist);
 		shuffleButton.addEventHandler(MouseEvent.MOUSE_CLICKED, shufflePlaylist);
-		
+		artistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyArtist);
+		titleButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyTitle);
 		}	
 	}
 
@@ -870,11 +928,12 @@ public class MusicPlayerView extends Application implements Observer{
 				@Override
 				public void handle(MouseEvent mouseEvent) {
 					System.out.println("played playlist");
+					shuffle = false;
 					PlayList librarySongs = new PlayList(songLibrary.getSongs());
 					if (controller.getCurPlaylist() == null) {
-						controller.playPlaylist(librarySongs, false, null);
+						controller.playPlaylist(librarySongs, shuffle, null);
 					} else {
-						controller.playPlaylist(controller.getCurPlaylist(), false, null);
+						controller.playPlaylist(controller.getCurPlaylist(), shuffle, null);
 					}
 				} 
 				
@@ -884,11 +943,12 @@ public class MusicPlayerView extends Application implements Observer{
 				@Override
 				public void handle(MouseEvent mouseEvent) {
 					System.out.println("shuffled");
+					shuffle = true;
 					PlayList librarySongs = new PlayList(songLibrary.getSongs());
 					if (controller.getCurPlaylist() == null) {
-						controller.playPlaylist(librarySongs, true, null);
+						controller.playPlaylist(librarySongs, shuffle, null);
 					} else {
-						controller.playPlaylist(controller.getCurPlaylist(), true, null);
+						controller.playPlaylist(controller.getCurPlaylist(), shuffle, null);
 					}
 
 				}
@@ -943,12 +1003,16 @@ public class MusicPlayerView extends Application implements Observer{
 		VBox curSongView = showCurSong();
 		GridPane controls = setButtons();
 		
-		mediaBar = new MediaBar(mediaPlayers);
-		
-		curSongView.setAlignment(Pos.CENTER);
-		controls.setAlignment(Pos.CENTER);
-		root.getChildren().addAll(hbox, curSongView, mediaBar);
-		
+		if (controller.getCurSong() != null && mediaPlayers.size() > 0) {
+			mediaBar = new MediaBar(mediaPlayers);
+			curSongView.setAlignment(Pos.CENTER);
+			controls.setAlignment(Pos.CENTER);
+			root.getChildren().addAll(hbox, curSongView, mediaBar);
+		} else {
+			curSongView.setAlignment(Pos.CENTER);
+			controls.setAlignment(Pos.CENTER);
+			root.getChildren().addAll(hbox, curSongView);
+		}
 		Scene scene = new Scene(root);
 		mainStage.setScene(scene);
 		
@@ -961,9 +1025,14 @@ public class MusicPlayerView extends Application implements Observer{
 		if (mediaPlayer != null) {
 			mediaPlayer.stop();
 		}
+		
+		for (MediaPlayer player : mediaPlayers) {
+			player.stop();
+		}
 		for (Thread thread : threads) {
 			thread.stop();
 		}
+		System.out.println("Stopped threads");
 	}
 
 }

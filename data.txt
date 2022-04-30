@@ -3,7 +3,7 @@ Montero, Lil Nas X, pop, src/images/i hate you.jpg, Audios/Montero.wav
 Deja Vu, Ateez, k-pop, src/images/i hate you.jpg, Audios/Deja-Vu.wav
 Maniac, Stray Kids, k-pop, src/images/i hate you.jpg, Audios/Maniac.wav
 Freeze, Stray Kids, k-pop, src/images/i hate you.jpg, Audios/Freeze.wav
-yeat, Seth, rap, src/images/i hate you.jpg, Audios/yeat.wav
+Yeat, Seth, rap, src/images/i hate you.jpg, Audios/Yeat.wav
 400km, Han Yo Han, k-rap, src/images/i hate you.jpg, Audios/400km.wav
 Error, ASH Island, k-rap, src/images/i hate you.jpg, Audios/Error.wav
 Star Trail, SKOLOR, k-rap, src/images/i hate you.jpg, Audios/Star-Trail.wav

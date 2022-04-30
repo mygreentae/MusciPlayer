@@ -51,8 +51,8 @@ public class MediaBar extends HBox { // MediaBar extends Horizontal Box
         
         // Adding the components to the bottom
 
-        getChildren().add(PlayButton); // Playbutton
-        getChildren().add(skipButton);
+        //getChildren().add(PlayButton); // Playbutton
+       // getChildren().add(skipButton);
         getChildren().add(time); // time slider
         getChildren().add(volume); // volume slider
         getChildren().add(vol);
