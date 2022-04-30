@@ -93,7 +93,6 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	private String MEDIA_URL = "";
 	
-	
 	private ArrayList<Thread> threads;
 	
 
@@ -124,31 +123,18 @@ public class MusicPlayerView extends Application implements Observer{
 		controller = new MusicPlayerController(model);
 
 		threads = new ArrayList<>();
-		//Song song = songLibrary.getSongs().get(0);
-		//String path = song.getAudioPath();
-		//File file = new File(path);
-		//String MEDIA_URL = file.toURI().toString();
+		Song song = songLibrary.getSongs().get(0);
+		String path = song.getAudioPath();
+		File file = new File(path);
+		String MEDIA_URL = file.toURI().toString();
 		//System.out.println(MEDIA_URL);
-		//media = new Media("Audios/400km.wav");
-		//mediaPlayer = new MediaPlayer(media);
-		//mediaView = new MediaView(mediaPlayer);
-		if (controller.getCurSong() != null) {
-			 String path = controller.getCurSong().getAudioPath();
-		     File file = new File(path);
-		     String path2 = file.toURI().toString();
-		     //Instantiating Media class  
-		     Media media = new Media(path2); 
-		     mediaPlayer = new MediaPlayer(media);  
-	          
-	        //by setting this property to true, the audio will be played   
-	        mediaPlayer.setAutoPlay(true); 
-		}
+		media = new Media(MEDIA_URL);
+		mediaPlayer = new MediaPlayer(media);
+		mediaView = new MediaView(mediaPlayer);
 
 		model.addObserver(this);
 		
 //		URI uri = new URI("");
-		File file = new File("Audios/400km.wav");
-		String mediaURL = file.toURI().toString();
 
 		//Media media = new Media(mediaURL);
 		//player = new MediaPlayer(media);
@@ -427,9 +413,10 @@ public class MusicPlayerView extends Application implements Observer{
 				
 				Media file = new Media(new File(song.getAudioPath()).toURI().toString());
 				mediaPlayer = new MediaPlayer(file);
+				mediaView = new MediaView(mediaPlayer);
 				Runnable runnable =
 					    new Runnable(){
-					        public void run() {
+							public void run() {
 								mediaPlayer.setAutoPlay(true);
 					        }
 					    };
@@ -769,6 +756,7 @@ public class MusicPlayerView extends Application implements Observer{
 					        		Media file = new Media(new File(song.getAudioPath()).toURI().toString());
 									mediaPlayer = new MediaPlayer(file);
 									mediaPlayer.setAutoPlay(true);
+									mediaView = new MediaView(mediaPlayer);
 									try {
 										TimeUnit.SECONDS.sleep((long) song.getDuration());
 									} catch (InterruptedException e) {
@@ -942,8 +930,6 @@ public class MusicPlayerView extends Application implements Observer{
 		songView.setPrefViewportHeight(SCROLL_MAX_HEIGHT);
 		
 		UI.getChildren().addAll(menu, songView, bottomMenu);
-		
-		
 		
 		hbox.getChildren().addAll(image, UI);
 		

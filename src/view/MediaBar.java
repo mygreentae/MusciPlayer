@@ -1,5 +1,9 @@
 package view;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -14,6 +18,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.media.MediaView;
+import javafx.util.Duration;
 
 public class MediaBar extends HBox { // MediaBar extends Horizontal Box
 
@@ -21,14 +27,18 @@ public class MediaBar extends HBox { // MediaBar extends Horizontal Box
     Slider time = new Slider(); // Slider for time
     Slider vol = new Slider(); // Slider for volume
     Button PlayButton = new Button("||"); // For pausing the player
+    Button skipButton = new Button(">>");
     Label volume = new Label("Volume: ");
     MediaPlayer player;
+    MediaView mediaView;
+    List<MediaPlayer> players;
 
     public MediaBar(MediaPlayer play)
     { // Default constructor taking
         // the MediaPlayer object
         player = play;
-
+        players = new ArrayList<>();
+        
         setAlignment(Pos.CENTER); // setting the HBox to center
         setPadding(new Insets(5, 10, 5, 10));
         // Settih the preference for volume bar
@@ -37,10 +47,11 @@ public class MediaBar extends HBox { // MediaBar extends Horizontal Box
         vol.setValue(100);
         HBox.setHgrow(time, Priority.ALWAYS);
         PlayButton.setPrefWidth(30);
-
+        
         // Adding the components to the bottom
 
         getChildren().add(PlayButton); // Playbutton
+        getChildren().add(skipButton);
         getChildren().add(time); // time slider
         getChildren().add(volume); // volume slider
         getChildren().add(vol);
@@ -102,6 +113,15 @@ public class MediaBar extends HBox { // MediaBar extends Horizontal Box
                     // as specified by user by pressing
                 }
             }
+        });
+        
+        
+        skipButton.setOnAction(actionEvent -> {
+            final MediaPlayer curPlayer = mediaView.getMediaPlayer();
+            MediaPlayer nextPlayer = players.get((players.indexOf(curPlayer) + 1) % players.size());
+            nextPlayer.seek(Duration.ZERO);
+            mediaView.setMediaPlayer(nextPlayer);
+            nextPlayer.play();
         });
     }
 
