@@ -333,5 +333,12 @@ public class MusicPlayerController {
 	}
 	
 	
+	public ArrayList<Song> sortTitle(ArrayList<Song> songList){
+		return model.sortTitle(songList);
+	}
+	public ArrayList<Song> sortArtist(ArrayList<Song> songList){
+		return model.sortArtist(songList);
+	}
+	
 	
 }

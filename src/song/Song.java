@@ -39,6 +39,7 @@ public class Song {
 	private AudioInputStream stream;
 	private String name;
 	private String artist; 
+	private int date; //probably just a year
 	private String cover; // temporary for now.
 	private double durationInSeconds; // in seconds, needed for song play delay
 	private ArrayList<String> lyrics;
@@ -63,6 +64,7 @@ public class Song {
 	public Song(String name, String artist, String genre, String artPath, String audioPath) {
 		this.name = name;
 		this.artist = artist; 
+		this.date = 0;
 		this.genre = genre;
 		this.index = 0;
 		this.framePosition = 0;
@@ -96,6 +98,15 @@ public class Song {
 	 */
 	public String getArtist() {
 		return artist;
+	}
+	
+	/**
+	 * Returns the Song's release year
+	 * 
+	 * @return the Song release year
+	 */
+	public int getDate() {
+		return date;
 	}
 	
 	/**

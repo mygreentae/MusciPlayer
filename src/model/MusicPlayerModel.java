@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -93,6 +94,9 @@ public class MusicPlayerModel extends Observable{
 		threads = new ArrayList<Thread>();
 		metadata = new HashMap<String, Integer>();
 
+		//PlayList defaultPlaylist = new PlayList(songLibrary.getSongs());
+		//currentPlaylist = defaultPlaylist;
+		
 		createRecommended(); //creates recommended songs
 		
 	}
@@ -383,6 +387,9 @@ public class MusicPlayerModel extends Observable{
 	 * @return if a Song is playing
 	 */
 	public Boolean isPlayingSong() {
+		if (curSong == null) {
+			return false;
+		}
 		return curSong.isPlaying();
 	}
 	
@@ -761,21 +768,23 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public ArrayList<Song> sortTitle(ArrayList<Song> songList){
 		
-		ArrayList<Song> tempList = new ArrayList<Song>();
-		tempList.add(songList.get(0));
-		//insertion sort
-		for(int i = 1; i < songList.size(); i++) {
-			for(int j = 0; j < tempList.size(); j++) {
-				try {
-					if(tempList.get(j).getName().compareTo(songList.get(i).getName()) < 0) {
-						tempList.add(j + 1, songList.get(i));
-					}
-				} catch(Exception IndexOutOfBoundsException) {
-					tempList.add(songList.get(i));
+		ArrayList<String> titleList = new ArrayList<String>();
+		
+		for (Song song : songList) {
+			titleList.add(song.getName());
+		}
+		Collections.sort(titleList);
+		
+		
+		ArrayList<Song> sortedOrder = new ArrayList<Song>();
+		for (String title : titleList) {
+			for (Song song : songList) {
+				if (song.getName() == title) {
+					sortedOrder.add(song);
 				}
 			}
 		}
-		return tempList;
+		return sortedOrder;
 	}
 	
 	/**
@@ -783,20 +792,45 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public ArrayList<Song> sortArtist(ArrayList<Song> songList){
 		
-		ArrayList<Song> tempList = new ArrayList<Song>();
-		tempList.add(songList.get(0));
-		//insertion sort
-		for(int i = 1; i < songList.size(); i++) {
-			for(int j = 0; j < tempList.size(); j++) {
-				try {
-					if(tempList.get(j).getArtist().compareTo(songList.get(i).getArtist()) < 0) {
-						tempList.add(j + 1, songList.get(i));
-					}
-				} catch(Exception IndexOutOfBoundsException) {
-					tempList.add(songList.get(i));
+		ArrayList<String> artistList = new ArrayList<String>();
+		
+		for (Song song : songList) {
+			artistList.add(song.getArtist());
+		}
+		Collections.sort(artistList);
+		
+		
+		ArrayList<Song> sortedOrder = new ArrayList<Song>();
+		for (String artist : artistList) {
+			for (Song song : songList) {
+				if (song.getArtist() == artist) {
+					sortedOrder.add(song);
 				}
 			}
 		}
-		return tempList;
+		return sortedOrder;
+	}
+	
+	/**
+	 * Sorts the songLibrary by song release Date
+	 */
+	public ArrayList<Song> sortDate(ArrayList<Song> songList){
+		
+		ArrayList<Integer> dateList = new ArrayList<Integer>();
+		for (Song song : songList) {
+			//dateList.add(song.getDate());
+		}
+		Collections.sort(dateList);
+		
+		
+		ArrayList<Song> sortedOrder = new ArrayList<Song>();
+		for (int date : dateList) {
+			for (Song song : songList) {
+				if (song.getDate() == date) {
+					sortedOrder.add(song);
+				}
+			}
+		}
+		return sortedOrder;
 	}
 }
