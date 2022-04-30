@@ -40,6 +40,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -419,7 +420,6 @@ public class MusicPlayerView extends Application implements Observer{
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				stopThreads();
-				System.out.println("threats stopped");
 				Node source = (Node)mouseEvent.getTarget();
 				Node p = source.getParent(); //idk why SongTile is double parent.
 				Song song = ((SongTile)p).getSong();
@@ -493,10 +493,11 @@ public class MusicPlayerView extends Application implements Observer{
 
 			songTile.setOnMouseEntered(highlightSong);
 			songTile.setOnMouseExited(unhighlightSong);
-			
-			//songTile.setOnMo
+			songTile.setPrefWidth(250);
 			songView.add(songTile, 1, i);
+			songTile.border.autosize();
 		}
+		//songView.getColumnConstraints().add(new ColumnConstraints(75));
 		scroller.setContent(songView);
 		return scroller;
 	}
@@ -612,7 +613,7 @@ public class MusicPlayerView extends Application implements Observer{
 			setAlignment(title, Pos.TOP_RIGHT);
 			setAlignment(artist, Pos.BOTTOM_RIGHT);
 			
-			setMargin(border, new Insets(5, 5, 20, 5));
+			setMargin(border, new Insets(5, 5, 5, 5));
 			setMargin(playButton, new Insets(10, 5, 5, 5));
 			
 			border.setTop(title);
