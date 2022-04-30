@@ -616,16 +616,18 @@ public class MusicPlayerView extends Application implements Observer{
 	        fastForwardButton.setMaxWidth(Double.MAX_VALUE);    
 	        fastForwardButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 	        
-			fastForwardButton.setOnAction(new EventHandler<ActionEvent> () {
-
-				@Override
-				public void handle(ActionEvent arg0) {
+	        fastForwardButton.setOnMousePressed(new EventHandler<MouseEvent> (){
+	        	@Override
+				public void handle(MouseEvent arg0) {
 					if (player != null) {
-						double rate = player.getRate();
-						player.setRate(rate * 1.1);
+						player.seek(player.getCurrentTime().add(Duration.seconds(10)));
 					}
 				}
 			}) ;
+	        
+	        
+			
+			
 		}
 		
 		private void setBackwardButton() {
@@ -639,16 +641,14 @@ public class MusicPlayerView extends Application implements Observer{
 	        backwardButton.setMaxWidth(Double.MAX_VALUE);    
 	        backwardButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 	        
-			backwardButton.setOnAction(new EventHandler<ActionEvent> () {
-
-				@Override
-				public void handle(ActionEvent arg0) {
+	        backwardButton.setOnMousePressed(new EventHandler<MouseEvent> (){
+	        	@Override
+				public void handle(MouseEvent arg0) {
 					if (player != null) {
-						double rate = player.getRate();
-						player.setRate(0);
+						player.seek(player.getCurrentTime().add(Duration.seconds(-10)));
 					}
 				}
-			});
+			}) ;
 		}
 		
 		private void setNextSongButton() {
