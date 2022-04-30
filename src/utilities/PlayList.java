@@ -109,6 +109,11 @@ public class PlayList {
 		return this.size;
 	}
 	
+	public void setSongList(ArrayList<Song> songs){
+		this.songList = songs;
+	}
+	
+	
 	/**
 	 * Returns the list of Songs in the PlayList
 	 * @return the list of Songs in the PlayList
