@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Queue;
@@ -163,7 +164,7 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		VBox curSongView = showCurSong();
 		
-		controls = new ControlMenu();
+		controls = new ControlMenu(mediaPlayers);
 		curSongView.setAlignment(Pos.CENTER);
 
 		controls.setAlignment(Pos.CENTER);
@@ -508,8 +509,17 @@ public class MusicPlayerView extends Application implements Observer{
 		private Button backwardButton;
 		private Button prevSongButton;
 		private Button nextSongButton;
+		private MediaPlayer player;
+	    private MediaView mediaView;
+	    private List<MediaPlayer> players;
 		
-		private ControlMenu() {
+		private ControlMenu(ArrayList<MediaPlayer> players) {
+			this.players = players;
+			if (controller.getCurSong() != null) {
+		        player = players.get(0);
+			}
+	        mediaView = new MediaView(player);
+	        
 			playPauseButton = new Button();
 			shuffleButton = new Button();
 			fastForwardButton = new Button();
@@ -539,41 +549,62 @@ public class MusicPlayerView extends Application implements Observer{
 	        playPauseButton.setMaxWidth(Double.MAX_VALUE);    
 	        playPauseButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 	        
-			playPauseButton.setOnAction(new EventHandler<ActionEvent> () {
-
-				@Override
-				public void handle(ActionEvent arg0) {
-					if (controller.getCurSong() == null) {
-						ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
-				        
+	        
+	        
+	        
+	        
+	        
+	        
+	     // Adding Functionality
+	        // to play the media player
+	        playPauseButton.setOnAction(new EventHandler<ActionEvent>() {
+	            public void handle(ActionEvent e)
+	            {
+	            	ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
+	            	if (controller.getCurSong() == null) {   
 				        Platform.runLater(() -> {
 					        Alert dialog = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
 					        dialog.show();
 					    });
-					}
-					
-					else if (controller.isPlayingSong()) {
-						ImageView imageView = new ImageView(new Image ("utilities/buttons/play.png"));
-						controller.pause();
-						
-					}
-					else if (!controller.isPlayingSong()) {
-						ImageView imageView = new ImageView(new Image ("utilities/buttons/pause.png"));
-						controller.resume();
-						
-					}
-					
-					imageView.setFitHeight(BUTTON_SIZE_1);
+				        return;
+					} 
+	            	
+	            	if (player != null) {
+	            		 Status status = player.getStatus(); // To get the status of Player
+	 	                if (status == status.PLAYING) {
+	 	                    // If the status is Video playing
+	 	                    if (player.getCurrentTime().greaterThanOrEqualTo(player.getTotalDuration())) {
+	 	                        // If the player is at the end of video
+	 	                        player.seek(player.getStartTime()); // Restart the video
+	 	                        player.play();
+	 	                        System.out.println("play");
+	 	                    }
+	 	                    else {
+	 	                        // Pausing the player
+	 	                        player.pause();
+	 	                       System.out.println("pause");
+	 	                        imageView = new ImageView(new Image ("utilities/buttons/play.png"));
+	 	                    }
+	 	                } // If the video is stopped, halted or paused
+	 	                if (status == Status.HALTED || status == Status.STOPPED || status == Status.PAUSED) {
+	 	                	System.out.println("plays2");
+	 	                    player.play(); // Start the video
+	 	                    imageView = new ImageView(new Image ("utilities/buttons/play.png"));
+	 	                }
+	            	}
+	               
+	                imageView.setFitHeight(BUTTON_SIZE_1);
 			        imageView.setFitWidth(BUTTON_SIZE_1);
 			        imageView.setPreserveRatio(true);
 			        playPauseButton.setGraphic(imageView);
 			        playPauseButton.setMaxWidth(Double.MAX_VALUE);    
 			        playPauseButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-				
-				}
-				
-			}) ;
+	            }
+	            
+	        });
 		}
+	        
+	        
 		
 		private void setFastForwardButton() {
 			fastForwardButton.setShape(new Circle(10));
@@ -590,7 +621,10 @@ public class MusicPlayerView extends Application implements Observer{
 
 				@Override
 				public void handle(ActionEvent arg0) {
-					// TODO	
+					if (player != null) {
+						double rate = player.getRate();
+						player.setRate(rate * 1.1);
+					}
 				}
 			}) ;
 		}
@@ -610,7 +644,10 @@ public class MusicPlayerView extends Application implements Observer{
 
 				@Override
 				public void handle(ActionEvent arg0) {
-					// TODO	
+					if (player != null) {
+						double rate = player.getRate();
+						player.setRate(0);
+					}
 				}
 			});
 		}
@@ -974,7 +1011,7 @@ public class MusicPlayerView extends Application implements Observer{
 
 		
 
-		controls = new ControlMenu();
+		controls = new ControlMenu(mediaPlayers);
 
 		if (controller.getCurSong() != null && mediaPlayers.size() > 0) {
 			mediaBar = new MediaBar(mediaPlayers);
