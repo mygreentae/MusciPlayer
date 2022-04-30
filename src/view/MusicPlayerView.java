@@ -41,6 +41,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.ConstraintsBase;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -94,6 +95,7 @@ public class MusicPlayerView extends Application implements Observer{
 	private String MEDIA_URL = "";
 	
 	private ArrayList<Thread> threads;
+	private ArrayList<MediaPlayer> mediaPlayers;
 	
 
 	
@@ -123,6 +125,8 @@ public class MusicPlayerView extends Application implements Observer{
 		controller = new MusicPlayerController(model);
 
 		threads = new ArrayList<>();
+		mediaPlayers = new ArrayList<>();
+		
 		Song song = songLibrary.getSongs().get(0);
 		String path = song.getAudioPath();
 		File file = new File(path);
@@ -406,6 +410,8 @@ public class MusicPlayerView extends Application implements Observer{
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				stopThreads();
+				mediaPlayers = new ArrayList<>();
+				
 				Node source = (Node)mouseEvent.getTarget();
 				Node p = source.getParent(); //idk why SongTile is double parent.
 				Song song = ((SongTile)p).getSong();
@@ -414,6 +420,7 @@ public class MusicPlayerView extends Application implements Observer{
 				Media file = new Media(new File(song.getAudioPath()).toURI().toString());
 				mediaPlayer = new MediaPlayer(file);
 				mediaView = new MediaView(mediaPlayer);
+				mediaPlayers.add(mediaPlayer);
 				Runnable runnable =
 					    new Runnable(){
 							public void run() {
@@ -936,7 +943,7 @@ public class MusicPlayerView extends Application implements Observer{
 		VBox curSongView = showCurSong();
 		GridPane controls = setButtons();
 		
-		mediaBar = new MediaBar(mediaPlayer);
+		mediaBar = new MediaBar(mediaPlayers);
 		
 		curSongView.setAlignment(Pos.CENTER);
 		controls.setAlignment(Pos.CENTER);

@@ -33,11 +33,12 @@ public class MediaBar extends HBox { // MediaBar extends Horizontal Box
     MediaView mediaView;
     List<MediaPlayer> players;
 
-    public MediaBar(MediaPlayer play)
+    public MediaBar(ArrayList<MediaPlayer> players)
     { // Default constructor taking
         // the MediaPlayer object
-        player = play;
-        players = new ArrayList<>();
+        this.players = players;
+        player = players.get(0);
+        mediaView = new MediaView(player);
         
         setAlignment(Pos.CENTER); // setting the HBox to center
         setPadding(new Insets(5, 10, 5, 10));
@@ -94,30 +95,31 @@ public class MediaBar extends HBox { // MediaBar extends Horizontal Box
         });
 
         // Inorder to jump to the certain part of video
-        time.valueProperty().addListener(new InvalidationListener() {
-            public void invalidated(Observable ov)
+        time.valueProperty().addListener(new InvalidationListener() { 
+            public void invalidated(Observable ov) 
             {
-                if (time.isPressed()) { // It would set the time
-                    // as specified by user by pressing
-                    player.seek(player.getMedia().getDuration().multiply(time.getValue() / 100));
+                if (time.isPressed()) { // It would set the time 
+                    // as specified by user by pressing 
+                    player.seek(player.getMedia().getDuration().multiply(time.getValue() / 100)); 
                 }
             }
         });
 
-        // providing functionality to volume slider
-        vol.valueProperty().addListener(new InvalidationListener() {
-            public void invalidated(Observable ov)
-            {
-                if (vol.isPressed()) {
-                    player.setVolume(vol.getValue() / 100); // It would set the volume
-                    // as specified by user by pressing
+        // providing functionality to volume slider 
+        vol.valueProperty().addListener(new InvalidationListener() { 
+            public void invalidated(Observable ov) 
+            { 
+                if (vol.isPressed()) { 
+                    player.setVolume(vol.getValue() / 100); // It would set the volume 
+                    // as specified by user by pressing 
                 }
             }
         });
         
         
+        
         skipButton.setOnAction(actionEvent -> {
-            final MediaPlayer curPlayer = mediaView.getMediaPlayer();
+            final MediaPlayer curPlayer = player;
             MediaPlayer nextPlayer = players.get((players.indexOf(curPlayer) + 1) % players.size());
             nextPlayer.seek(Duration.ZERO);
             mediaView.setMediaPlayer(nextPlayer);
