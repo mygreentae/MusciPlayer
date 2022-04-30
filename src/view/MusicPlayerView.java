@@ -121,7 +121,7 @@ public class MusicPlayerView extends Application implements Observer{
 		songLibrary = new SongLibrary();
 		model = new MusicPlayerModel(songLibrary);
 		controller = new MusicPlayerController(model);
-		
+		threads = new ArrayList<>();
 		//Song song = songLibrary.getSongs().get(0);
 		//String path = song.getAudioPath();
 		//File file = new File(path);
@@ -430,15 +430,25 @@ public class MusicPlayerView extends Application implements Observer{
 		EventHandler<MouseEvent> playSong = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
+				stopThreads();
+				System.out.println("threats stopped");
 				Node source = (Node)mouseEvent.getTarget();
 				Node p = source.getParent(); //idk why SongTile is double parent.
 				Song song = ((SongTile)p).getSong();
 				
-				
-				Media file = new Media(new File(song.getAudioPath()).toURI().toString());
-				mediaPlayer = new MediaPlayer(file);
-				mediaPlayer.setAutoPlay(true);
 				controller.changeSong(song);
+				Runnable runnable =
+					    new Runnable(){
+					        public void run(){
+					        	Media file = new Media(new File(song.getAudioPath()).toURI().toString());
+								mediaPlayer = new MediaPlayer(file);
+								mediaPlayer.setAutoPlay(true);
+					        }
+					    };
+				//controller.playPlaylist(librarySongs, false, null);  
+				Thread thread = new Thread(runnable);
+				threads.add(thread);
+				thread.start();
 			}
 		};
 		
@@ -688,6 +698,9 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	}
 	
+	
+	
+	
 	private class Menu extends BorderPane {
 	
 	
@@ -737,10 +750,7 @@ public class MusicPlayerView extends Application implements Observer{
 	}
 	
 	
-	private void addEventHandlers() {
-		
-		
-		
+	private void addEventHandlers() {	
 		EventHandler<MouseEvent> playPlaylist = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
@@ -748,33 +758,35 @@ public class MusicPlayerView extends Application implements Observer{
 				System.out.println("played playlist");
 				PlayList librarySongs = new PlayList(songLibrary.getSongs());
 				if (controller.getCurPlaylist() == null) {
-					
-					Runnable runnable =
-						    new Runnable(){
-						        public void run(){
-						        	for (Song song : librarySongs.getSongList()) {
-						        		Media file = new Media(new File(song.getAudioPath()).toURI().toString());
-										mediaPlayer = new MediaPlayer(file);
-										mediaPlayer.setAutoPlay(true);
-										try {
-											TimeUnit.SECONDS.sleep((long) song.getDuration());
-										} catch (InterruptedException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}	
-										
-						        	}
-						        }
-						    };
-					//controller.playPlaylist(librarySongs, false, null);  
-					Thread thread = new Thread(runnable);
-					threads.add(thread);
-					thread.start();
-					
+					controller.playPlaylist(librarySongs, false, null);
 					//controller.playPlaylist(librarySongs, false, null);
 				} else {
-					controller.playPlaylist(controller.getCurPlaylist(), false, null);
+					controller.playPlaylist(controller.getCurPlaylist(), false, null);			
 				}
+				Song song = controller.getCurPlaylist().getSongList().get(0);
+				controller.changeSong(song);
+				Runnable runnable =
+					    new Runnable(){
+					        public void run(){
+					        	for (Song song : controller.getCurPlaylist().getSongList()) {
+					        		//controller.changeSong(song);
+					        		Media file = new Media(new File(song.getAudioPath()).toURI().toString());
+									mediaPlayer = new MediaPlayer(file);
+									mediaPlayer.setAutoPlay(true);
+									try {
+										TimeUnit.SECONDS.sleep((long) song.getDuration());
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}	
+									
+					        	}
+					        }
+					    };
+				//controller.playPlaylist(librarySongs, false, null);  
+				Thread thread = new Thread(runnable);
+				threads.add(thread);
+				thread.start();
 			} 
 			
 		};
@@ -782,13 +794,17 @@ public class MusicPlayerView extends Application implements Observer{
 		EventHandler<MouseEvent> shufflePlaylist = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				System.out.println("shuffled");
+				stopThreads();
+				System.out.println("shuffled playlist");
+				
 				PlayList librarySongs = new PlayList(songLibrary.getSongs());
 				if (controller.getCurPlaylist() == null) {
 					controller.playPlaylist(librarySongs, true, null);
 				} else {
-					controller.playPlaylist(controller.getCurPlaylist(), true, null);
+					controller.playPlaylist(controller.getCurPlaylist(), true, song);			
 				}
+				
+				Song song = controller.getCurPlaylist().getSongList().get(0);
 
 			}
 		};
@@ -939,6 +955,9 @@ public class MusicPlayerView extends Application implements Observer{
 	 * Stops any running threads
 	 */
 	private void stopThreads() {
+		if (mediaPlayer != null) {
+			mediaPlayer.stop();
+		}
 		for (Thread thread : threads) {
 			thread.stop();
 		}

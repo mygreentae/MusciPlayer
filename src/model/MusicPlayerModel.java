@@ -200,7 +200,7 @@ public class MusicPlayerModel extends Observable {
 		playingQueue = false;
 		curSong = playlist.getPlayOrder().get(0);
 		
-		curSong.play();
+		//curSong.play();
 		/*
 		Runnable runnable =
 			    new Runnable(){
@@ -243,25 +243,6 @@ public class MusicPlayerModel extends Observable {
 		
 		//playlist.playFirst(song); //sets first song
 		// plays entire playlist
-		Runnable runnable =
-			    new Runnable(){
-			        public void run(){
-			        	for (Song pSong : playlist.getPlayOrder()) {
-			    			//plays song for however long it is
-			        		if (pSong.getIndex() > song.getIndex()) {
-				    			curSong = song;
-				    			curSong.play();
-				    			curSong.stop();
-			        		}
-
-			    		}
-			        }
-			    };
-	
-		System.out.println("gonna figure it out later");
-		Thread thread = new Thread(runnable);
-		threads.add(thread);
-		thread.start();
 		setChanged();
 		notifyObservers();
 	}
