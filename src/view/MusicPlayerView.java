@@ -87,7 +87,6 @@ public class MusicPlayerView extends Application implements Observer{
 	//that makes sense i think, click like "Back" and it makes edit mode 
 	//false which changes the view
 	
-<<<<<<< Updated upstream
 	//media player stuff
 	private Media media;
 	private MediaPlayer mediaPlayer;
@@ -103,8 +102,7 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	
 	
-=======
->>>>>>> Stashed changes
+
 	private static final int TILE_HEIGHT = 50;
 	private static final int TILE_WIDTH = 100;
 	private static final int TITLE_FONT_SIZE = 18;
@@ -142,7 +140,7 @@ public class MusicPlayerView extends Application implements Observer{
 
 		model.addObserver(this);
 		
-<<<<<<< Updated upstream
+
 //		URI uri = new URI("");
 
 		//Media media = new Media(mediaURL);
@@ -167,34 +165,7 @@ public class MusicPlayerView extends Application implements Observer{
 		*/
 //		Song song = controller.search("400km");
 //		controller.changeSong(song);
-=======
-////		URI uri = new URI("");
-//		File file = new File("Audios/400km.wav");
-//		String mediaURL = file.toURI().toString();
-//
-//		//Media media = new Media(mediaURL);
-//		//player = new MediaPlayer(media);
-//		
-//		/*
-//		EventHandler<KeyEvent> pausePlay = new EventHandler<KeyEvent>() {
-//			@Override
-//			public void handle(KeyEvent keyEvent) {
-//
-//				if (keyEvent.getCode() == KeyCode.SPACE) {
-//					if (controller.getCurSong() != null) {
-//						if (controller.getCurSong().isPlaying()) {
-//							controller.pause();
-//						} else {
-//							controller.resume();
-//						}
-//					}
-//				}
-//			}
-//		};
-//		*/
-////		Song song = controller.search("400km");
-////		controller.changeSong(song);
->>>>>>> Stashed changes
+
 
 		
 		VBox root = new VBox();
@@ -219,14 +190,13 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		controls = new ControlMenu();
 		curSongView.setAlignment(Pos.CENTER);
-<<<<<<< Updated upstream
+
 		controls.setAlignment(Pos.CENTER);
-		root.getChildren().addAll(hbox, curSongView);
 //		root.getChildren().add(new MediaView(player));
-=======
+
 //		controls.setAlignment(Pos.CENTER);
 		root.getChildren().addAll(hbox, curSongView, controls);
->>>>>>> Stashed changes
+
 		
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -428,7 +398,6 @@ public class MusicPlayerView extends Application implements Observer{
 		// then this line, otherwise, songList == curPlaylist;
 		ArrayList<Song> songList = songLibrary.getSongs();
 		
-<<<<<<< Updated upstream
 		EventHandler<MouseEvent> playSong = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
@@ -469,8 +438,7 @@ public class MusicPlayerView extends Application implements Observer{
 //			}
 //		};
 		
-=======
->>>>>>> Stashed changes
+
 		EventHandler<MouseEvent> highlightSong = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
@@ -623,11 +591,11 @@ public class MusicPlayerView extends Application implements Observer{
 			setAlignment(title, Pos.TOP_RIGHT);
 			setAlignment(artist, Pos.BOTTOM_RIGHT);
 			
-<<<<<<< Updated upstream
-			setMargin(border, new Insets(5, 5, 5, 5));
-=======
+
+			//mine setMargin(border, new Insets(5, 5, 5, 5));
+
 			setMargin(border, new Insets(5, 5, 20, SCROLL_MAX_WIDTH/5));
->>>>>>> Stashed changes
+
 			setMargin(playButton, new Insets(10, 5, 5, 5));
 			
 			border.setTop(title);
@@ -647,11 +615,9 @@ public class MusicPlayerView extends Application implements Observer{
 	        playButton.setGraphic(imageView);
 	        playButton.setMaxWidth(Double.MAX_VALUE);    
 	        playButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-<<<<<<< Updated upstream
-=======
+
 	        
-			playButton.setOnAction(new EventHandler<ActionEvent> () {
->>>>>>> Stashed changes
+			//playButton.setOnAction(new EventHandler<ActionEvent> () {};
 
 	        
 			setMargin(playButton, new Insets(10, 10, 10, 5));
@@ -706,10 +672,7 @@ public class MusicPlayerView extends Application implements Observer{
 	
 	}
 	
-<<<<<<< Updated upstream
-	
-	
-=======
+
 	private class ControlMenu extends HBox {
 		private static final int BUTTON_SIZE_1 = 60;
 		private static final int BUTTON_SIZE_2 = 45;
@@ -893,7 +856,7 @@ public class MusicPlayerView extends Application implements Observer{
 			}) ;
 		}
 	}
->>>>>>> Stashed changes
+
 	
 	private class Menu extends BorderPane {
 	
@@ -1128,26 +1091,20 @@ public class MusicPlayerView extends Application implements Observer{
 		songView.setPrefViewportHeight(SCROLL_MAX_HEIGHT);
 		
 		UI.getChildren().addAll(menu, songView, bottomMenu);
-<<<<<<< Updated upstream
-		
-=======
->>>>>>> Stashed changes
+
 		hbox.getChildren().addAll(image, UI);
 		
 		VBox curSongView = showCurSong();
 		
-<<<<<<< Updated upstream
+
 		mediaBar = new MediaBar(mediaPlayers);
 		
-		curSongView.setAlignment(Pos.CENTER);
-		controls.setAlignment(Pos.CENTER);
-		root.getChildren().addAll(hbox, curSongView, mediaBar);
-=======
+
 		controls = new ControlMenu();
 		curSongView.setAlignment(Pos.CENTER);
 //		controls.setAlignment(Pos.CENTER);
-		root.getChildren().addAll(hbox, curSongView, controls);
->>>>>>> Stashed changes
+		root.getChildren().addAll(hbox, curSongView, controls, mediaBar);
+
 		
 		Scene scene = new Scene(root);
 		mainStage.setScene(scene);
@@ -1168,3 +1125,4 @@ public class MusicPlayerView extends Application implements Observer{
 	}
 
 }
+
