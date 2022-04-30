@@ -289,7 +289,8 @@ public class Song {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		audio.start();
+
+		//audio.start();
 		try {
 			TimeUnit.SECONDS.sleep((long) durationInSeconds + 1);
 		} catch (InterruptedException e) {
