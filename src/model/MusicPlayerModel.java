@@ -231,7 +231,6 @@ public class MusicPlayerModel extends Observable {
 	 */
 	public void playPlaylist(PlayList playlist, Song song) {
 		//stops other songs playing
-		stopThreads();
 		if (curSong != null) {
 			curSong.stop();
 		}
@@ -255,7 +254,6 @@ public class MusicPlayerModel extends Observable {
 	 */
 	public void playPlaylist(PlayList playlist, int index) {
 		//stops other songs playing
-		stopThreads();
 		if (curSong != null) {
 			curSong.stop();
 		}

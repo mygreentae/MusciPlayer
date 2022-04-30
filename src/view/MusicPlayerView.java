@@ -89,7 +89,7 @@ public class MusicPlayerView extends Application implements Observer{
 	private Media media;
 	private MediaPlayer mediaPlayer;
 	private MediaView mediaView;
-	
+	private MediaBar mediaBar;
 	
 	private String MEDIA_URL = "";
 	
@@ -141,7 +141,6 @@ public class MusicPlayerView extends Application implements Observer{
 	        //by setting this property to true, the audio will be played   
 	        mediaPlayer.setAutoPlay(true); 
 		}
-		
 		model.addObserver(this);
 		
 //		URI uri = new URI("");
@@ -207,7 +206,7 @@ public class MusicPlayerView extends Application implements Observer{
 		
 		curSongView.setAlignment(Pos.CENTER);
 		controls.setAlignment(Pos.CENTER);
-		root.getChildren().addAll(hbox, curSongView, controls);
+		root.getChildren().addAll(hbox, curSongView);
 //		root.getChildren().add(new MediaView(player));
 		
 		MusicPlayerView j = this;
@@ -436,12 +435,11 @@ public class MusicPlayerView extends Application implements Observer{
 				Node p = source.getParent(); //idk why SongTile is double parent.
 				Song song = ((SongTile)p).getSong();
 				
-				controller.changeSong(song);
+				Media file = new Media(new File(song.getAudioPath()).toURI().toString());
+				mediaPlayer = new MediaPlayer(file);
 				Runnable runnable =
 					    new Runnable(){
-					        public void run(){
-					        	Media file = new Media(new File(song.getAudioPath()).toURI().toString());
-								mediaPlayer = new MediaPlayer(file);
+					        public void run() {
 								mediaPlayer.setAutoPlay(true);
 					        }
 					    };
@@ -449,6 +447,7 @@ public class MusicPlayerView extends Application implements Observer{
 				Thread thread = new Thread(runnable);
 				threads.add(thread);
 				thread.start();
+				controller.changeSong(song);
 			}
 		};
 		
@@ -763,6 +762,7 @@ public class MusicPlayerView extends Application implements Observer{
 				} else {
 					controller.playPlaylist(controller.getCurPlaylist(), false, null);			
 				}
+				
 				Song song = controller.getCurPlaylist().getSongList().get(0);
 				controller.changeSong(song);
 				Runnable runnable =
@@ -912,6 +912,8 @@ public class MusicPlayerView extends Application implements Observer{
 	        mediaPlayer.setAutoPlay(true); 
 		}
 		*/
+		
+		
 		VBox root = new VBox();
 		HBox hbox = new HBox();
 		
@@ -941,9 +943,11 @@ public class MusicPlayerView extends Application implements Observer{
 		VBox curSongView = showCurSong();
 		GridPane controls = setButtons();
 		
+		mediaBar = new MediaBar(mediaPlayer);
+		
 		curSongView.setAlignment(Pos.CENTER);
 		controls.setAlignment(Pos.CENTER);
-		root.getChildren().addAll(hbox, curSongView, controls);
+		root.getChildren().addAll(hbox, curSongView, mediaBar);
 		
 		
 		Scene scene = new Scene(root);
