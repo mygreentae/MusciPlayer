@@ -639,14 +639,8 @@ public class MusicPlayerView extends Application implements Observer{
 	        //Important otherwise button will wrap to text + graphic size (no resizing on scaling).
 	        playButton.setMaxWidth(Double.MAX_VALUE);    
 	        playButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-			playButton.setOnAction(new EventHandler<ActionEvent> () {
 
-				@Override
-				public void handle(ActionEvent arg0) {
-					controller.changeSong(song);	
-				}
-				
-			}) ;
+	        
 			setMargin(playButton, new Insets(10, 10, 10, 5));
 			
 			setLeft(playButton);
