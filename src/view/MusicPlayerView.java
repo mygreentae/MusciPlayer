@@ -666,7 +666,7 @@ public class MusicPlayerView extends Application implements Observer{
 
 				@Override
 				public void handle(ActionEvent arg0) {
-					// TODO	
+					player.seek(Duration.seconds(controller.getCurSong().getDuration() - .1));
 				}
 			});
 		}
@@ -686,7 +686,7 @@ public class MusicPlayerView extends Application implements Observer{
 
 				@Override
 				public void handle(ActionEvent arg0) {
-					// TODO	
+					player.seek(Duration.seconds(0));
 				}
 			}) ;
 		}
