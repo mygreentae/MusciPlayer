@@ -303,43 +303,14 @@ public class MusicPlayerController {
 		
 	}
 	
-	
 	/*
-	 * play, pause skip, all need to be handled differently based on threading for 
-	 * Playlists and Queues, so thats a tomorrow problem, skip works tho
+	 * The sorting functions for PlayLists
 	 */
-	 
-	/**
-	 * Doesn't call the Model's function, it just handles it. 
-	 * Might be bad design
-	 */
-	public void pause() {
-		model.pause();
-	}
-	
-	/**
-	 * Doesn't call the Model's function, it just handles it. 
-	 * Might be bad design
-	 */
-	public void resume() {
-		model.resume();
-	}
-	
-	/**
-	 * Skips a song
-	 */
-	public void skip() {
-		model.skip();
-	}
-	
-	public void restart() {
-		model.restart();
-	}
-	
 	
 	public ArrayList<Song> sortTitle(ArrayList<Song> songList){
 		return model.sortTitle(songList);
 	}
+	
 	public ArrayList<Song> sortArtist(ArrayList<Song> songList){
 		return model.sortArtist(songList);
 	}
