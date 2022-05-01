@@ -99,6 +99,10 @@ public class MusicPlayerModel extends Observable{
 		
 		createRecommended(); //creates recommended songs
 		
+		// create playlist using songlibrary
+		PlayList playlist = new PlayList(songLibrary.getSongs());
+		allPlaylists.add(playlist);
+		
 	}
 	
 	/**
@@ -832,5 +836,17 @@ public class MusicPlayerModel extends Observable{
 			}
 		}
 		return sortedOrder;
+	}
+	
+	public String getAllPlaylistsAsString() {
+		StringBuilder sb = new StringBuilder();
+		
+		for (PlayList playlist : allPlaylists) {
+			sb.append("-");
+			sb.append(playlist.getName());
+			sb.append("\n");
+		}
+		
+		return sb.toString();
 	}
 }

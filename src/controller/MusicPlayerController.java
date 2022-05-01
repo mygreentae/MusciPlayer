@@ -197,6 +197,10 @@ public class MusicPlayerController {
 			throw new IllegalArgumentException();
 		}
 	}
+	
+	public String getAllPlaylistsAsString() {
+		return model.getAllPlaylistsAsString();
+	}
 
 	/**
 	 * Returns a PlayList of Favorite Songs
