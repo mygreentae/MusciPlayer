@@ -98,10 +98,6 @@ public class MusicPlayerController {
 		}
 	}
 	
-	public Song getNextSong() {
-		return model.getNextSong();
-	}
-	
 	
 	/**
 	 * This method is used when a use selects a song in say like an

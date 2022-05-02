@@ -13,6 +13,7 @@ import java.util.Observer;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
+import api.SpotifyAPI;
 import controller.MusicPlayerController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -830,7 +831,19 @@ public class MusicPlayerView extends Application implements Observer {
 //				dialog.setContentText("These are the playlists you have:\n" + controller.getAllPlaylistsAsString() + "Total Playlists: " + controller.getAllPlaylists().size());
 				dialog.showAndWait().ifPresent(string -> 
 			    {
-			    	controller.search(string);
+			    	String toSearch[] = string.split(",");
+			    	if ( toSearch.length != 2) {
+			    		Platform.runLater(() -> {
+					        Alert error = new Alert(AlertType.INFORMATION, "Please enter only artist, song in that format!", ButtonType.OK);
+					        error.show();
+					    });
+				        return;
+			    	}
+			    	else {
+			    		SpotifyAPI.authenticate();
+			    		SpotifyAPI.getToken();
+			    		SpotifyAPI.getMetadata(toSearch[0], toSearch[1]);
+			    	}
 				    	
 			    });
 				update(model, null);

@@ -94,7 +94,6 @@ public class MusicPlayerModel extends Observable{
 		threads = new ArrayList<Thread>();
 		metadata = new HashMap<String, Integer>();
 
-		allPlaylists.add(favorites);
 		//PlayList defaultPlaylist = new PlayList(songLibrary.getSongs());
 		//currentPlaylist = defaultPlaylist;
 		
@@ -407,10 +406,6 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public Song getCurSong() {
 		return curSong;
-	}
-	
-	public Song getNextSong() {
-		return currentPlaylist.getNextSong(curSong);
 	}
 	
 	/**
