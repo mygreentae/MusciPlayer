@@ -99,6 +99,8 @@ public class MusicPlayerView extends Application implements Observer {
 	
 	private ArrayList<Thread> threads;
 	private ArrayList<MediaPlayer> mediaPlayers;
+	private Song CURRENT_SONG;
+	
 	
 	private static final int TILE_HEIGHT = 50;
 	private static final int TILE_WIDTH = 100;
@@ -178,7 +180,7 @@ public class MusicPlayerView extends Application implements Observer {
 		
 		String title = "";
 		String artist = "";
-		Song song = controller.getCurSong();
+		Song song = CURRENT_SONG;
 		if (song != null) {
 			title = song.getName();
 			artist = song.getArtist();
@@ -242,6 +244,7 @@ public class MusicPlayerView extends Application implements Observer {
 				Node source = (Node)mouseEvent.getTarget();
 				Node p = source.getParent(); //idk why SongTile is double parent.
 				Song song = ((SongTile)p).getSong();
+				CURRENT_SONG = song;
 				
 				Media file = new Media(new File(song.getAudioPath()).toURI().toString());
 				mediaPlayer = new MediaPlayer(file);
@@ -296,7 +299,7 @@ public class MusicPlayerView extends Application implements Observer {
 				t.setBackground(highlight);
 				t.getPlayButton().setVisible(false);
 				
-				if (t.getSong() == controller.getCurSong()) {
+				if (t.getSong() == CURRENT_SONG) {
 					Background highlight2 = new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(0), Insets.EMPTY));
 					t.setBackground(highlight2);
 				};			
@@ -383,7 +386,7 @@ public class MusicPlayerView extends Application implements Observer {
 			
 			border = new BorderPane();
 			
-			if (song == controller.getCurSong() && controller.getCurSong() != null) {
+			if (song == CURRENT_SONG) {
 				Background highlight = new Background(new BackgroundFill(Color.LIGHTGREY, 
 						new CornerRadii(0), Insets.EMPTY));
 				title.setFill(Color.AQUA);
@@ -535,7 +538,7 @@ public class MusicPlayerView extends Application implements Observer {
 	        imageView.setPreserveRatio(true);
 	        b.setGraphic(imageView);
 	        b.setMaxWidth(Double.MAX_VALUE);    
-	        //b.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+	        b.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 			
 		}
 		
@@ -753,7 +756,7 @@ public class MusicPlayerView extends Application implements Observer {
 			    {
 			    	PlayList toPlay = controller.getPlaylist(string);
 			    	if (toPlay.getSize() > 0) {
-			    		controller.playPlaylist(toPlay, false, toPlay.getSongList().get(0));
+			    		controller.playPlaylist(toPlay, false, toPlay.getSongList().get(0)); // casuses visual error
 			    	}
 			    	else {
 			    		 Platform.runLater(() -> {
