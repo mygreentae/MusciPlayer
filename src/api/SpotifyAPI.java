@@ -30,7 +30,7 @@ public class SpotifyAPI {
 	
 	
 	
-	public Song getMetadata(String artist, String songName) {
+	public static Song getMetadata(String artist, String songName) {
 		String link = formTrackURL(artist, songName);
 		try {
 			URL url = new URL(link);
@@ -127,12 +127,12 @@ public class SpotifyAPI {
 	}
 
 	
-	private String getGenre(String artist) {
+	private static String getGenre(String artist) {
 		String url = formArtistURL(artist);
 		return parseGenre(url);
 	}
 
-	private String parseGenre(String link) {
+	private static String parseGenre(String link) {
 		String genre = ""; 
 		try {
 			URL url = new URL(link);
@@ -163,7 +163,7 @@ public class SpotifyAPI {
 		return genre;
 	}
 
-	private String formArtistURL(String artist) {
+	private static String formArtistURL(String artist) {
 		String uriAuth = "https://api.spotify.com/v1/search?q="; 
 		String[] splitArtist = artist.split(" ");
 		for (int i = 0; i < splitArtist.length; i++) {
@@ -198,7 +198,7 @@ public class SpotifyAPI {
 	}
 
 
-	public void authenticate() {
+	public static void authenticate() {
 		String uriAuth = "https://accounts.spotify.com/authorize?"
 				+ "client_id="+clientID+"&"
 				+ "response_type=code&"
@@ -225,7 +225,7 @@ public class SpotifyAPI {
 	}
 	
 	
-	public void getToken() {
+	public static void getToken() {
 		if (token != "") {
 			return; 
 		}
