@@ -97,6 +97,8 @@ public class MusicPlayerModel extends Observable{
 		//PlayList defaultPlaylist = new PlayList(songLibrary.getSongs());
 		//currentPlaylist = defaultPlaylist;
 		
+		System.out.println("Is there a song library? " + this.songLibrary.getSongs());
+		
 		createRecommended(); //creates recommended songs
 		
 		// create playlist using songlibrary

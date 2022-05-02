@@ -832,7 +832,7 @@ public class MusicPlayerView extends Application implements Observer {
 				dialog.showAndWait().ifPresent(string -> 
 			    {
 			    	String toSearch[] = string.split(",");
-			    	if ( toSearch.length != 2) {
+			    	if ( toSearch.length != 2 || toSearch == null) {
 			    		Platform.runLater(() -> {
 					        Alert error = new Alert(AlertType.INFORMATION, "Please enter only artist, song in that format!", ButtonType.OK);
 					        error.show();
@@ -840,9 +840,20 @@ public class MusicPlayerView extends Application implements Observer {
 				        return;
 			    	}
 			    	else {
+			    		System.out.println("Search[0]: " + toSearch[0] + " Search[1] " + toSearch[1]);
 			    		SpotifyAPI.authenticate();
 			    		SpotifyAPI.getToken();
-			    		SpotifyAPI.getMetadata(toSearch[0], toSearch[1]);
+			    		Song toAdd = SpotifyAPI.getMetadata(toSearch[0], toSearch[1]);
+//			    		if (songLibrary.contains(toAdd)) {
+//			    			Platform.runLater(() -> {
+//						        Alert error = new Alert(AlertType.INFORMATION, "This song already exists in the library!", ButtonType.OK);
+//						        error.show();
+//						    });
+//					        return;
+//			    		} else {
+//			    			songLibrary.add(toAdd);
+//			    		}
+			    		
 			    	}
 				    	
 			    });
