@@ -7,11 +7,9 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-
 import javafx.application.Platform;
 import song.Song;
 import utilities.PlayList;
-import utilities.Queue;
 import utilities.SongLibrary;
 
 
@@ -68,7 +66,6 @@ public class MusicPlayerModel extends Observable{
 	
 	private Song curSong; 
 	
-	private Queue currentQueue; 
 	private PlayList currentPlaylist;
 	
 	//features maybe?
@@ -101,66 +98,10 @@ public class MusicPlayerModel extends Observable{
 		
 		// create playlist using songlibrary
 		PlayList playlist = new PlayList(songLibrary.getSongs());
+		allPlaylists.add(favorites);
 		allPlaylists.add(playlist);
 		
 	}
-	
-	/**
-	 * Adds songs to current Queue or starts new Queue
-	 * 
-	 * @param song, the song to enqueue
-	 */
-	public void addToQueue(Song song) {
-		if (currentQueue == null) {
-			currentQueue = new Queue(song);
-		} else {
-			currentQueue.enqueue(song);
-		}
-	}
-	
-	/**
-	 * Starts a Queue, used in changeSong(Song) to handle when not playing
-	 * a Queue or a PlayList.
-	 * 
-	 * Thus, if a user clicks on the first song,
-	 * it must first be added to The Queue, and then this method is called.
-	 * 
-	 * The annoying part about that is if they click on another song, it must
-	 * use that Song as the next Song in the queue, set references accordingly and 
-	 * play it immediately upon click. ew, might use changeSong for that but idk.
-	 * 
-	 * @param queue, the Queue to be played
-	 */
-	public void playQueue(Queue queue) {
-		//stops other songs playing
-		stopThreads();
-		if (curSong != null) {
-			curSong.stop();
-		}
-		currentQueue = queue;
-		currentPlaylist = null;
-		playingQueue = true;
-		playingPlaylist = false;
-    	curSong = queue.getCur();
-		Runnable runnable =
-			    new Runnable(){
-			        public void run(){
-			        	while (curSong != null) {
-			    			curSong.play();
-			    			//queue.next();
-			    			//curSong = queue.getCur();
-
-			    		}  
-			        }
-			    };
-			  
-		Thread thread = new Thread(runnable);
-		threads.add(thread);
-		thread.start();
-		setChanged();
-		notifyObservers();
-	}
-	
 	
 	
 	/**
@@ -178,31 +119,8 @@ public class MusicPlayerModel extends Observable{
 			curSong.stop();
 		}
 		currentPlaylist = playlist;
-		currentQueue = null;
 		playingPlaylist = true;
-		playingQueue = false;
 		curSong = playlist.getPlayOrder().get(0);
-		
-		//curSong.play();
-		/*
-		Runnable runnable =
-			    new Runnable(){
-			        public void run(){
-			        	for (Song song : playlist.getPlayOrder()) {
-			    			//plays song for however long it is
-			    			curSong = song;
-			    			curSong.play();
-			    			//curSong.stop();
-			    			setChanged();
-
-			    		}
-			        }
-			    };
-			  
-		Thread thread = new Thread(runnable);
-		threads.add(thread);
-		thread.start();
-		*/
 		
 		setChanged();
 		notifyObservers();
@@ -220,9 +138,7 @@ public class MusicPlayerModel extends Observable{
 			curSong.stop();
 		}
 		currentPlaylist = playlist;
-		currentQueue = null;
 		playingPlaylist = true;
-		playingQueue = false;
 		curSong = song;
 		
 		
@@ -281,10 +197,7 @@ public class MusicPlayerModel extends Observable{
 			curSong = song;
 			playPlaylist(currentPlaylist, song);
 			
-		} else {
-			// starts new queue, basically this handles the 1st song pick
-			playQueue(new Queue(song));
-		}
+		} 
 		// if in PlayList, start playlist with this song:
 	}	
 	
@@ -317,15 +230,6 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public Song getCurSong() {
 		return curSong;
-	}
-	
-	/**
-	 * Returns the current Queue
-	 * 
-	 * @return the current Queue, null if not playing Queue
-	 */
-	public Queue getCurQueue() {
-		return currentQueue;
 	}
 	
 	/**
@@ -377,15 +281,6 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public PlayList getRecommended(){
 		return recommended;
-	}
-	
-	/**
-	 * Returns true if Queue is Playing
-	 * 
-	 * @return true if Queue is Playing
-	 */
-	public boolean isPlayingQueue() {
-		return playingQueue;
 	}
 	
 	/**

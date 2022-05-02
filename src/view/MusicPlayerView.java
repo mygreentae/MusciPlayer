@@ -209,9 +209,7 @@ public class MusicPlayerView extends Application implements Observer {
 		if (controller.isPlayingPlaylist()) {
 			String playlist = controller.getCurPlaylist().getName();
 			typeText.setText("Playing: " + playlist);
-		} else if (controller.isPlayingQueue()) {
-			typeText.setText("Queue");
-		}
+		} 
 		
 		
 		vbox.setPadding(new Insets(0, 0, 20, 0));
@@ -261,7 +259,7 @@ public class MusicPlayerView extends Application implements Observer {
 				mediaPlayer.setOnEndOfMedia(() -> playNextSong(controller.getCurPlaylist(), controller.getCurSong(), mediaPlayer));
 				
 				
-				if (controller.isPlayingQueue() || !controller.isPlayingSong() || controller.getCurSong() != null) {
+				if (!controller.isPlayingSong() || controller.getCurSong() != null) {
 					if (controller.getCurPlaylist() == null) {
 						controller.playPlaylist(controller.getPlaylist("Song Library"), false, song);
 					}
@@ -790,7 +788,18 @@ public class MusicPlayerView extends Application implements Observer {
 				dialog.setContentText("These are the playlists you have:\n" + controller.getAllPlaylistsAsString() + "Total Playlists: " + controller.getAllPlaylists().size());
 				dialog.showAndWait().ifPresent(string -> 
 			    {
+			    	try {
+			    		PlayList isPresent = controller.getPlaylist(string);
+			    	} catch (IllegalArgumentException e) {
+			    		 Platform.runLater(() -> {
+						        Alert error = new Alert(AlertType.INFORMATION, "That playlist does not exist!", ButtonType.OK);
+						        error.show();
+						    });
+					        return;
+			    	}
+			    	
 			    	PlayList toPlay = controller.getPlaylist(string);
+			    	
 			    	if (toPlay.getSize() > 0) {
 			    		controller.playPlaylist(toPlay, false, toPlay.getSongList().get(0)); // casuses visual error
 			    		if (player != null) {
@@ -1060,7 +1069,7 @@ public class MusicPlayerView extends Application implements Observer {
 	
 	
 	/*
-	 * maybe a recursive function?
+	 * The absolute most cracked shit i have ever coded - j
 	 */
 	public void playNextSong(PlayList curPlaylist, Song curSong, MediaPlayer mediaPlayer) {
 		if (curSong.getIndex() == curPlaylist.getSize() - 1) {

@@ -43,33 +43,7 @@ public class MusicPlayerController {
 	public MusicPlayerController(MusicPlayerModel model) {
 		this.model = model; 
 	}
-	
-	/**
-	 * Adds a Song to the Queue
-	 * 
-	 * @param song, the Song to be added
-	 */
-	public void addToQueue(Song song) {
-		model.addToQueue(song);
-	}
-	
-	/**
-	 * Starts a Queue, default if a user clicks on a single song. 
-	 * 
-	 * Thus, if a user clicks on the first song,
-	 * it must first be added to The Queue, and then this method is called.
-	 * 
-	 * The annoying part about that is if they click on another song, it must
-	 * use that Song as the next Song in the queue, set references accordingly and 
-	 * play it immediately upon click. ew, might use changeSong for that but idk.
-	 * 
-	 * @param queue, the Queue to be played
-	 */
-	public void playQueue(Queue queue) { 
-		model.playQueue(queue);
-	}
-			        
-	
+			       	
 	/**
 	 * Starts playing a Playlist,
 	 * 
@@ -157,15 +131,6 @@ public class MusicPlayerController {
 	}
 	
 	/**
-	 * Returns the current Queue
-	 * 
-	 * @return the current Queue, null if not playing Queue
-	 */
-	public Queue getCurQueue() {
-		return model.getCurQueue();
-	}
-	
-	/**
 	 * Returns the current PlayList
 	 * 
 	 * @return the current PlayList, null if not playing PlayList
@@ -218,15 +183,6 @@ public class MusicPlayerController {
 	 */
 	public PlayList getRecommended(){
 		return model.getRecommended();
-	}
-	
-	/**
-	 * Returns true if Queue is Playing
-	 * 
-	 * @return true if Queue is Playing
-	 */
-	public boolean isPlayingQueue() {
-		return model.isPlayingQueue();
 	}
 	
 	/**
