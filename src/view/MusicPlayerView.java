@@ -904,7 +904,8 @@ public class MusicPlayerView extends Application implements Observer {
 
 				@Override
 				public void handle(MouseEvent arg0) {
-					if (controller.getCurSong() == null) {   
+					Song curSong = controller.getCurSong();
+					if (curSong == null) {   
 				        Platform.runLater(() -> {
 					        Alert error = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
 					        error.show();
@@ -912,11 +913,14 @@ public class MusicPlayerView extends Application implements Observer {
 				        return;
 					} 
 					System.out.println(controller.getCurSong().isFavorite());
-					if (controller.getCurSong().isFavorite()) {
-						controller.getCurSong().unFavorite();
+					if (curSong.isFavorite()) {
+						controller.removeFromFavorites(curSong);
+						curSong.unFavorite();
+						
 						favoriteButton.setText("Favorite");
 					} else {
-						controller.getCurSong().makeFavorite();
+						controller.addToFavorites(curSong);
+						curSong.makeFavorite();
 						favoriteButton.setText("Unfavorite");
 					}
 					
