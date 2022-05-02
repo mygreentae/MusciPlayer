@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import api.SpotifyAPI;
@@ -98,7 +99,7 @@ public class MusicPlayerView extends Application implements Observer {
 	
 	private String MEDIA_URL = "";
 	
-	private ArrayList<Thread> threads;
+	
 	private ArrayList<MediaPlayer> mediaPlayers;
 	private Song CURRENT_SONG;
 	
@@ -129,7 +130,6 @@ public class MusicPlayerView extends Application implements Observer {
 		model = new MusicPlayerModel(songLibrary);
 		controller = new MusicPlayerController(model);
 
-		threads = new ArrayList<>();
 		mediaPlayers = new ArrayList<>();
 		
 		Song song = songLibrary.getSongs().get(0);
@@ -240,7 +240,11 @@ public class MusicPlayerView extends Application implements Observer {
 		EventHandler<MouseEvent> playSong = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				stopThreads();
+				if (player != null) {
+					for (MediaPlayer p : mediaPlayers) {
+						p.stop();
+					}
+				}
 				mediaPlayers = new ArrayList<>();
 				Node source = (Node)mouseEvent.getTarget();
 				Node p = source.getParent(); //idk why SongTile is double parent.
@@ -251,16 +255,11 @@ public class MusicPlayerView extends Application implements Observer {
 				mediaPlayer = new MediaPlayer(file);
 				mediaView = new MediaView(mediaPlayer);
 				mediaPlayers.add(mediaPlayer);
-				Runnable runnable =
-					    new Runnable(){
-							public void run() {
-								mediaPlayer.setAutoPlay(true);
-					        }
-					    };
-				//controller.(librarySongs, false, null);  
-				Thread thread = new Thread(runnable);
-				threads.add(thread);
-				thread.start();
+				
+				mediaPlayer.setAutoPlay(true);
+ 
+				mediaPlayer.setOnEndOfMedia(() -> playNextSong(controller.getCurPlaylist(), controller.getCurSong(), mediaPlayer));
+				
 				
 				if (controller.isPlayingQueue() || !controller.isPlayingSong() || controller.getCurSong() != null) {
 					if (controller.getCurPlaylist() == null) {
@@ -331,22 +330,22 @@ public class MusicPlayerView extends Application implements Observer {
 
 	private ImageView setAlbumArt(Song curSong) {
 		System.out.println("cursong");
-		System.out.println(curSong);
+		System.out.println(CURRENT_SONG);
 		
     	ImageView imageView = new ImageView();
-    	if (curSong == null) {
+    	if (CURRENT_SONG == null) {
     		imageView.setImage(new Image("images/no-cover-art-found.jpg"));
     	}
-    	else if (curSong.getCover() == null) {
+    	else if (CURRENT_SONG.getCover() == null) {
     		imageView.setImage(new Image("images/no-cover-art-found.jpg"));
     	} 
     	else {
-    		System.out.println(curSong.getCover().substring(4));
+    		System.out.println(CURRENT_SONG.getCover().substring(4));
     		System.out.println("curSong cover");
     		//imageView.setImage(new Image("images/monteroArt.jpg"));
     		//imageView.setImage(new Image("images/monteroArt.jpg"));
     		try {
-    			Image i = new Image(curSong.getCover().substring(4).strip());
+    			Image i = new Image(CURRENT_SONG.getCover().substring(4).strip());
     			imageView.setImage(i);
     			System.out.println("image path");
     			System.out.println(i.getUrl());
@@ -506,7 +505,7 @@ public class MusicPlayerView extends Application implements Observer {
 		private ControlMenu(ArrayList<MediaPlayer> players) {
 			this.players = players;
 			
-			if (controller.getCurSong() != null) {
+			if (controller.getCurSong() != null && players.size() > 0) {
 		        player = players.get(0);
 			}
 			
@@ -664,12 +663,45 @@ public class MusicPlayerView extends Application implements Observer {
 
 				@Override
 				public void handle(ActionEvent arg0) {
+					if (player != null) {
+						for (MediaPlayer p: mediaPlayers) {
+							p.stop();
+						}
+					}
+					
+					Random random = new Random();
 					PlayList librarySongs = new PlayList(songLibrary.getSongs());
+					int index;
+					Song song;
+					
 					if (controller.getCurPlaylist() == null) {
-						controller.playPlaylist(librarySongs, true, controller.getCurSong());
+						
+						controller.playPlaylist(controller.getPlaylist("Song Library"), true, null);
+						controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
 					} else {
-						controller.playPlaylist(controller.getCurPlaylist(), true, controller.getCurSong());
+						PlayList playlist = controller.getCurPlaylist();
+						controller.playPlaylist(playlist, true, null);
+						controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
 					}	
+					
+					song = controller.getCurPlaylist().getPlayOrder().get(0);
+					
+					mediaPlayers = new ArrayList<>();
+					CURRENT_SONG = song;
+					
+					Media file = new Media(new File(song.getAudioPath()).toURI().toString());
+					mediaPlayer = new MediaPlayer(file);
+					mediaView = new MediaView(mediaPlayer);
+					mediaPlayers.add(mediaPlayer);
+					
+					mediaPlayer.setAutoPlay(true);
+					player = mediaPlayer;
+					
+					controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
+					
+					controller.changeSong(song);
+					
+					mediaPlayer.setOnEndOfMedia(() -> playNextSong(controller.getCurPlaylist(), controller.getCurSong(), mediaPlayer));
 				}
 			}) ;
 		}
@@ -761,6 +793,12 @@ public class MusicPlayerView extends Application implements Observer {
 			    	PlayList toPlay = controller.getPlaylist(string);
 			    	if (toPlay.getSize() > 0) {
 			    		controller.playPlaylist(toPlay, false, toPlay.getSongList().get(0)); // casuses visual error
+			    		if (player != null) {
+				    		//TODO: 
+			    			player.pause(); 
+			    			System.out.println("player puaser?");
+			    			
+			    		}
 			    	}
 			    	else {
 			    		 Platform.runLater(() -> {
@@ -1030,22 +1068,36 @@ public class MusicPlayerView extends Application implements Observer {
 		
 	}
 	
-	/**
-	 * Stops any running threads
+	
+	
+	/*
+	 * maybe a recursive function?
 	 */
-	@SuppressWarnings("deprecation")
-	private void stopThreads() {
-		if (mediaPlayer != null) {
-			mediaPlayer.stop();
+	public void playNextSong(PlayList curPlaylist, Song curSong, MediaPlayer mediaPlayer) {
+		if (curSong.getIndex() == curPlaylist.getSize() - 1) {
+			return;
 		}
+		mediaPlayers = new ArrayList<>();
+
+		int index = curSong.getIndex();
+		Song nextSong = curPlaylist.getPlayOrder().get(index + 1);
+		for (Song s : curPlaylist.getPlayOrder()) {
+			System.out.println(curPlaylist.getSongList().get(index));
+			System.out.println(s.getName());
+		}
+		System.out.println("play next song");
 		
-		for (MediaPlayer player : mediaPlayers) {
-			player.stop();
-		}
-		for (Thread thread : threads) {
-			thread.stop();
-		}
-		System.out.println("Stopped threads");
+		Media file = new Media(new File(nextSong.getAudioPath()).toURI().toString());
+		
+		MediaPlayer nextMediaPlayer = new MediaPlayer(file);
+		mediaPlayers.add(nextMediaPlayer);
+		
+		nextMediaPlayer.setAutoPlay(true);
+		player = nextMediaPlayer;
+		CURRENT_SONG = nextSong;
+		controller.changeSong(nextSong);
+		
+		nextMediaPlayer.setOnEndOfMedia(() -> playNextSong(curPlaylist, nextSong, nextMediaPlayer));
 	}
 	
 }

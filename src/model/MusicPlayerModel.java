@@ -252,6 +252,10 @@ public class MusicPlayerModel extends Observable{
 		playingQueue = false;
 		curSong = song;
 		
+		
+		//if (playlist.getPlayOrder() != playlist.getSongList()) {
+		//	playlist.playFirst(song);
+		//}
 		//playlist.playFirst(song); //sets first song
 		// plays entire playlist
 		setChanged();
