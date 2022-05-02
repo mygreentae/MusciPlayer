@@ -501,9 +501,11 @@ public class MusicPlayerView extends Application implements Observer {
 		
 		private ControlMenu(ArrayList<MediaPlayer> players) {
 			this.players = players;
-//			if (controller.getCurSong() != null) {
-//		        player = players.get(0);
-//			}
+			
+			if (controller.getCurSong() != null) {
+		        player = players.get(0);
+			}
+			
 	        mediaView = new MediaView(player);
 	        
 			playPauseButton = new Button();
@@ -533,7 +535,7 @@ public class MusicPlayerView extends Application implements Observer {
 	        imageView.setPreserveRatio(true);
 	        b.setGraphic(imageView);
 	        b.setMaxWidth(Double.MAX_VALUE);    
-	        b.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+	        //b.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 			
 		}
 		
@@ -545,13 +547,17 @@ public class MusicPlayerView extends Application implements Observer {
 	        playPauseButton.setOnAction(new EventHandler<ActionEvent>() {
 	            public void handle(ActionEvent e)
 	            {
+	            	System.out.println("playpuase touched");
 	            	if (controller.isPlayingSong() || controller.isPlayingPlaylist()) {
 	            		setImage(playPauseButton, "pause.png", BUTTON_SIZE_1);
+	            		System.out.println("playing song");
 	            	} else {
 	            		setImage(playPauseButton, "play.png", BUTTON_SIZE_1);
+	            		System.out.println("paused");
 	            	}
 	            	
 	            	if (controller.getCurSong() == null) {   
+	            		System.out.println("curSong == null");
 				        Platform.runLater(() -> {
 					        Alert dialog = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
 					        dialog.show();
@@ -560,8 +566,10 @@ public class MusicPlayerView extends Application implements Observer {
 					} 
 	            	
 	            	if (player != null) {
+	            		System.out.println("curSong != null");
 	            		 Status status = player.getStatus(); // To get the status of Player
 	 	                if (status == Status.PLAYING) {
+	 	                	System.out.println("status = playing");
 	 	                    // If the status is Video playing
 	 	                    if (player.getCurrentTime().greaterThanOrEqualTo(player.getTotalDuration())) {
 	 	                        // If the player is at the end of video
@@ -571,6 +579,7 @@ public class MusicPlayerView extends Application implements Observer {
 	 	                    }
 	 	                    else {
 	 	                        // Pausing the player
+	 	                    	System.out.println("pausing");
 	 	                        player.pause();
 	 	                       System.out.println("pause");
 	 	                      setImage(playPauseButton, "play.png", BUTTON_SIZE_1);
@@ -581,6 +590,8 @@ public class MusicPlayerView extends Application implements Observer {
 	 	                    player.play(); // Start the video
 	 	                   setImage(playPauseButton, "pause.png", BUTTON_SIZE_1);
 	 	                }
+	            	} else {
+	            		System.out.println("Player is null");
 	            	}
 	            }
 	            
@@ -621,7 +632,9 @@ public class MusicPlayerView extends Application implements Observer {
 
 				@Override
 				public void handle(ActionEvent arg0) {
-					player.seek(Duration.seconds(controller.getCurSong().getDuration() - .1));
+					if (player != null) {
+						player.seek(Duration.seconds(controller.getCurSong().getDuration() - .1));
+					}
 				}
 			});
 		}
@@ -633,7 +646,9 @@ public class MusicPlayerView extends Application implements Observer {
 
 				@Override
 				public void handle(ActionEvent arg0) {
-					player.seek(Duration.seconds(0));
+					if (player != null) {
+						player.seek(Duration.seconds(0));
+					}
 				}
 			}) ;
 		}
