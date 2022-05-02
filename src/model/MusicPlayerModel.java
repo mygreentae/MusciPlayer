@@ -409,6 +409,10 @@ public class MusicPlayerModel extends Observable{
 		return curSong;
 	}
 	
+	public Song getNextSong() {
+		return currentPlaylist.getNextSong(curSong);
+	}
+	
 	/**
 	 * Returns the current Queue
 	 * 

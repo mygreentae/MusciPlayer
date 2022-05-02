@@ -682,19 +682,22 @@ public class MusicPlayerView extends Application implements Observer {
 	private Button titleButton;
 	private Button createPlaylistButton;
 	private Button switchPlaylistButton;
+	private Button searchButton;
 	
 	private Menu() {
 		createPlaylistButton = new Button("Create New Playlist");
 		switchPlaylistButton = new Button("Switch Playlist");
 		artistButton = new Button("Sort by Artist");
 		titleButton = new Button("Sort by Title");
+		searchButton = new Button("Search");
 		menu = new GridPane();
 		
 		GridPane.setConstraints(createPlaylistButton, 1, 0);
 		GridPane.setConstraints(switchPlaylistButton, 2, 0);
 		GridPane.setConstraints(artistButton, 3, 0);
 		GridPane.setConstraints(titleButton, 4, 0);
-		menu.getChildren().addAll(createPlaylistButton, switchPlaylistButton, artistButton, titleButton);
+		GridPane.setConstraints(searchButton, 5, 0);
+		menu.getChildren().addAll(createPlaylistButton, switchPlaylistButton, artistButton, titleButton, searchButton);
 		
 		menu.setHgap(10);
         menu.setVgap(10);
@@ -816,10 +819,29 @@ public class MusicPlayerView extends Application implements Observer {
 			}
 		};
 		
+		EventHandler<MouseEvent> search = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				System.out.println("saerch!");
+				
+				TextInputDialog dialog = new TextInputDialog();
+				dialog.setTitle("Search for Song");
+				dialog.setHeaderText("Type in a song to search");
+//				dialog.setContentText("These are the playlists you have:\n" + controller.getAllPlaylistsAsString() + "Total Playlists: " + controller.getAllPlaylists().size());
+				dialog.showAndWait().ifPresent(string -> 
+			    {
+			    	controller.search(string);
+				    	
+			    });
+				update(model, null);
+			}
+		};
+		
 		createPlaylistButton.addEventFilter(MouseEvent.MOUSE_CLICKED, createPlaylist);
 		switchPlaylistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, switchPlaylist);
 		artistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyArtist);
 		titleButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyTitle);
+		searchButton.addEventHandler(MouseEvent.MOUSE_CLICKED, search);
 		}
 	}
 	
