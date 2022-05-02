@@ -102,7 +102,7 @@ public class MusicPlayerModel extends Observable{
 		allPlaylists.add(playlist);
 		
 	}
-	
+
 	
 	/**
 	 * Starts playing a PlayList,
@@ -122,6 +122,7 @@ public class MusicPlayerModel extends Observable{
 		playingPlaylist = true;
 		curSong = playlist.getPlayOrder().get(0);
 		
+
 		setChanged();
 		notifyObservers();
 	}
