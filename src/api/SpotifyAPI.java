@@ -1,6 +1,8 @@
 package api;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,6 +17,8 @@ import java.util.Arrays;
 
 import javafx.application.Platform;
 import song.Song;
+import utilities.SpotifyAPIInvalidStreamException;
+import utilities.SpotifyAPIInvalidURLException;
 
 public class SpotifyAPI {
 
@@ -30,7 +34,7 @@ public class SpotifyAPI {
 	
 	
 	
-	public static Song getMetadata(String artist, String songName) {
+	public static Song getMetadata(String artist, String songName) throws Exception {
 		String link = formTrackURL(artist, songName);
 		try {
 			URL url = new URL(link);
@@ -59,48 +63,55 @@ public class SpotifyAPI {
 			String genre = getGenre(artist);
 			Song retval = new Song(songName, artist, genre, audioPath, artPath); 
 			con.disconnect();
+			// add method to write to data.txt
+			updateData(retval);
 			return retval; 
-			// then create new Song object and return it. 
 		} catch (MalformedURLException e) {
-			System.out.println("invalid link"); // likely will never hit 
-			e.printStackTrace();
+			throw new SpotifyAPIInvalidURLException("Invalid call to Spotify's API. Ensure the link is a valid SpotifyAPI URL");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		return null; // placeholder for now.  
+			throw new SpotifyAPIInvalidStreamException();
+		}
 	}
 
-	// returns path of the audio 
-	private static String downloadAudio(String prevLink, String artist, String name) {
+	private static void updateData(Song retval) {
+		
 		try {
-			URL url = new URL(prevLink);
-			fetchContent(url, "Audios/"+ artist + "_" + name +  ".wav"); // likely will get rid of artist maybe? 
-		} catch (MalformedURLException e) {
+			FileWriter fw = new FileWriter("data.txt", true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(retval.getName() + ", " + 
+			retval.getArtist() + ", " + 
+			retval.getGenre() + ", " +
+			retval.getArtPath() + ", " +
+			retval.getAudioPath());
+			bw.newLine();
+			bw.close();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("some bullshit");
-			Platform.exit();
 		}
 		
 		
-		
+	}
+
+	// returns path of the audio 
+	private static String downloadAudio(String prevLink, String artist, String name) throws SpotifyAPIInvalidURLException {
+		try {
+			URL url = new URL(prevLink);
+			fetchContent(url, "audios/"+ artist + "_" + name +  ".wav"); // likely will get rid of artist maybe? 
+		} catch (MalformedURLException e) {
+			throw new SpotifyAPIInvalidURLException("Invalid path. Ensure the path is correct for saving the audio.");
+		} 
 		return "audios/"+ artist + "_" + name +  ".wav";
 	}
 
 
 	// returns path of the artwork. 
-	private static String downloadArt(String coverLink, String artist, String name) {
+	private static String downloadArt(String coverLink, String artist, String name) throws SpotifyAPIInvalidURLException {
 		try {
 			URL url = new URL(coverLink);
 			fetchContent(url, "src/images/"+ artist + "_" + name +  ".jpg");
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("some bullshit");
-			Platform.exit();
+			throw new SpotifyAPIInvalidURLException("Invalid path. Ensure the path is correct for saving the art.");
 		}
 		return "src/images/"+ artist + "_" + name +  ".jpg"; 
 	}
@@ -116,8 +127,7 @@ public class SpotifyAPI {
 			            FileOutputStream fos = new FileOutputStream(outputFileName)) {
 			            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 			        } catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						// need to figure this out
 					}
 				}	
 			};
@@ -127,12 +137,12 @@ public class SpotifyAPI {
 	}
 
 	
-	private static String getGenre(String artist) {
+	private static String getGenre(String artist) throws SpotifyAPIInvalidURLException, SpotifyAPIInvalidStreamException {
 		String url = formArtistURL(artist);
 		return parseGenre(url);
 	}
 
-	private static String parseGenre(String link) {
+	private static String parseGenre(String link) throws SpotifyAPIInvalidURLException, SpotifyAPIInvalidStreamException {
 		String genre = ""; 
 		try {
 			URL url = new URL(link);
@@ -153,11 +163,9 @@ public class SpotifyAPI {
 				}
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SpotifyAPIInvalidURLException("Invalid call to Spotify's API. Ensure the link is a valid SpotifyAPI URL");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SpotifyAPIInvalidStreamException();
 		}
 		genre = genre.substring(20, genre.length() - 1);
 		return genre;
@@ -193,12 +201,11 @@ public class SpotifyAPI {
 			}
 		}
 		uriAuth = uriAuth + "&type=track&market=US&limit=1"; 
-		//System.out.println(uriAuth);
 		return uriAuth;
 	}
 
 
-	public static void authenticate() {
+	public static void authenticate() throws SpotifyAPIInvalidURLException, SpotifyAPIInvalidStreamException {
 		String uriAuth = "https://accounts.spotify.com/authorize?"
 				+ "client_id="+clientID+"&"
 				+ "response_type=code&"
@@ -215,17 +222,14 @@ public class SpotifyAPI {
 			System.out.println(con.getResponseCode());
 			con.disconnect();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SpotifyAPIInvalidURLException("Invalid call to Spotify's API. Ensure the link is a valid SpotifyAPI URL");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("connection error or input stream issue");
-			e.printStackTrace();
+			throw new SpotifyAPIInvalidStreamException();
 		}	
 	}
 	
 	
-	public static void getToken() {
+	public static void getToken() throws SpotifyAPIInvalidURLException, SpotifyAPIInvalidStreamException {
 		if (token != "") {
 			return; 
 		}
@@ -251,11 +255,9 @@ public class SpotifyAPI {
 			tok = tok.substring(0, tok.length() - 1);
 			token = tok; 
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block 
-			e.printStackTrace();
+			throw new SpotifyAPIInvalidURLException("Invalid call to Spotify's API. Ensure the link is a valid SpotifyAPI URL");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SpotifyAPIInvalidStreamException();
 		}
 	}
 	
