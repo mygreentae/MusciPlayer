@@ -47,22 +47,19 @@ public class SongLibrary {
 
 	private void addSongs() throws IOException {
 		List<String> dataList = Files.readAllLines(Paths.get("data.txt"), StandardCharsets.UTF_8);
-		
-		System.out.println(dataList.toString());
 		File dir = new File("Audios");
 		File[] paths = dir.listFiles();
 		if (paths != null) {
 			for (File p : paths) {
 				if (p.toString().endsWith(".wav")) {
 					for (String data : dataList) {
-						System.out.println(data);
-						if (data.endsWith(p.toString())) {
+						if (data.contains(p.toString())) {
 							String[] info = data.split(",");
 							Song song = new Song(info[0].trim(), info[1].trim(), info[2].trim(), info[3].trim(), info[4].trim(), info[5].trim());
 							songLibrary.add(song);
-						}
-					}
-					
+							song.setCover(info[3].trim());
+						} 
+					}			
 				}
 			}
 		} 
@@ -74,10 +71,9 @@ public class SongLibrary {
 		if (paths2 != null) {
 			for (File p : paths2) {
 				for (Song song : songLibrary) {
-					System.out.println(p.toString());
-					if (p.toString().contains(song.getName().toLowerCase())){
+					if (p.toString().contains(song.getName())){
 						song.setCover(p.toString());
-					}
+					} 
 				}
 			}
 		}
@@ -104,5 +100,14 @@ public class SongLibrary {
 	
 	public void addSong(Song song) {
 		songLibrary.add(song);
+		File dir2 = new File("src/images");
+		File[] paths2 = dir2.listFiles();
+		if (paths2 != null) {
+			for (File p : paths2) {
+				if (p.toString().contains(song.getName())){
+						song.setCover(p.toString());
+				} 
+			}
+		}
 	}
 }

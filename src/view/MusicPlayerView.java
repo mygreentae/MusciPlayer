@@ -241,7 +241,7 @@ public class MusicPlayerView extends Application implements Observer {
 					SHOW_PLAYLIST = controller.getCurPlaylist();
 					controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
 				} else {
-					PlayList playlist = controller.getCurPlaylist();
+					PlayList playlist = SHOW_PLAYLIST;
 					controller.playPlaylist(playlist, shuffle, song);
 					controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
 					SHOW_PLAYLIST = controller.getCurPlaylist();
@@ -312,6 +312,7 @@ public class MusicPlayerView extends Application implements Observer {
     	} 
     	else {
     		try {
+    			System.out.println(CURRENT_SONG.getCover().substring(4).strip());
     			Image i = new Image(CURRENT_SONG.getCover().substring(4).strip());
     			imageView.setImage(i);
     		} catch (IllegalArgumentException e) {
@@ -664,13 +665,12 @@ public class MusicPlayerView extends Application implements Observer {
 						}
 					}
 					
-					if (controller.getCurPlaylist() == null) {
-						
+					if (controller.getCurPlaylist() == null || SHOW_PLAYLIST == controller.getPlaylist("Song Library")) {
 						controller.playPlaylist(controller.getPlaylist("Song Library"), true, null);
 						controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
 						SHOW_PLAYLIST = controller.getCurPlaylist();
 					} else {
-						PlayList playlist = controller.getCurPlaylist();
+						PlayList playlist = SHOW_PLAYLIST;
 						controller.playPlaylist(playlist, true, null);
 						controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
 						SHOW_PLAYLIST = controller.getCurPlaylist();
@@ -878,7 +878,13 @@ public class MusicPlayerView extends Application implements Observer {
 				if (SHOW_PLAYLIST == null) {
 					return;
 				}
-				controller.getCurPlaylist().returnToOriginalOrder();
+				else if (controller.getCurPlaylist().getSongList() 
+						== controller.getCurPlaylist().getOriginalOrder()){
+					SHOW_PLAYLIST = new PlayList(songLibrary.getSongs());
+				} else {	
+					controller.getCurPlaylist().returnToOriginalOrder();
+					SHOW_PLAYLIST = new PlayList(songLibrary.getSongs());
+				}
 				update(model, null);
 			}
 		};
@@ -924,24 +930,22 @@ public class MusicPlayerView extends Application implements Observer {
 			    		try {
 							Song toAdd = SpotifyAPI.getMetadata(toSearch[0], toSearch[1]);
 							songLibrary.addSong(toAdd);
+							PlayList songLib = controller.getPlaylist("Song Library");
+							songLib.addSong(toAdd);
+							update(model, null);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
+							Platform.runLater(() -> {
+						        Alert error = new Alert(AlertType.INFORMATION, "Oops! Something went wrong!", ButtonType.OK);
+						        error.show();
+						    });
 							e.printStackTrace();
 						}
-//			    		if (songLibrary.contains(toAdd)) {
-//			    			Platform.runLater(() -> {
-//						        Alert error = new Alert(AlertType.INFORMATION, "This song already exists in the library!", ButtonType.OK);
-//						        error.show();
-//						    });
-//					        return;
-//			    		} else {
-//			    			songLibrary.add(toAdd);
-//			    		}
+
 			    		
 			    	}
 				    	
 			    });
-				update(model, null);
+	
 			}
 		};
 		

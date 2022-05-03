@@ -354,6 +354,9 @@ public class PlayList {
 		}
 	}
 	
+	public ArrayList<Song> getOriginalOrder(){
+		return originalOrder;
+	}
 	
 	/**
 	 * Increments the value of a key in a Map

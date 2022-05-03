@@ -95,9 +95,12 @@ public class SpotifyAPI {
 					i++;
 				}
 			}
-			String artPath = downloadArt(coverLink, artist, songName);
 			String audioPath = downloadAudio(prevLink, artist, songName);
+			String artPath = downloadArt(coverLink, artist, songName);
 			String genre = getGenre(artist);
+			if (date == "") {
+				date = "6969-20-04";
+			}
 			Song retval = new Song(songName, artist, genre, artPath, date, audioPath); 
 			con.disconnect();
 			// add method to write to data.txt
@@ -119,6 +122,7 @@ public class SpotifyAPI {
 			retval.getArtist() + ", " + 
 			retval.getGenre() + ", " +
 			retval.getArtPath() + ", " +
+			retval.getDate() + "," + 
 			retval.getAudioPath());
 			bw.newLine();
 			bw.close();
@@ -134,11 +138,17 @@ public class SpotifyAPI {
 	private static String downloadAudio(String prevLink, String artist, String name) throws SpotifyAPIInvalidURLException {
 		try {
 			URL url = new URL(prevLink);
-			fetchContent(url, "audios/"+ artist + "_" + name +  ".wav"); // likely will get rid of artist maybe? 
+			fetchContent(url, "Audios/"+ artist + "_" + name +  ".wav"); // likely will get rid of artist maybe? 
 		} catch (MalformedURLException e) {
-			throw new SpotifyAPIInvalidURLException("Invalid path. Ensure the path is correct for saving the audio.");
+			try {
+				URL url = new URL(prevLink);
+				fetchContent(url, "Audios/"+ artist + "_" + name +  ".mp3");
+			} catch (MalformedURLException e2) { 
+				throw new SpotifyAPIInvalidURLException("Invalid path. Ensure the path is correct for saving the audio.");
+			}
+			
 		} 
-		return "audios/"+ artist + "_" + name +  ".wav";
+		return "Audios/"+ artist + "_" + name +  ".wav";
 	}
 
 
