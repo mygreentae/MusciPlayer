@@ -117,7 +117,7 @@ After adding a couple songs, we can now see the full implementation of our progr
 5. Control Buttons
 
 ### Sorting/Back:
-By clicking any sorting button, it will sort the Playlist View Window in that order. THIS WILL NOT CHANGE THE PLAY ORDER. The songs will play in the order dictated by the order of the original playlist before sorting. This is an intentional design choice because implementation was deemed too difficult based on time constraints. You are able to click the "Back" button in order to view the original order of the playlist. The "Back" button is also able to revert back to the current playlist if you have created a playlist and are currently viewing it. If you are playing playlist, the "Back" button will allow you to view the Song Library list of songs.  
+By clicking any sorting button, it will sort the Playlist View Window in that order. THIS WILL NOT CHANGE THE PLAY ORDER. The songs will play in the order dictated by the order of the original playlist before sorting. This is an intentional design choice because implementation was deemed too difficult based on time constraints. You are able to click the "Back" button in order to view the original order of the playlist. The "Back" button is also able to revert back to the current playlist if you have created a playlist and are currently viewing it. If you are playing a playlist, the "Back" button will allow you to view the Song Library list of songs.  
 
 ### Control Buttons:
 1. Prev/Skip
