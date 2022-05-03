@@ -49,7 +49,8 @@ You will see 4 of the 7 main components of our GUI.
 2. Album Art
 3. Playlist View Window
 4. Control Menu
-5. 
+
+
 At this time, the control buttons do not work, and clicking the Play Button will send an Alert, saying you must select a Song. 
 
 ### Menu: 
