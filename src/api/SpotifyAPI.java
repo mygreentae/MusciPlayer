@@ -66,7 +66,7 @@ public class SpotifyAPI {
 	}
 	
 	
-	public static Song getMetadata(String artist, String songName) throws Exception {
+	public static Song getMetadata(String artist, String songName) throws SpotifyAPIInvalidURLException, SpotifyAPIInvalidStreamException  {
 		String link = formTrackURL(artist, songName);
 		try {
 			URL url = new URL(link);
@@ -90,7 +90,7 @@ public class SpotifyAPI {
 					coverLink = output.substring(19, output.length() -2);
 				} else if (output.contains("preview_url")) {
 					prevLink = output.substring(23, output.length() -2);
-				} else if (output.contains("release_date") && i == 0) {
+				} else if (output.contains("release_date") && i <= 0) {
 					date = output.substring(26, 36);
 					i++;
 				}
@@ -98,13 +98,10 @@ public class SpotifyAPI {
 			String audioPath = downloadAudio(prevLink, artist, songName);
 			String artPath = downloadArt(coverLink, artist, songName);
 			String genre = getGenre(artist);
-			if (date == "") {
-				date = "6969-20-04";
-			}
 			Song retval = new Song(songName, artist, genre, artPath, date, audioPath); 
-			con.disconnect();
 			// add method to write to data.txt
 			updateData(retval);
+			con.disconnect();
 			return retval; 
 		} catch (MalformedURLException e) {
 			throw new SpotifyAPIInvalidURLException("Invalid call to Spotify's API. Ensure the link is a valid SpotifyAPI URL");
@@ -122,7 +119,7 @@ public class SpotifyAPI {
 			retval.getArtist() + ", " + 
 			retval.getGenre() + ", " +
 			retval.getArtPath() + ", " +
-			retval.getDate() + "," + 
+			retval.getSongDate() + "," + 
 			retval.getAudioPath());
 			bw.newLine();
 			bw.close();
@@ -130,8 +127,6 @@ public class SpotifyAPI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 	}
 
 	// returns path of the audio 
