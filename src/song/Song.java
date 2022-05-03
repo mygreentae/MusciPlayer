@@ -52,7 +52,7 @@ public class Song {
 	 * @param name, the name of the Song
 	 * @param artist, the artist of the Song
 	 */
-	public Song(String name, String artist, String genre, String artPath, String audioPath, String songDate) {
+	public Song(String name, String artist, String genre, String artPath, String songDate, String audioPath) {
 		this.name = name;
 		this.artist = artist; 
 		this.date = 0;

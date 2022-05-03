@@ -73,6 +73,8 @@ import javafx.scene.control.ProgressBar;
 
 
 import utilities.SongLibrary;
+import utilities.SpotifyAPIInvalidStreamException;
+import utilities.SpotifyAPIInvalidURLException;
 
 public class MusicPlayerView extends Application implements Observer {
 	private static MusicPlayerModel model;
@@ -873,7 +875,9 @@ public class MusicPlayerView extends Application implements Observer {
 			public void handle(MouseEvent mouseEvent) {
 				
 				SHOW_PLAYLIST = controller.getCurPlaylist();
-				
+				if (SHOW_PLAYLIST == null) {
+					return;
+				}
 				controller.getCurPlaylist().returnToOriginalOrder();
 				update(model, null);
 			}
@@ -899,9 +903,30 @@ public class MusicPlayerView extends Application implements Observer {
 			    	}
 			    	else {
 			    		System.out.println("Search[0]: " + toSearch[0] + " Search[1] " + toSearch[1]);
-			    		SpotifyAPI.authenticate();
-			    		SpotifyAPI.getToken();
-			    		Song toAdd = SpotifyAPI.getMetadata(toSearch[0], toSearch[1]);
+			    		try {
+							SpotifyAPI.authenticate();
+						} catch (SpotifyAPIInvalidURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (SpotifyAPIInvalidStreamException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+			    		try {
+							SpotifyAPI.getToken();
+						} catch (SpotifyAPIInvalidURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (SpotifyAPIInvalidStreamException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+			    		try {
+							Song toAdd = SpotifyAPI.getMetadata(toSearch[0], toSearch[1]);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 //			    		if (songLibrary.contains(toAdd)) {
 //			    			Platform.runLater(() -> {
 //						        Alert error = new Alert(AlertType.INFORMATION, "This song already exists in the library!", ButtonType.OK);

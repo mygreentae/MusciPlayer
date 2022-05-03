@@ -88,7 +88,7 @@ public class MusicPlayerModel extends Observable{
 		
 		System.out.println("Is there a song library? " + this.songLibrary.getSongs());
 		
-		createRecommended(); //creates recommended songs
+		//createRecommended(); //creates recommended songs
 		
 		// create playlist using songlibrary
 		PlayList playlist = new PlayList(songLibrary.getSongs());

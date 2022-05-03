@@ -51,14 +51,14 @@ public class SongLibrary {
 		System.out.println(dataList.toString());
 		File dir = new File("Audios");
 		File[] paths = dir.listFiles();
-		System.out.println(paths.length);
 		if (paths != null) {
 			for (File p : paths) {
 				if (p.toString().endsWith(".wav")) {
 					for (String data : dataList) {
+						System.out.println(data);
 						if (data.endsWith(p.toString())) {
 							String[] info = data.split(",");
-							Song song = new Song(info[0].trim(), info[1].trim(), info[2].trim(), info[3].trim(), info[4].trim());
+							Song song = new Song(info[0].trim(), info[1].trim(), info[2].trim(), info[3].trim(), info[4].trim(), info[5].trim());
 							songLibrary.add(song);
 						}
 					}
@@ -71,7 +71,6 @@ public class SongLibrary {
 		// of the song, including spaces and weird stuff
 		File dir2 = new File("src/images");
 		File[] paths2 = dir2.listFiles();
-		System.out.println(paths.length);
 		if (paths2 != null) {
 			for (File p : paths2) {
 				for (Song song : songLibrary) {
