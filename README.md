@@ -29,16 +29,18 @@ A lengthy ReadMe on how to use our music player, as well as a deeper explanation
     2. The Spotify API does not want you to play the song for copyright reasons???
     3. The distributer of the Song does not want you to play the song for copyright reasons???
     4. The Spotify API doesn't like playing that song???
+3. Sometimes it gets the wrong song. This is because in our implementation, it picks the first thing that comes up in the search result via the Spotyify API.
 #### Visual Bugs:
-3. Album art not loading: This can be attributed to Eclipse, but it can only be fixed some of the time. Because of the way Eclipse works, you need to go to preferences -> General -> Workspace and click the below checkboxes.
+3. If you're playing a playlist, and in the middle of typing something in the Search bar, when update() is called, it will interupt your typing. It is not an actual like bug persay, but it is somewhat frustrating.
+4. Album art not loading: This can be attributed to Eclipse, but it can only be fixed some of the time. Because of the way Eclipse works, you need to go to preferences -> General -> Workspace and click the below checkboxes.
 - [x] Refresh using native hooks or polling
 - [x] Refresh on access
-4. This should fix, one of the four types of visual errors. When a song is searched and added to the Music Player, this will allow Eclipse to auto-refresh the project folder. This will allow you to view SOME of the album covers.
-5. The second type is those that eventually show up. After a while, some album covers will just magically start working for no explicable reason. 
-6. The third type is those that never show up (within a reasonable amount of time). To fix this, or any of the other visual glitches, stop and re-run the program.
-7. The fourth type is where the actual song does not even show up. We know our code works because we've tested it extensively. This is also why we know this bug exists. Sometimes for no reason, the song does not appear in the Song Library when viewing the Playlist View Window. It just does not show up. This is of course fixed when you restart the program, but it is of note. 
+5. This should fix, one of the four types of visual errors. When a song is searched and added to the Music Player, this will allow Eclipse to auto-refresh the project folder. This will allow you to view SOME of the album covers.
+6. The second type is those that eventually show up. After a while, some album covers will just magically start working for no explicable reason. 
+7. The third type is those that never show up (within a reasonable amount of time). To fix this, or any of the other visual glitches, stop and re-run the program.
+8. The fourth type is where the actual song does not even show up. We know our code works because we've tested it extensively. This is also why we know this bug exists. Sometimes for no reason, the song does not appear in the Song Library when viewing the Playlist View Window. It just does not show up. This is of course fixed when you restart the program, but it is of note. 
 #### Auditory Bugs:
-8. Auditory glitches: Sometimes, the Spotify API is able to find a song, but it will play .5 seconds of it, and immediately move to the next song if there is one. There is no way to fix this, it just happens. Restarting the program, deleting the data from the .txt file, and re-searching for the song does not fix this either, so we have concluded it is a Spotify API quirk.
+9. Auditory glitches: Sometimes, the Spotify API is able to find a song, but it will play .5 seconds of it, and immediately move to the next song if there is one. There is no way to fix this, it just happens. Restarting the program, deleting the data from the .txt file, and re-searching for the song does not fix this either, so we have concluded it is a Spotify API quirk.
 
 # Running the Music Player:
 
