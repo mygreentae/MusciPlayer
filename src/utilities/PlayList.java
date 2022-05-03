@@ -81,6 +81,14 @@ public class PlayList {
 		this.originalOrder = new ArrayList<Song>();
 	}
 	
+	
+	/**
+	 * Duplicate constructor for creating a PlayList with an ArrayList of Songs.
+	 * 
+	 * The created PlayList will have the the contents of the argument passed.
+	 * 
+	 * @param songList, an ArrayList of Song Objects.
+	 */
 	public PlayList(ArrayList<Song> songList) {
 		this.name = "Song Library";
 		this.size = 0;
@@ -137,7 +145,6 @@ public class PlayList {
 		song.setIndex(this.size - 1);
 		
 		//metadata
-
         String genre = song.getGenre();
         
         PlayList.incrementValue(genres, genre);
@@ -192,7 +199,7 @@ public class PlayList {
 	 * Puts the Songs in a random Play Order
 	 */
 	public void shuffle() {
-		//shuffles with Set
+		//shuffles using randomInt()
 		playOrder = new ArrayList<Song>();
 		shuffle = new ArrayList<Song>();
 		for (Song song : songList) {
@@ -291,7 +298,6 @@ public class PlayList {
 		}
 		Collections.sort(titleList);
 		
-		
 		ArrayList<Song> sortedOrder = new ArrayList<Song>();
 		for (String title : titleList) {
 			for (Song song : songList) {
@@ -300,7 +306,6 @@ public class PlayList {
 				}
 			}
 		}
-		//playOrder = sortedOrder;
 		songList = sortedOrder;
 	}
 	
@@ -316,7 +321,6 @@ public class PlayList {
 		}
 		Collections.sort(artistList);
 		
-		
 		ArrayList<Song> sortedOrder = new ArrayList<Song>();
 		for (String artist : artistList) {
 			for (Song song : songList) {
@@ -325,7 +329,6 @@ public class PlayList {
 				}
 			}
 		}
-		//playOrder = sortedOrder;
 		songList = sortedOrder;
 	}
 	
@@ -333,26 +336,29 @@ public class PlayList {
 	 * Sorts the songLibrary by song release Date
 	 */
 	public void sortDate(){
-		
-		ArrayList<Integer> dateList = new ArrayList<Integer>();
+		ArrayList<String> dateList = new ArrayList<String>();
 		for (Song song : songList) {
-			//dateList.add(song.getDate());
+			dateList.add(song.getSongDate());
 		}
+		
 		Collections.sort(dateList);
 		
-		
 		ArrayList<Song> sortedOrder = new ArrayList<Song>();
-		for (int date : dateList) {
+		for (String date : dateList) {
 			for (Song song : songList) {
-				if (song.getDate() == date) {
+				if (song.getSongDate().equals(date)) {
 					sortedOrder.add(song);
 				}
 			}
 		}
-		//playOrder = sortedOrder;
 		songList = sortedOrder;
 	}
 	
+	/**
+	 * Changes the PlayList's songList to the original order of the PlayList
+	 * 
+	 * This is used to undo sorting.
+	 */
 	public void returnToOriginalOrder() {
 		songList = new ArrayList<Song>();
 		for (Song song: originalOrder) {
@@ -360,6 +366,11 @@ public class PlayList {
 		}
 	}
 	
+	/**
+	 * Returns the original order of the PlayList
+	 * 
+	 * @return the original order of the PlayList
+	 */
 	public ArrayList<Song> getOriginalOrder(){
 		return originalOrder;
 	}

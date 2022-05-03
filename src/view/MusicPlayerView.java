@@ -256,7 +256,6 @@ public class MusicPlayerView extends Application implements Observer {
 					SHOW_PLAYLIST = controller.getCurPlaylist();
 				}
 				CURRENT_PLAYER = mediaPlayer;
-				System.out.println(controller.getCurSong().getIndex());
 				CURRENT_PLAYER.setOnEndOfMedia(() -> playNextSong(controller.getCurPlaylist(), controller.getCurSong()));
 				
 			}
@@ -321,7 +320,6 @@ public class MusicPlayerView extends Application implements Observer {
     	} 
     	else {
     		try {
-    			System.out.println(CURRENT_SONG.getCover().substring(4).strip());
     			Image i = new Image(CURRENT_SONG.getCover().substring(4).strip());
     			imageView.setImage(i);
     		} catch (IllegalArgumentException e) {
@@ -961,7 +959,6 @@ public class MusicPlayerView extends Application implements Observer {
 				        return;
 			    	}
 			    	else {
-			    		System.out.println("Search[0]: " + toSearch[0] + " Search[1] " + toSearch[1]);
 			    		try {
 							SpotifyAPI.authenticate();
 						} catch (SpotifyAPIInvalidURLException e) {
@@ -1207,7 +1204,6 @@ public class MusicPlayerView extends Application implements Observer {
 		mediaPlayers = new ArrayList<>();
 
 		int index = curSong.getIndex();
-		System.out.println(index);
 		Song nextSong = curPlaylist.getPlayOrder().get(index + 1);
 		
 		Media file = new Media(new File(nextSong.getAudioPath()).toURI().toString());
