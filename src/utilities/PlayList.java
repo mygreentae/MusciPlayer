@@ -271,7 +271,7 @@ public class PlayList {
 		this.playOrder = this.songList;
 	}
 	
-	/*
+	/**
 	 * Takes in a differently sorted ArrayList<Song> 
 	 */
 	public void sortPlaylist(ArrayList<Song> list) {
@@ -279,6 +279,9 @@ public class PlayList {
 		this.playOrder = list;
 	}
 	
+	/**
+	 * Sorts the songLibrary alphabetically by title
+	 */
 	public void sortTitle(){
 		
 		ArrayList<String> titleList = new ArrayList<String>();
@@ -301,6 +304,9 @@ public class PlayList {
 		songList = sortedOrder;
 	}
 	
+	/**
+	 * Sorts the songLibrary by artist
+	 */
 	public void sortArtist(){
 		
 		ArrayList<String> artistList = new ArrayList<String>();
