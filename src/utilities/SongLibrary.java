@@ -59,7 +59,6 @@ public class SongLibrary {
 						if (data.endsWith(p.toString())) {
 							String[] info = data.split(",");
 							Song song = new Song(info[0].trim(), info[1].trim(), info[2].trim(), info[3].trim(), info[4].trim());
-							song.setAudioStream(info[4].trim());
 							songLibrary.add(song);
 						}
 					}
@@ -83,37 +82,6 @@ public class SongLibrary {
 				}
 			}
 		}
-			
-		
-//		//create songs
-//		Song industryBaby = new Song("Industry Baby", "Lil Nas X", "pop");
-//		industryBaby.setAudioStream("Audios/Industry-Baby.wav");
-//		
-//		Song montero = new Song("Montero", "Lil Nas X", "pop");
-//		montero.setAudioStream("Audios/Montero.wav");
-//		
-//		Song dejaVu = new Song("Deja Vu", "Ateez", "k-pop");
-//		dejaVu.setAudioStream("Audios/Deja-Vu.wav");
-//		
-//		Song maniac = new Song("Maniac", "Stray Kids", "k-pop");
-//		maniac.setAudioStream("Audios/Maniac.wav");
-//		
-//		Song freeze = new Song("Freeze", "Stray Kids", "k-pop");
-//		freeze.setAudioStream("Audios/Freeze.wav");
-//		
-//		Song yeat = new Song("yeat", "Seth", "rap");
-//		yeat.setAudioStream("Audios/yeat.wav");
-//		
-//		Song km = new Song("400km", "Han Yo Han", "k-hiphop");
-//		
-//		//adds songs to library
-//		songLibrary.add(industryBaby);
-//		songLibrary.add(montero);
-//		songLibrary.add(dejaVu);
-//		songLibrary.add(maniac);
-//		songLibrary.add(freeze);
-//		//songLibrary.add(yeat);
-
 	}
 	
 	/**
@@ -132,5 +100,10 @@ public class SongLibrary {
 	 */
 	public void setSongs(ArrayList<Song> list){
 		songLibrary = list;
+	}
+	
+	
+	public void addSong(Song song) {
+		songLibrary.add(song);
 	}
 }

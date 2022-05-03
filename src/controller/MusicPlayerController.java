@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 import model.MusicPlayerModel;
 import song.Song;
 import utilities.PlayList;
-import utilities.Queue;
 
 
 
@@ -18,9 +17,6 @@ import utilities.Queue;
  * 
  * Properties:
  * name, artist, coverImage, duration, lyrics?, audio file,
- * 
- * Linked List Compatibility:
- * Utilizes .prev and .next in order to use a "live" Queue System
  * 
  * ArrayList Compatibility:
  * Utilizes an index so that it is usable in Lists.
@@ -43,33 +39,7 @@ public class MusicPlayerController {
 	public MusicPlayerController(MusicPlayerModel model) {
 		this.model = model; 
 	}
-	
-	/**
-	 * Adds a Song to the Queue
-	 * 
-	 * @param song, the Song to be added
-	 */
-	public void addToQueue(Song song) {
-		model.addToQueue(song);
-	}
-	
-	/**
-	 * Starts a Queue, default if a user clicks on a single song. 
-	 * 
-	 * Thus, if a user clicks on the first song,
-	 * it must first be added to The Queue, and then this method is called.
-	 * 
-	 * The annoying part about that is if they click on another song, it must
-	 * use that Song as the next Song in the queue, set references accordingly and 
-	 * play it immediately upon click. ew, might use changeSong for that but idk.
-	 * 
-	 * @param queue, the Queue to be played
-	 */
-	public void playQueue(Queue queue) { 
-		model.playQueue(queue);
-	}
-			        
-	
+			       	
 	/**
 	 * Starts playing a Playlist,
 	 * 
@@ -93,6 +63,8 @@ public class MusicPlayerController {
 		
 		if (song == null) {
 			model.playPlaylist(playlist);
+		} else if (shuffle){
+			model.playPlaylist(playlist, shuffle, song);
 		} else {
 			model.playPlaylist(playlist, song);
 		}
@@ -110,17 +82,13 @@ public class MusicPlayerController {
 	 * 
 	 * But it is dual function. You can use it to play a single song,
 	 * or to change to a specific song while already playing a PlayList
-	 * or Queue.
 	 * 
-	 * If they specifically want to play a PlayList or specifically 
-	 * want to make a new Queue, we use the above two functions. 
+	 * If they specifically want to play a PlayList we use the above function. 
 	 * 
 	 * The issue I run into is if they want to click a song in a PlayList
 	 * but its the first song they're picking. So the user wants to start 
 	 * the PlayList at the song they're clicking. Thus I think what we might 
 	 * have to do is handle it in the controller.
-	 * 
-	 * 100% needs to be on an eventlistener Thread
 	 * 
 	 * @param song, the Song we want to change to.
 	 */
@@ -154,15 +122,6 @@ public class MusicPlayerController {
 	 */
 	public Song getCurSong() {
 		return model.getCurSong();
-	}
-	
-	/**
-	 * Returns the current Queue
-	 * 
-	 * @return the current Queue, null if not playing Queue
-	 */
-	public Queue getCurQueue() {
-		return model.getCurQueue();
 	}
 	
 	/**
@@ -218,15 +177,6 @@ public class MusicPlayerController {
 	 */
 	public PlayList getRecommended(){
 		return model.getRecommended();
-	}
-	
-	/**
-	 * Returns true if Queue is Playing
-	 * 
-	 * @return true if Queue is Playing
-	 */
-	public boolean isPlayingQueue() {
-		return model.isPlayingQueue();
 	}
 	
 	/**
@@ -287,61 +237,16 @@ public class MusicPlayerController {
 		model.addToPlaylist(playlist, song);
 	}
 	
-	/**
-	 * Searches for a specific Song based on a passed String name.
-	 *
-	 * @param name, the name of the Song you want
-	 * @return returns the song if its found
-	 * @throws IllegalArgumentException if song is not found
-	 */
-	public Song search(String name) throws IllegalArgumentException {
-		Song song = model.search(name);
-		if (song == null) {
-			throw new IllegalArgumentException();
-		}
-		return song;
-		
-	}
-	
-	
 	/*
-	 * play, pause skip, all need to be handled differently based on threading for 
-	 * Playlists and Queues, so thats a tomorrow problem, skip works tho
+	 * The sorting functions for PlayLists
 	 */
-	 
-	/**
-	 * Doesn't call the Model's function, it just handles it. 
-	 * Might be bad design
-	 */
-	public void pause() {
-		model.pause();
+	
+	public void sortTitle(PlayList playlist){
+		model.sortTitle(playlist);
 	}
 	
-	/**
-	 * Doesn't call the Model's function, it just handles it. 
-	 * Might be bad design
-	 */
-	public void resume() {
-		model.resume();
-	}
-	
-	/**
-	 * Skips a song
-	 */
-	public void skip() {
-		model.skip();
-	}
-	
-	public void restart() {
-		model.restart();
-	}
-	
-	
-	public ArrayList<Song> sortTitle(ArrayList<Song> songList){
-		return model.sortTitle(songList);
-	}
-	public ArrayList<Song> sortArtist(ArrayList<Song> songList){
-		return model.sortArtist(songList);
+	public void sortArtist(PlayList playlist){
+		model.sortArtist(playlist);
 	}
 	
 	

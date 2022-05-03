@@ -2,6 +2,7 @@ package utilities;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -60,6 +61,7 @@ public class PlayList {
 	// playing songs;
 	private ArrayList<Song> shuffle;
 	private ArrayList<Song> playOrder;
+	private ArrayList<Song> originalOrder;
 	
 	// metadata
 	// HashMap that allows person to know what dominant genre a PlayList is
@@ -78,6 +80,7 @@ public class PlayList {
 		this.shuffle = new ArrayList<Song>();
 		this.playOrder = new ArrayList<Song>();
 		this.genres = new HashMap<String, Integer>();
+		this.originalOrder = new ArrayList<Song>();
 	}
 	
 	public PlayList(ArrayList<Song> songList) {
@@ -87,6 +90,7 @@ public class PlayList {
 		this.shuffle = new ArrayList<Song>();
 		this.playOrder = new ArrayList<Song>();
 		this.genres = new HashMap<String, Integer>();
+		this.originalOrder = new ArrayList<Song>();
 		
 		for (Song song: songList) {
 			addSong(song);
@@ -130,6 +134,7 @@ public class PlayList {
 	public void addSong(Song song) {
 		playOrder = songList;
 		songList.add(song);
+		originalOrder.add(song);
 		this.size += 1;
 		song.setIndex(this.size - 1);
 		
@@ -153,6 +158,7 @@ public class PlayList {
 			return;
 		}
 		songList.remove(song);
+		originalOrder.remove(song);
 		this.size -= 1;
 		
 		//metadata removes number from genre or removes it completely
@@ -217,6 +223,7 @@ public class PlayList {
 		}
 	}
 	
+	
 	/**
 	 * This is used to reassign the song that plays first in the 
 	 * PlayList. might not be necessary. WE DO NOT NEED THIS
@@ -230,17 +237,22 @@ public class PlayList {
 	public void playFirst(Song song) {
 		shuffle = new ArrayList<Song>();
 		shuffle.add(song);
-		ArrayList<Song> order = songList;
-		if (playOrder != null) {
-			order = playOrder;
-		}
-		for (Song s: order) {
-			if (s != shuffle.get(0)) {
+		song.setIndex(0);
+		
+		int index = 1;
+		for (Song s: playOrder) {
+			if (s != song) {
 				shuffle.add(s);
+				s.setIndex(index);
+				index += 1;
 			}
 		}
 		playOrder = shuffle;
+		for (Song s: playOrder) {
+			System.out.println(s.getName());
+		}
 	}
+	
 	
 	/**
 	 * Returns the order in which to play the songs
@@ -255,13 +267,92 @@ public class PlayList {
 		}
 	}
 	
+	public void resetPlayOrder(){
+		this.playOrder = this.songList;
+	}
+	
 	/*
 	 * Takes in a differently sorted ArrayList<Song> 
 	 */
 	public void sortPlaylist(ArrayList<Song> list) {
 		this.songList = list;
+		this.playOrder = list;
 	}
 	
+	public void sortTitle(){
+		
+		ArrayList<String> titleList = new ArrayList<String>();
+		
+		for (Song song : songList) {
+			titleList.add(song.getName());
+		}
+		Collections.sort(titleList);
+		
+		
+		ArrayList<Song> sortedOrder = new ArrayList<Song>();
+		for (String title : titleList) {
+			for (Song song : songList) {
+				if (song.getName() == title) {
+					sortedOrder.add(song);
+				}
+			}
+		}
+		//playOrder = sortedOrder;
+		songList = sortedOrder;
+	}
+	
+	public void sortArtist(){
+		
+		ArrayList<String> artistList = new ArrayList<String>();
+		
+		for (Song song : songList) {
+			artistList.add(song.getArtist());
+		}
+		Collections.sort(artistList);
+		
+		
+		ArrayList<Song> sortedOrder = new ArrayList<Song>();
+		for (String artist : artistList) {
+			for (Song song : songList) {
+				if (song.getArtist() == artist) {
+					sortedOrder.add(song);
+				}
+			}
+		}
+		//playOrder = sortedOrder;
+		songList = sortedOrder;
+	}
+	
+	/**
+	 * Sorts the songLibrary by song release Date
+	 */
+	public void sortDate(){
+		
+		ArrayList<Integer> dateList = new ArrayList<Integer>();
+		for (Song song : songList) {
+			//dateList.add(song.getDate());
+		}
+		Collections.sort(dateList);
+		
+		
+		ArrayList<Song> sortedOrder = new ArrayList<Song>();
+		for (int date : dateList) {
+			for (Song song : songList) {
+				if (song.getDate() == date) {
+					sortedOrder.add(song);
+				}
+			}
+		}
+		//playOrder = sortedOrder;
+		songList = sortedOrder;
+	}
+	
+	public void returnToOriginalOrder() {
+		songList = new ArrayList<Song>();
+		for (Song song: originalOrder) {
+			songList.add(song);
+		}
+	}
 	
 	
 	/**
