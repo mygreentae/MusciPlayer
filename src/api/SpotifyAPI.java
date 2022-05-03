@@ -98,7 +98,7 @@ public class SpotifyAPI {
 			String artPath = downloadArt(coverLink, artist, songName);
 			String audioPath = downloadAudio(prevLink, artist, songName);
 			String genre = getGenre(artist);
-			Song retval = new Song(songName, artist, genre, audioPath, artPath, date); 
+			Song retval = new Song(songName, artist, genre, artPath, date, audioPath); 
 			con.disconnect();
 			// add method to write to data.txt
 			updateData(retval);

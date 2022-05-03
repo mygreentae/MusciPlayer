@@ -923,6 +923,7 @@ public class MusicPlayerView extends Application implements Observer {
 						}
 			    		try {
 							Song toAdd = SpotifyAPI.getMetadata(toSearch[0], toSearch[1]);
+							songLibrary.addSong(toAdd);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
