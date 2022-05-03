@@ -1,16 +1,2 @@
 
-God's Menu, Stray Kids, k-pop, src/images/Stray Kids_ God's Menu.jpg, 2019-05-14, Audios/Stray Kids_ God's Menu.wav
-On, BTS, k-pop, src/images/BTS_ On.jpg, 2019-05-14, Audios/BTS_ On.wav
-Butter, BTS, k-pop, src/images/BTS_ Butter.jpg, 2019-05-14, Audios/BTS_ Butter.wav
-Industry Baby, Lil Nas X, lgbtq+ hip hop, src/images/Lil Nas X_ Industry Baby.jpg, 2019-05-14, Audios/Lil Nas X_ Industry Baby.wav
- Dynamite, BTS, k-pop, src/images/BTS_ Dynamite.jpg, 2019-05-14, Audios/BTS_ Dynamite.wav
- 400km, Han Yo Han, k-rap, src/images/Han Yo Han_ 400km.jpg, 0,Audios/Han Yo Han_ 400km.wav
- Montero, Lil Nas X, lgbtq+ hip hop, src/images/Lil Nas X_ Montero.jpg, 0,Audios/Lil Nas X_ Montero.wav
- Deja Vu, Ateez, k-pop, src/images/Ateez_ Deja Vu.jpg, 0,Audios/Ateez_ Deja Vu.wav
- Home Run, SEVENTEEN, k-pop, src/images/SEVENTEEN_ Home Run.jpg, 0,Audios/SEVENTEEN_ Home Run.wav
- First, Everglow, k-pop, src/images/Everglow_ First.jpg, 0,Audios/Everglow_ First.wav
- Layla, Eric Clapton, album rock, src/images/Eric Clapton_ Layla.jpg, 0,Audios/Eric Clapton_ Layla.wav
- More, K/DA, k-pop girl group" , src/images/K/DA_ More.jpg, 0,Audios/K/DA_ More.wav
- New Life, MAX, dance pop, src/images/MAX_ New Life.jpg, 0,Audios/MAX_ New Life.wav
- crossing field, LiSA, k-pop" , src/images/LiSA_ crossing field.jpg, 0,Audios/LiSA_ crossing field.wav
- Tempo, EXO, k-pop, src/images/EXO_ Tempo.jpg, 0,Audios/EXO_ Tempo.wav
+
