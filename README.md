@@ -107,7 +107,7 @@ This section allows us to seek to specific points in the song. It also has a vol
 ![](https://i.imgur.com/sW715HX.png)
 
 After adding a couple songs, we can now see the full implementation of our program. 
-(Note) this is one of the visual ablum cover glitches that will most-likely be fixed once another song is added to the Music Player or the song is skipped (apparently).
+(Note) this is one of the visual ablum cover glitches that will most-likely be fixed once another song is added to the Music Player. (In testing the song was skipped, and then selected again which allowed the album art to load.)
 
 ## Controls that are now available:
 1. Sort by Artist
