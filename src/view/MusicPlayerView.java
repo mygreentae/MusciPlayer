@@ -18,6 +18,7 @@ import api.SpotifyAPI;
 import controller.MusicPlayerController;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -78,31 +79,18 @@ public class MusicPlayerView extends Application implements Observer {
 	private static MusicPlayerController controller;
 	private static SongLibrary songLibrary;
 	
-	private MediaPlayer player;
 	
 	private ControlMenu controls;
 	
-	//edit modes/ control what is shown in playlistView
-	private static Boolean editMode;
-	private static Boolean playListViewMode;
-	private static Boolean searchMode;
-	//private static something backbutton shit that
-	//probably edits these to be either true or false.
-	//that makes sense i think, click like "Back" and it makes edit mode 
-	//false which changes the view
-	
 	//media player stuff
-	private Media media;
-	private MediaPlayer mediaPlayer;
-	private MediaView mediaView;
 	private MediaBar mediaBar;
-	
-	private String MEDIA_URL = "";
 	
 	
 	private ArrayList<MediaPlayer> mediaPlayers;
 	private Song CURRENT_SONG;
-	
+	private PlayList SHOW_PLAYLIST;
+	private MediaPlayer CURRENT_PLAYER;
+	private boolean shuffle = false;
 	
 	private static final int TILE_HEIGHT = 50;
 	private static final int TILE_WIDTH = 100;
@@ -131,15 +119,6 @@ public class MusicPlayerView extends Application implements Observer {
 		controller = new MusicPlayerController(model);
 
 		mediaPlayers = new ArrayList<>();
-		
-		Song song = songLibrary.getSongs().get(0);
-		String path = song.getAudioPath();
-		File file = new File(path);
-		String MEDIA_URL = file.toURI().toString();
-		//System.out.println(MEDIA_URL);
-		media = new Media(MEDIA_URL);
-		mediaPlayer = new MediaPlayer(media);
-		mediaView = new MediaView(mediaPlayer);
 
 		model.addObserver(this);
 
@@ -230,7 +209,7 @@ public class MusicPlayerView extends Application implements Observer {
 		// then this line, otherwise, songList == curPlaylist;
 		
 		ArrayList<Song> songList = songLibrary.getSongs();
-		PlayList playlist = controller.getCurPlaylist();
+		PlayList playlist = SHOW_PLAYLIST;
 		if (playlist != null) {
 			songList = playlist.getSongList();
 		} 
@@ -238,7 +217,7 @@ public class MusicPlayerView extends Application implements Observer {
 		EventHandler<MouseEvent> playSong = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				if (player != null) {
+				if (mediaPlayers.size() > 0) {
 					for (MediaPlayer p : mediaPlayers) {
 						p.stop();
 					}
@@ -250,28 +229,25 @@ public class MusicPlayerView extends Application implements Observer {
 				CURRENT_SONG = song;
 				
 				Media file = new Media(new File(song.getAudioPath()).toURI().toString());
-				mediaPlayer = new MediaPlayer(file);
-				mediaView = new MediaView(mediaPlayer);
+				MediaPlayer mediaPlayer = new MediaPlayer(file);
 				mediaPlayers.add(mediaPlayer);
 				
 				mediaPlayer.setAutoPlay(true);
- 
-				mediaPlayer.setOnEndOfMedia(() -> playNextSong(controller.getCurPlaylist(), controller.getCurSong(), mediaPlayer));
 				
-				
-				if (!controller.isPlayingSong() || controller.getCurSong() != null) {
-					if (controller.getCurPlaylist() == null) {
-						controller.playPlaylist(controller.getPlaylist("Song Library"), false, song);
-					}
-					else {
-						controller.changeSong(song);
-					}
+				if (!controller.isPlayingSong() || controller.getCurSong() == null) {
+					controller.playPlaylist(controller.getPlaylist("Song Library"), shuffle, song);
+					SHOW_PLAYLIST = controller.getCurPlaylist();
 					controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
 				} else {
 					PlayList playlist = controller.getCurPlaylist();
-					controller.playPlaylist(playlist, false, song);
+					controller.playPlaylist(playlist, shuffle, song);
 					controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
+					SHOW_PLAYLIST = controller.getCurPlaylist();
 				}
+				CURRENT_PLAYER = mediaPlayer;
+				System.out.println(controller.getCurSong().getIndex());
+				CURRENT_PLAYER.setOnEndOfMedia(() -> playNextSong(controller.getCurPlaylist(), controller.getCurSong()));
+				
 			}
 		};
 
@@ -307,12 +283,9 @@ public class MusicPlayerView extends Application implements Observer {
 		
 		for (int i = 0; i < songList.size(); i++) {
 			SongTile songTile = new SongTile(songList.get(i));
-//			songTile.getIndex().setText(Integer.toString(i+1));
 			songTile.getTitle().setText(songList.get(i).getName());
 			songTile.getArtist().setText(songList.get(i).getArtist());
-			
-			//songTile.setOnMouseClicked(playSong);
-//			songTile.getPlayButton().addEventFilter(MouseEvent.MOUSE_CLICKED, playSong);
+
 
 			songTile.setOnMouseEntered(highlightSong);
 			songTile.setOnMouseExited(unhighlightSong);
@@ -327,8 +300,6 @@ public class MusicPlayerView extends Application implements Observer {
 	}
 
 	private ImageView setAlbumArt(Song curSong) {
-		System.out.println("cursong");
-		System.out.println(CURRENT_SONG);
 		
     	ImageView imageView = new ImageView();
     	if (CURRENT_SONG == null) {
@@ -338,20 +309,12 @@ public class MusicPlayerView extends Application implements Observer {
     		imageView.setImage(new Image("images/no-cover-art-found.jpg"));
     	} 
     	else {
-    		System.out.println(CURRENT_SONG.getCover().substring(4));
-    		System.out.println("curSong cover");
-    		//imageView.setImage(new Image("images/monteroArt.jpg"));
-    		//imageView.setImage(new Image("images/monteroArt.jpg"));
     		try {
     			Image i = new Image(CURRENT_SONG.getCover().substring(4).strip());
     			imageView.setImage(i);
-    			System.out.println("image path");
-    			System.out.println(i.getUrl());
     		} catch (IllegalArgumentException e) {
-    			System.out.println("error with album image");
     			imageView.setImage(new Image("images/no-cover-art-found.jpg"));
     		}
-    		// change
     	}
     	
     	imageView.setFitHeight(400);
@@ -497,7 +460,6 @@ public class MusicPlayerView extends Application implements Observer {
 		private Button prevSongButton;
 		private Button nextSongButton;
 		private MediaPlayer player;
-	    private MediaView mediaView;
 	    private List<MediaPlayer> players;
 		
 		private ControlMenu(ArrayList<MediaPlayer> players) {
@@ -506,11 +468,11 @@ public class MusicPlayerView extends Application implements Observer {
 			if (controller.getCurSong() != null && players.size() > 0) {
 		        player = players.get(0);
 			}
-			
-	        mediaView = new MediaView(player);
+		
 	        
 			playPauseButton = new Button();
 			shuffleButton = new Button();
+			shuffleButton.setMaxSize(5, 5);
 			fastForwardButton = new Button();
 			backwardButton = new Button();
 			prevSongButton = new Button();
@@ -548,17 +510,13 @@ public class MusicPlayerView extends Application implements Observer {
 	        playPauseButton.setOnAction(new EventHandler<ActionEvent>() {
 	            public void handle(ActionEvent e)
 	            {
-	            	System.out.println("playpuase touched");
 	            	if (controller.isPlayingSong() || controller.isPlayingPlaylist()) {
 	            		setImage(playPauseButton, "pause.png", BUTTON_SIZE_1);
-	            		System.out.println("playing song");
 	            	} else {
 	            		setImage(playPauseButton, "play.png", BUTTON_SIZE_1);
-	            		System.out.println("paused");
 	            	}
 	            	
 	            	if (controller.getCurSong() == null) {   
-	            		System.out.println("curSong == null");
 				        Platform.runLater(() -> {
 					        Alert dialog = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
 					        dialog.show();
@@ -567,32 +525,26 @@ public class MusicPlayerView extends Application implements Observer {
 					} 
 	            	
 	            	if (player != null) {
-	            		System.out.println("curSong != null");
 	            		 Status status = player.getStatus(); // To get the status of Player
 	 	                if (status == Status.PLAYING) {
-	 	                	System.out.println("status = playing");
 	 	                    // If the status is Video playing
 	 	                    if (player.getCurrentTime().greaterThanOrEqualTo(player.getTotalDuration())) {
 	 	                        // If the player is at the end of video
 	 	                        player.seek(player.getStartTime()); // Restart the video
 	 	                        player.play();
-	 	                        System.out.println("play");
 	 	                    }
 	 	                    else {
 	 	                        // Pausing the player
-	 	                    	System.out.println("pausing");
 	 	                        player.pause();
-	 	                       System.out.println("pause");
 	 	                      setImage(playPauseButton, "play.png", BUTTON_SIZE_1);
 	 	                    }
 	 	                } // If the video is stopped, halted or paused
 	 	                if (status == Status.HALTED || status == Status.STOPPED || status == Status.PAUSED) {
-	 	                	System.out.println("plays2");
 	 	                    player.play(); // Start the video
 	 	                   setImage(playPauseButton, "pause.png", BUTTON_SIZE_1);
 	 	                }
 	            	} else {
-	            		System.out.println("Player is null");
+	            		return;
 	            	}
 	            }
 	            
@@ -630,11 +582,11 @@ public class MusicPlayerView extends Application implements Observer {
 			setImage(nextSongButton, "next-song.png", BUTTON_SIZE_2);
 	        
 			nextSongButton.setOnAction(new EventHandler<ActionEvent> () {
-
+				
 				@Override
 				public void handle(ActionEvent arg0) {
 					if (player != null) {
-						player.seek(Duration.seconds(controller.getCurSong().getDuration() - .1));
+						player.seek(player.getTotalDuration());
 					}
 				}
 			});
@@ -648,7 +600,35 @@ public class MusicPlayerView extends Application implements Observer {
 				@Override
 				public void handle(ActionEvent arg0) {
 					if (player != null) {
-						player.seek(Duration.seconds(0));
+						Song s = controller.getCurSong();
+						if (s.getIndex() == 0) {
+							return;
+						}
+						Song prev = s;
+						for (Song song : controller.getCurPlaylist().getPlayOrder()) {
+							if (s.getIndex()== song.getIndex() + 1) {
+								prev = song;
+								break;
+							}
+						}
+						
+						if (mediaPlayers.size() > 0) {
+							for (MediaPlayer p : mediaPlayers) {
+								p.stop();
+							}
+						}
+						mediaPlayers = new ArrayList<>();
+						CURRENT_SONG = prev;
+						
+						Media file = new Media(new File(prev.getAudioPath()).toURI().toString());
+						MediaPlayer mediaPlayer = new MediaPlayer(file);
+						mediaPlayers.add(mediaPlayer);
+						
+						mediaPlayer.setAutoPlay(true);
+						player = mediaPlayer;
+						controller.changeSong(prev);
+						mediaPlayer.setOnEndOfMedia(() -> playNextSong(controller.getCurPlaylist(), CURRENT_SONG));
+						
 					}
 				}
 			}) ;
@@ -656,40 +636,50 @@ public class MusicPlayerView extends Application implements Observer {
 		
 		private void setShuffleButton() {
 			setImage(shuffleButton, "shuffle.png", BUTTON_SIZE_3);
-	        
+			shuffleButton.setMaxSize(500, 5);
+			if (shuffle) {
+				setImage(shuffleButton, "shuffleActive.png", BUTTON_SIZE_3);
+			} else {
+				setImage(shuffleButton, "shuffle.png", BUTTON_SIZE_3);
+			}
+			
+			
 			shuffleButton.setOnAction(new EventHandler<ActionEvent> () {
 
 				@Override
 				public void handle(ActionEvent arg0) {
-					if (player != null) {
-						for (MediaPlayer p: mediaPlayers) {
+					
+					if (shuffle) {
+						shuffle = false;
+						update(model, null);
+						return;
+					} 	
+					shuffle = true;	
+		
+					if (mediaPlayers.size() > 0) {
+						for (MediaPlayer p : mediaPlayers) {
 							p.stop();
 						}
 					}
-					
-					Random random = new Random();
-					PlayList librarySongs = new PlayList(songLibrary.getSongs());
-					int index;
-					Song song;
 					
 					if (controller.getCurPlaylist() == null) {
 						
 						controller.playPlaylist(controller.getPlaylist("Song Library"), true, null);
 						controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
+						SHOW_PLAYLIST = controller.getCurPlaylist();
 					} else {
 						PlayList playlist = controller.getCurPlaylist();
 						controller.playPlaylist(playlist, true, null);
 						controls.setImage(controls.playPauseButton, "pause.png", BUTTON_SIZE_1);
+						SHOW_PLAYLIST = controller.getCurPlaylist();
 					}	
-					
-					song = controller.getCurPlaylist().getPlayOrder().get(0);
+					Song song = controller.getCurPlaylist().getPlayOrder().get(0);
 					
 					mediaPlayers = new ArrayList<>();
 					CURRENT_SONG = song;
 					
 					Media file = new Media(new File(song.getAudioPath()).toURI().toString());
-					mediaPlayer = new MediaPlayer(file);
-					mediaView = new MediaView(mediaPlayer);
+					MediaPlayer mediaPlayer = new MediaPlayer(file);
 					mediaPlayers.add(mediaPlayer);
 					
 					mediaPlayer.setAutoPlay(true);
@@ -699,7 +689,7 @@ public class MusicPlayerView extends Application implements Observer {
 					
 					controller.changeSong(song);
 					
-					mediaPlayer.setOnEndOfMedia(() -> playNextSong(controller.getCurPlaylist(), controller.getCurSong(), mediaPlayer));
+					mediaPlayer.setOnEndOfMedia(() -> playNextSong(controller.getCurPlaylist(), controller.getCurSong()));
 				}
 			}) ;
 		}
@@ -714,12 +704,16 @@ public class MusicPlayerView extends Application implements Observer {
 	private Button createPlaylistButton;
 	private Button switchPlaylistButton;
 	private Button searchButton;
+	private Button dateButton;
+	private Button backButton;
 	
 	private Menu() {
 		createPlaylistButton = new Button("Create New Playlist");
 		switchPlaylistButton = new Button("Switch Playlist");
 		artistButton = new Button("Sort by Artist");
 		titleButton = new Button("Sort by Title");
+		dateButton = new Button("Sort by Date");
+		backButton = new Button("Back");
 		searchButton = new Button("Search");
 		menu = new GridPane();
 		
@@ -727,8 +721,10 @@ public class MusicPlayerView extends Application implements Observer {
 		GridPane.setConstraints(switchPlaylistButton, 2, 0);
 		GridPane.setConstraints(artistButton, 3, 0);
 		GridPane.setConstraints(titleButton, 4, 0);
-		GridPane.setConstraints(searchButton, 5, 0);
-		menu.getChildren().addAll(createPlaylistButton, switchPlaylistButton, artistButton, titleButton, searchButton);
+		GridPane.setConstraints(dateButton, 5, 0);
+		GridPane.setConstraints(backButton, 6, 0);
+		GridPane.setConstraints(searchButton, 7, 0);
+		menu.getChildren().addAll(createPlaylistButton, switchPlaylistButton, artistButton, titleButton, searchButton, dateButton, backButton);
 		
 		menu.setHgap(10);
         menu.setVgap(10);
@@ -801,13 +797,8 @@ public class MusicPlayerView extends Application implements Observer {
 			    	PlayList toPlay = controller.getPlaylist(string);
 			    	
 			    	if (toPlay.getSize() > 0) {
-			    		controller.playPlaylist(toPlay, false, toPlay.getSongList().get(0)); // casuses visual error
-			    		if (player != null) {
-				    		//TODO: 
-			    			player.pause(); 
-			    			System.out.println("player puaser?");
-			    			
-			    		}
+			    		SHOW_PLAYLIST = toPlay;
+			    		update(model, null);// casuses visual error
 			    	}
 			    	else {
 			    		 Platform.runLater(() -> {
@@ -827,19 +818,15 @@ public class MusicPlayerView extends Application implements Observer {
 		EventHandler<MouseEvent> sortPlaylistbyArtist = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				System.out.println("sorted by artist");
 				
-				PlayList curPlaylist = controller.getCurPlaylist();
+				PlayList curPlaylist = SHOW_PLAYLIST;
 				
-				ArrayList<Song> songs = songLibrary.getSongs();
+				PlayList songs = new PlayList(songLibrary.getSongs());
 				if (curPlaylist != null){
-					songs = curPlaylist.getSongList();
-					curPlaylist.setSongList(controller.sortArtist(songs));
+					songs = curPlaylist;
+					controller.sortArtist(songs);			
 				} else {
-					songLibrary.setSongs(controller.sortArtist(songs));
-					for (Song song : songLibrary.getSongs()) {
-						System.out.println(song.getName());
-					}
+					controller.sortArtist(songs);
 				}
 				update(model, null);
 			}
@@ -849,20 +836,45 @@ public class MusicPlayerView extends Application implements Observer {
 		EventHandler<MouseEvent> sortPlaylistbyTitle = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				System.out.println("sorted by title");
 				
-				PlayList curPlaylist = controller.getCurPlaylist();
+				PlayList curPlaylist = SHOW_PLAYLIST;
 				
-				ArrayList<Song> songs = songLibrary.getSongs();
+				PlayList songs = new PlayList(songLibrary.getSongs());
 				if (curPlaylist != null){
-					songs = curPlaylist.getSongList();
-					curPlaylist.setSongList(controller.sortTitle(songs));
+					songs = curPlaylist;
+					controller.sortTitle(songs);
 				} else {
-					songLibrary.setSongs(controller.sortTitle(songs));
-					for (Song song : songLibrary.getSongs()) {
-						System.out.println(song.getName());
-					}
+					controller.sortTitle(songs);
 				}
+				update(model, null);
+			}
+		};
+		
+		EventHandler<MouseEvent> sortPlaylistbyDate = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				
+				PlayList curPlaylist = SHOW_PLAYLIST;
+				
+				PlayList songs = new PlayList(songLibrary.getSongs());
+				if (curPlaylist != null){
+					songs = curPlaylist;
+					controller.sortTitle(songs);
+				} else {
+					controller.sortTitle(songs);
+				}
+				update(model, null);
+			}
+		};
+		
+		
+		EventHandler<MouseEvent> back = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				
+				SHOW_PLAYLIST = controller.getCurPlaylist();
+				
+				controller.getCurPlaylist().returnToOriginalOrder();
 				update(model, null);
 			}
 		};
@@ -870,7 +882,6 @@ public class MusicPlayerView extends Application implements Observer {
 		EventHandler<MouseEvent> search = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				System.out.println("saerch!");
 				
 				TextInputDialog dialog = new TextInputDialog();
 				dialog.setTitle("Search for Song");
@@ -901,6 +912,7 @@ public class MusicPlayerView extends Application implements Observer {
 		switchPlaylistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, switchPlaylist);
 		artistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyArtist);
 		titleButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyTitle);
+		backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, back);
 		searchButton.addEventHandler(MouseEvent.MOUSE_CLICKED, search);
 		}
 	}
@@ -943,11 +955,7 @@ public class MusicPlayerView extends Application implements Observer {
 			EventHandler<MouseEvent> addSongToPlaylist = new EventHandler<MouseEvent>() {
 
 				@Override
-				public void handle(MouseEvent mouseEvent) {
-					
-					System.out.println("Add Song to playlist");
-					
-					
+				public void handle(MouseEvent mouseEvent) {	
 					if (controller.getCurSong() == null) {   
 				        Platform.runLater(() -> {
 					        Alert error = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
@@ -976,6 +984,12 @@ public class MusicPlayerView extends Application implements Observer {
 						        error.show();
 						    });
 					        return;
+				    	} else if (toAddto == controller.getFavorites()) {
+				    		Platform.runLater(() -> {
+						        Alert error = new Alert(AlertType.INFORMATION, "Add this Song to Favorites by favoriting it.", ButtonType.OK);
+						        error.show();
+						    });
+					        return;
 				    	}
 				    	else {
 				    		toAddto.addSong(controller.getCurSong());
@@ -997,7 +1011,6 @@ public class MusicPlayerView extends Application implements Observer {
 					    });
 				        return;
 					} 
-					System.out.println(controller.getCurSong().isFavorite());
 					if (curSong.isFavorite()) {
 						controller.removeFromFavorites(curSong);
 						curSong.unFavorite();
@@ -1071,19 +1084,16 @@ public class MusicPlayerView extends Application implements Observer {
 	/*
 	 * The absolute most cracked shit i have ever coded - j
 	 */
-	public void playNextSong(PlayList curPlaylist, Song curSong, MediaPlayer mediaPlayer) {
+	public void playNextSong(PlayList curPlaylist, Song curSong) {
 		if (curSong.getIndex() == curPlaylist.getSize() - 1) {
+			controls.setImage(controls.playPauseButton, "play.png", BUTTON_SIZE_1);
 			return;
 		}
 		mediaPlayers = new ArrayList<>();
 
 		int index = curSong.getIndex();
+		System.out.println(index);
 		Song nextSong = curPlaylist.getPlayOrder().get(index + 1);
-		for (Song s : curPlaylist.getPlayOrder()) {
-			System.out.println(curPlaylist.getSongList().get(index));
-			System.out.println(s.getName());
-		}
-		System.out.println("play next song");
 		
 		Media file = new Media(new File(nextSong.getAudioPath()).toURI().toString());
 		
@@ -1091,11 +1101,11 @@ public class MusicPlayerView extends Application implements Observer {
 		mediaPlayers.add(nextMediaPlayer);
 		
 		nextMediaPlayer.setAutoPlay(true);
-		player = nextMediaPlayer;
+		CURRENT_PLAYER = nextMediaPlayer;
 		CURRENT_SONG = nextSong;
 		controller.changeSong(nextSong);
 		
-		nextMediaPlayer.setOnEndOfMedia(() -> playNextSong(curPlaylist, nextSong, nextMediaPlayer));
+		nextMediaPlayer.setOnEndOfMedia(() -> playNextSong(curPlaylist, nextSong));
 	}
 	
 }

@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 import model.MusicPlayerModel;
 import song.Song;
 import utilities.PlayList;
-import utilities.Queue;
 
 
 
@@ -18,9 +17,6 @@ import utilities.Queue;
  * 
  * Properties:
  * name, artist, coverImage, duration, lyrics?, audio file,
- * 
- * Linked List Compatibility:
- * Utilizes .prev and .next in order to use a "live" Queue System
  * 
  * ArrayList Compatibility:
  * Utilizes an index so that it is usable in Lists.
@@ -67,6 +63,8 @@ public class MusicPlayerController {
 		
 		if (song == null) {
 			model.playPlaylist(playlist);
+		} else if (shuffle){
+			model.playPlaylist(playlist, shuffle, song);
 		} else {
 			model.playPlaylist(playlist, song);
 		}
@@ -84,17 +82,13 @@ public class MusicPlayerController {
 	 * 
 	 * But it is dual function. You can use it to play a single song,
 	 * or to change to a specific song while already playing a PlayList
-	 * or Queue.
 	 * 
-	 * If they specifically want to play a PlayList or specifically 
-	 * want to make a new Queue, we use the above two functions. 
+	 * If they specifically want to play a PlayList we use the above function. 
 	 * 
 	 * The issue I run into is if they want to click a song in a PlayList
 	 * but its the first song they're picking. So the user wants to start 
 	 * the PlayList at the song they're clicking. Thus I think what we might 
 	 * have to do is handle it in the controller.
-	 * 
-	 * 100% needs to be on an eventlistener Thread
 	 * 
 	 * @param song, the Song we want to change to.
 	 */
@@ -243,32 +237,16 @@ public class MusicPlayerController {
 		model.addToPlaylist(playlist, song);
 	}
 	
-	/**
-	 * Searches for a specific Song based on a passed String name.
-	 *
-	 * @param name, the name of the Song you want
-	 * @return returns the song if its found
-	 * @throws IllegalArgumentException if song is not found
-	 */
-	public Song search(String name) throws IllegalArgumentException {
-		Song song = model.search(name);
-		if (song == null) {
-			throw new IllegalArgumentException();
-		}
-		return song;
-		
-	}
-	
 	/*
 	 * The sorting functions for PlayLists
 	 */
 	
-	public ArrayList<Song> sortTitle(ArrayList<Song> songList){
-		return model.sortTitle(songList);
+	public void sortTitle(PlayList playlist){
+		model.sortTitle(playlist);
 	}
 	
-	public ArrayList<Song> sortArtist(ArrayList<Song> songList){
-		return model.sortArtist(songList);
+	public void sortArtist(PlayList playlist){
+		model.sortArtist(playlist);
 	}
 	
 	

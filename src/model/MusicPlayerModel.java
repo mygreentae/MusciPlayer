@@ -22,8 +22,8 @@ import utilities.SongLibrary;
  * @author Seth/Jackson/Paris
  * 	
  * This is the Model of the music player. It holds all of the 
- * User data regarding PlayLists, Queues, favorites, recommended
- * songs, and threads. 
+ * User data regarding PlayLists, Queues, favorites, and recommended
+ * songs
  * 
  * 
  * Properties:
@@ -31,9 +31,6 @@ import utilities.SongLibrary;
  * The Song currently playing, when Model is initialized, 
  * it is null.
  * 
- * currentQueue: 
- * The Queue currently playing, null when initialized/if
- * PlayList is playing.
  * 
  * currentPlayList: 
  * The PlayList currently playing, null when initialized/
@@ -47,12 +44,9 @@ import utilities.SongLibrary;
  * favorites:
  * A PlayList of favorite songs, Empty ArrayList when initialized.
  * 
- * playingQueue/playingPlaylist: 
- * Boolean values for if Queue/PlayList is playing, null when initialized.
+ * playingPlaylist: 
+ * Boolean value for if PlayList is playing, null when initialized.
  * 
- * threads: 
- * An ArrayList of Thread's that are responsible for playing audio.
- * Are interrupted()/stop()-ed when a new play....() function is called.
  * 
  * metadata:
  * A Map of Strings mapped to integers of genre's of Songs in a user's 
@@ -76,7 +70,6 @@ public class MusicPlayerModel extends Observable{
 	//model state
 	private boolean playingQueue;
 	private boolean playingPlaylist;
-	private ArrayList<Thread> threads;
 	
 	private Map<String, Integer> metadata;
 	
@@ -88,7 +81,6 @@ public class MusicPlayerModel extends Observable{
 		allPlaylists = new ArrayList<>();
 		favorites = new PlayList("Favorites");
 		recommended = new PlayList("Recommended");
-		threads = new ArrayList<Thread>();
 		metadata = new HashMap<String, Integer>();
 
 		//PlayList defaultPlaylist = new PlayList(songLibrary.getSongs());
@@ -114,10 +106,6 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public void playPlaylist(PlayList playlist) {
 		//stops other songs playing
-		stopThreads();
-		if (curSong != null) {
-			curSong.stop();
-		}
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		curSong = playlist.getPlayOrder().get(0);
@@ -135,9 +123,6 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public void playPlaylist(PlayList playlist, Song song) {
 		//stops other songs playing
-		if (curSong != null) {
-			curSong.stop();
-		}
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		curSong = song;
@@ -152,6 +137,22 @@ public class MusicPlayerModel extends Observable{
 		notifyObservers();
 	}
 	
+	public void playPlaylist(PlayList playlist, boolean Shuffle, Song song) {
+		//stops other songs playing
+		currentPlaylist = playlist;
+		playingPlaylist = true;
+		
+		curSong = song;
+		
+		
+		//if (playlist.getPlayOrder() != playlist.getSongList()) {
+		//	playlist.playFirst(song);
+		//}
+		playlist.playFirst(song); //sets first song
+		// plays entire playlist
+		setChanged();
+		notifyObservers();
+	}
 	/**
 	 * Shuffles a PlayList 
 	 * 
@@ -177,8 +178,7 @@ public class MusicPlayerModel extends Observable{
 	 * If we use a list of Songs as our Song library, and our user just 
 	 * clicks a Song, we call this method.
 	 * 
-	 * If they specifically want to play a PlayList or specifically 
-	 * want to make a new Queue, we use the above two functions. 
+	 * If they specifically want to play a PlayList we use the above two functions. 
 	 * 
 	 * The issue I run into is if they want to click a song in a PlayList
 	 * but its the first song they're picking. So the user wants to start 
@@ -190,9 +190,6 @@ public class MusicPlayerModel extends Observable{
 	public void changeSong(Song song) {
 		
 		// if a song is playing, stop it
-		if (curSong != null) {
-			curSong.stop();
-		}
 		// if in Playlist, and playlist is currently being played
 		if (playingPlaylist && currentPlaylist.contains(song)) {
 			curSong = song;
@@ -219,7 +216,7 @@ public class MusicPlayerModel extends Observable{
 		if (curSong == null) {
 			return false;
 		}
-		return curSong.isPlaying();
+		return true;
 	}
 	
 	
@@ -323,7 +320,6 @@ public class MusicPlayerModel extends Observable{
 			}
 			Random random = new Random();
 			while (count > 0) {
-				System.out.println(shuffle.size());
 				int i = random.nextInt(shuffle.size());
 				Song song = shuffle.get(i);
 				recommended.addSong(song);
@@ -331,13 +327,14 @@ public class MusicPlayerModel extends Observable{
 				count--;
 			}		
 		} else {
-			System.out.println("Nope");
+
 		}
 		
+		//TODO:
 		
 		
 		// literal ai
-		System.out.println("horrible");
+		System.out.println("creates recommended");
 	}
 		
 	/**
@@ -428,15 +425,6 @@ public class MusicPlayerModel extends Observable{
 		return copy;
 		
 	}
-	
-	/**
-	 * Stops any running threads
-	 */
-	private void stopThreads() {
-		for (Thread thread : threads) {
-			thread.stop();
-		}
-	}
 
 	/**
 	 * Sorting Playlists functions
@@ -445,72 +433,26 @@ public class MusicPlayerModel extends Observable{
 	/**
 	 * Sorts the songLibrary by song Name
 	 */
-	public ArrayList<Song> sortTitle(ArrayList<Song> songList){
-		
-		ArrayList<String> titleList = new ArrayList<String>();
-		
-		for (Song song : songList) {
-			titleList.add(song.getName());
-		}
-		Collections.sort(titleList);
-		
-		
-		ArrayList<Song> sortedOrder = new ArrayList<Song>();
-		for (String title : titleList) {
-			for (Song song : songList) {
-				if (song.getName() == title) {
-					sortedOrder.add(song);
-				}
-			}
-		}
-		return sortedOrder;
+	public void sortTitle(PlayList playlist){
+		playlist.sortTitle();
 	}
+		
+		
 	
 	/**
 	 * Sorts the songLibrary by song Artist
 	 */
-	public ArrayList<Song> sortArtist(ArrayList<Song> songList){
+	public void sortArtist(PlayList playlist){
 		
-		ArrayList<String> artistList = new ArrayList<String>();
-		
-		for (Song song : songList) {
-			artistList.add(song.getArtist());
-		}
-		Collections.sort(artistList);
-		
-		
-		ArrayList<Song> sortedOrder = new ArrayList<Song>();
-		for (String artist : artistList) {
-			for (Song song : songList) {
-				if (song.getArtist() == artist) {
-					sortedOrder.add(song);
-				}
-			}
-		}
-		return sortedOrder;
+		playlist.sortArtist();
 	}
 	
 	/**
 	 * Sorts the songLibrary by song release Date
 	 */
-	public ArrayList<Song> sortDate(ArrayList<Song> songList){
+	public void sortDate(PlayList playlist){
 		
-		ArrayList<Integer> dateList = new ArrayList<Integer>();
-		for (Song song : songList) {
-			//dateList.add(song.getDate());
-		}
-		Collections.sort(dateList);
-		
-		
-		ArrayList<Song> sortedOrder = new ArrayList<Song>();
-		for (int date : dateList) {
-			for (Song song : songList) {
-				if (song.getDate() == date) {
-					sortedOrder.add(song);
-				}
-			}
-		}
-		return sortedOrder;
+		playlist.sortDate();
 	}
 	
 	public String getAllPlaylistsAsString() {

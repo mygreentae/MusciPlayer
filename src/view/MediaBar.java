@@ -51,40 +51,9 @@ public class MediaBar extends HBox { // MediaBar extends Horizontal Box
         
         // Adding the components to the bottom
 
-        //getChildren().add(PlayButton); // Playbutton
-       // getChildren().add(skipButton);
         getChildren().add(time); // time slider
         getChildren().add(volume); // volume slider
         getChildren().add(vol);
-
-        // Adding Functionality
-        // to play the media player
-        PlayButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e)
-            {
-                Status status = player.getStatus(); // To get the status of Player
-                if (status == status.PLAYING) {
-
-                    // If the status is Video playing
-                    if (player.getCurrentTime().greaterThanOrEqualTo(player.getTotalDuration())) {
-
-                        // If the player is at the end of video
-                        player.seek(player.getStartTime()); // Restart the video
-                        player.play();
-                    }
-                    else {
-                        // Pausing the player
-                        player.pause();
-
-                        PlayButton.setText(">");
-                    }
-                } // If the video is stopped, halted or paused
-                if (status == Status.HALTED || status == Status.STOPPED || status == Status.PAUSED) {
-                    player.play(); // Start the video
-                    PlayButton.setText("||");
-                }
-            }
-        });
 
         // Providing functionality to time slider
         player.currentTimeProperty().addListener(new InvalidationListener() {
