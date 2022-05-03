@@ -50,8 +50,6 @@ You will see 4 of the 7 main components of our GUI.
 3. Playlist View Window
 4. Control Menu
 
-Upon the first initial launch, the only way to play a Song is by using the "Search" button to use the Spotify API to get a 30 second preview of a song. 
-
 At this time, the control buttons do not work, and clicking the Play Button will send an Alert, saying you must select a Song. 
 
 ### Menu: 
