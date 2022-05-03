@@ -46,12 +46,13 @@ public class Song {
 	private Boolean favorite;
 	private String art;
 	private String audioPath; 
+	private String songDate;
 
 	/**
 	 * @param name, the name of the Song
 	 * @param artist, the artist of the Song
 	 */
-	public Song(String name, String artist, String genre, String artPath, String audioPath) {
+	public Song(String name, String artist, String genre, String artPath, String audioPath, String songDate) {
 		this.name = name;
 		this.artist = artist; 
 		this.date = 0;
@@ -60,12 +61,35 @@ public class Song {
 		this.favorite = false;
 		this.art = artPath;
 		this.audioPath = audioPath; 
+		this.songDate = songDate; 
 	}
 	
+	
+	
+	/**
+	 * Returns the release date of the Song
+	 * 
+	 * @return the release date for the Song
+	 */
+	public String getSongDate() {
+		return songDate;
+	}
+	
+	
+	/**
+	 * Returns the path of the artwork for the Song
+	 * 
+	 * @return the path of the artwork for the Song
+	 */
 	public String getArtPath() {
 		return art;
 	}
 	
+	/**
+	 * Returns the path of the audio for the Song
+	 * 
+	 * @return the path of the audio for the Song
+	 */
 	public String getAudioPath() {
 		return audioPath; 
 	}

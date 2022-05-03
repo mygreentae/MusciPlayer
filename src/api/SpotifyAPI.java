@@ -34,6 +34,38 @@ public class SpotifyAPI {
 	
 	
 	
+	public static String getSongDate(String artist, String songName) throws Exception {
+		String link = formTrackURL(artist, songName);
+		try {
+			URL url = new URL(link);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setDoInput(true);
+			con.setDoOutput(true);
+			con.setRequestProperty("Accept", "application/json");
+			con.setRequestProperty("Content-Type", "application/json");
+			con.setRequestProperty("Authorization", "Bearer " + token);
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					(con.getInputStream())));
+			String date = "";
+			String output;
+			while ((output = br.readLine()) != null) {
+				System.out.println(output);
+				if (output.contains("release_date")) {
+					date = output.substring(26, 36);
+					break;
+				}
+			}
+			con.disconnect();
+			return date;
+		} catch (MalformedURLException e) {
+			throw new SpotifyAPIInvalidURLException("Invalid call to Spotify's API. Ensure the link is a valid SpotifyAPI URL");
+		} catch (IOException e) {
+			throw new SpotifyAPIInvalidStreamException();
+		}
+	}
+	
+	
 	public static Song getMetadata(String artist, String songName) throws Exception {
 		String link = formTrackURL(artist, songName);
 		try {
@@ -47,21 +79,26 @@ public class SpotifyAPI {
 			con.setRequestProperty("Authorization", "Bearer " + token);
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					(con.getInputStream())));
+			String date = "";
 			String coverLink = ""; 
 			String prevLink = ""; 
 			String output;
+			int i = 0; 
 			while ((output = br.readLine()) != null) {
 				if (output.contains("images")) {
 					output = br.readLine(); output = br.readLine(); // doing twice to get artwork image link. 
 					coverLink = output.substring(19, output.length() -2);
 				} else if (output.contains("preview_url")) {
 					prevLink = output.substring(23, output.length() -2);
+				} else if (output.contains("release_date") && i == 0) {
+					date = output.substring(26, 36);
+					i++;
 				}
 			}
 			String artPath = downloadArt(coverLink, artist, songName);
 			String audioPath = downloadAudio(prevLink, artist, songName);
 			String genre = getGenre(artist);
-			Song retval = new Song(songName, artist, genre, audioPath, artPath); 
+			Song retval = new Song(songName, artist, genre, audioPath, artPath, date); 
 			con.disconnect();
 			// add method to write to data.txt
 			updateData(retval);
