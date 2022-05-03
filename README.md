@@ -128,7 +128,7 @@ These buttons will now move forward and backward through the playlist in its pla
 
 #### Shuffle
 Implementation:
-As mentioned previously, this button is used as a toggle for if the song order should be randomized. At any point, you can activate the "Shuffle" button by clicking it. It will then appear green to indicate activity. In shuffle mode, clicking any song in the Playlist View Window will start a random playlist starting with the clicked song. 
+As mentioned previously, this button is used as a toggle for if the song order should be randomized. At any point, you can activate the "Shuffle" button by clicking it. It will then appear green to indicate activity. When toggling "on", it will randomly start playing a song in whatever playlist is currently in the Playlist View Window. This will put the Music Player into shuffle mode. While in shuffle mode, clicking any song in the Playlist View Window will start a random playlist starting with the clicked song. 
 
 Toggling the "Shuffle" button out of shuffle mode while playing a playlist WILL NOT change the random song order. This is also a design implementation deemed too difficult due to time constraints. In order to play the songs in an unshuffled order, the shuffle mode must be off, and a song must be played via the Playlist View Window. Then the playlist will play in order, starting from the song selected.
 
