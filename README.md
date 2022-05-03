@@ -72,9 +72,9 @@ At this time, the control buttons do not work, and clicking the Play Button will
 There are 6 Control Buttons total. These buttons are only effective on the current Song. Thus, if no Song is playing, these buttons will not do anything. 
 1. The Play Button: Pause and Play the current Song. 
 2. The Seek 10 Seconds Forward Button: Seeks 10 seconds forward or back.
-3. 2. The Seek 10 Seconds Back Button: Seeks 10 seconds back.
+3. The Seek 10 Seconds Back Button: Seeks 10 seconds back.
 4. The Skip button: Skips to the next song if applicable
-5. 4. The Back button: Skips to the previous song if applicable
+5. The Back button: Skips to the previous song if applicable
 6. The Shuffle button: This is a toggle button that will show when the playlist is shuffled. This button has a specific implementation due to complexity that will be mentioned later. When active, the button will be green.
 
 ## After Searching a Song: 
