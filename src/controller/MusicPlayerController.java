@@ -10,8 +10,6 @@ import utilities.PlayList;
 
 
 /**
- * @author Seth/Jackson
- * 	
  * Holds a Song and all relevant information relating to it. Has dual functions 
  * mentioned below. ArrayList compatible, Linked List compatible, 
  * 
@@ -24,6 +22,8 @@ import utilities.PlayList;
  * Metadata: 
  * favorite used in model as special playlist
  * genre used as recommended songs metadata
+ * 
+ * @author Jackson/Seth/Leighanna
  *
  */
 public class MusicPlayerController {
@@ -157,6 +157,10 @@ public class MusicPlayerController {
 		}
 	}
 	
+	/**
+	 * Returns a list of all the names of the playlists as a string
+	 * @return a string of the list of plaulists
+	 */
 	public String getAllPlaylistsAsString() {
 		return model.getAllPlaylistsAsString();
 	}
@@ -241,10 +245,20 @@ public class MusicPlayerController {
 	 * The sorting functions for PlayLists
 	 */
 	
+	/**
+	 * Sorts the specified playlist by title
+	 * @param playlist
+	 * 		this is the specified playlist to be sorted
+	 */
 	public void sortTitle(PlayList playlist){
 		model.sortTitle(playlist);
 	}
 	
+	/**
+	 * Sorts the specified playlist by artist
+	 * @param playlist 
+	 * 		this is the specified playlist to be sorted
+	 */
 	public void sortArtist(PlayList playlist){
 		model.sortArtist(playlist);
 	}

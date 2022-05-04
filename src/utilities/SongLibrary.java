@@ -1,6 +1,5 @@
 package utilities;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,11 +11,7 @@ import java.util.List;
 
 import song.Song;
 
-
-
 /**
- * @author Leighanna/Jackson/Paris
- * 	
  * Creates and stores all the Songs that will be used in the Music Player.
  * 
  * Accesses data.txt in order to get information to build Songs. 
@@ -30,6 +25,8 @@ import song.Song;
  * 
  * songLibrary:
  * An ArrayList of all the Songs created when this class is initialized. 
+ * 
+ * @author Leighanna/Jackson/Paris
  */
 public class SongLibrary {
 	
@@ -98,6 +95,11 @@ public class SongLibrary {
 	}
 	
 	
+	/**
+	 * Adds an individual song to the song library
+	 * @param song
+	 * 		is the individual song to be added to the song library
+	 */
 	public void addSong(Song song) {
 		songLibrary.add(song);
 		File dir2 = new File("src/images");

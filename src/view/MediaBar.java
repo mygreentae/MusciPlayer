@@ -1,6 +1,5 @@
 package view;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +20,14 @@ import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 
+/**
+ * This creates the media bar that keeps track of the duration
+ * of the song left. Basically, the slider that the user
+ * can toggle/seek through the song.
+ * 
+ * @author Jackson
+ *
+ */
 public class MediaBar extends HBox { // MediaBar extends Horizontal Box
 
     // introducing Sliders

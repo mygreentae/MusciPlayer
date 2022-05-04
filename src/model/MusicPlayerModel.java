@@ -8,19 +8,12 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
+
 import song.Song;
 import utilities.PlayList;
 import utilities.SongLibrary;
 
-
-
-
-
-
-
 /**
- * @author Seth/Jackson/Paris
- * 	
  * This is the Model of the music player. It holds all of the 
  * User data regarding PlayLists, Queues, favorites, and recommended
  * songs
@@ -51,6 +44,8 @@ import utilities.SongLibrary;
  * metadata:
  * A Map of Strings mapped to integers of genre's of Songs in a user's 
  * allPlaylists.
+ * 
+ * @author Seth/Jackson/Paris/Leighanna
  *
  */
 @SuppressWarnings("deprecation")
@@ -82,13 +77,6 @@ public class MusicPlayerModel extends Observable{
 		favorites = new PlayList("Favorites");
 		recommended = new PlayList("Recommended");
 		metadata = new HashMap<String, Integer>();
-
-		//PlayList defaultPlaylist = new PlayList(songLibrary.getSongs());
-		//currentPlaylist = defaultPlaylist;
-		
-		System.out.println("Is there a song library? " + this.songLibrary.getSongs());
-		
-		//createRecommended(); //creates recommended songs
 		
 		// create playlist using songlibrary
 		PlayList playlist = new PlayList(songLibrary.getSongs());
@@ -129,12 +117,6 @@ public class MusicPlayerModel extends Observable{
 		playingPlaylist = true;
 		curSong = song;
 		
-		
-		//if (playlist.getPlayOrder() != playlist.getSongList()) {
-		//	playlist.playFirst(song);
-		//}
-		//playlist.playFirst(song); //sets first song
-		// plays entire playlist
 		setChanged();
 		notifyObservers();
 	}
@@ -145,11 +127,7 @@ public class MusicPlayerModel extends Observable{
 		playingPlaylist = true;
 		
 		curSong = song;
-		
-		
-		//if (playlist.getPlayOrder() != playlist.getSongList()) {
-		//	playlist.playFirst(song);
-		//}
+
 		playlist.playFirst(song); //sets first song
 		// plays entire playlist
 		setChanged();
@@ -198,7 +176,6 @@ public class MusicPlayerModel extends Observable{
 			playPlaylist(currentPlaylist, song);
 			
 		} 
-		// if in PlayList, start playlist with this song:
 	}	
 	
 	
@@ -331,12 +308,6 @@ public class MusicPlayerModel extends Observable{
 		} else {
 
 		}
-		
-		//TODO:
-		
-		
-		// literal ai
-		System.out.println("creates recommended");
 	}
 		
 	/**
@@ -457,6 +428,10 @@ public class MusicPlayerModel extends Observable{
 		playlist.sortDate();
 	}
 	
+	/**
+	 * Returns a string of all the playlists names
+	 * @return the string that has all the playlists names
+	 */
 	public String getAllPlaylistsAsString() {
 		StringBuilder sb = new StringBuilder();
 		

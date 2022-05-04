@@ -1,6 +1,5 @@
 package utilities;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,9 +11,6 @@ import java.util.Set;
 import song.Song;
 
 /**
- * 
- * @author Jackson
- *
  *	A data structure used to hold Song objects in a list that 
  *	can be shuffle played. Utilizes indexing feature of Song 
  *	in order to play PlayList Songs. 
@@ -51,6 +47,8 @@ import song.Song;
  *	genres:
  *	A HashMap of Strings mapped to Integers, for how many songs
  *	of a specific genre are in the PlayList.
+ *
+ * @author Jackson
  */
 public class PlayList {
 	
@@ -213,7 +211,9 @@ public class PlayList {
 		}		
 	}
 	
-	
+	/**
+	 * Unshuffles the current playlist
+	 */
 	public void unshuffle() {
 		playOrder = songList;
 		int count = 0;

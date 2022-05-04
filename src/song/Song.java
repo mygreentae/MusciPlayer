@@ -34,9 +34,8 @@ public class Song {
 	//properties
 	private String name;
 	private String artist; 
-	private int date; //probably just a year
-	private String cover; // temporary for now.
-	private ArrayList<String> lyrics;
+	private int date;
+	private String cover;
 	
 	//List shit
 	private int index;

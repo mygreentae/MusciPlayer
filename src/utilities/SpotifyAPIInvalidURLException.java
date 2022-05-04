@@ -1,11 +1,9 @@
 package utilities;
 
 /**
- * This class represents an Exception for our Wordle game for an invalid guess. This exception will be thrown
- * if the users guess is either less than 5 letters, more than 5 letters or if their guess is not contained 
- * inside of our Dictionary.txt file.
+ * This will be thown when there is an Invalid URL passed into the Spotify API
  * 
- * @author Seth Jeppson
+ * @author Seth
  */
 
 public class SpotifyAPIInvalidURLException extends Exception {
@@ -16,7 +14,9 @@ public class SpotifyAPIInvalidURLException extends Exception {
 	}
 	
 	
-	
+	/**
+	 * The message to be printed out if this exception is thrown
+	 */
 	public String toString() {
 		return "Invalid url. " + super.getMessage();
 	}

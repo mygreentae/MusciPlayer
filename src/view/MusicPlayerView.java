@@ -1,7 +1,5 @@
 package view;
 
-
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -76,6 +74,17 @@ import utilities.SongLibrary;
 import utilities.SpotifyAPIInvalidStreamException;
 import utilities.SpotifyAPIInvalidURLException;
 
+/**
+ * Is the GUI of the music player. It displays all the components so the user can
+ * play music, shuffle music, and create playlists.
+ * 
+ * All exceptions are caught in this class so if the user does something that would
+ * crash the music player, there would be a window telling them about the action
+ * they cannot do.
+ * 
+ * @author Leighanna/Jackson/Seth
+ *
+ */
 public class MusicPlayerView extends Application implements Observer {
 	private static MusicPlayerModel model;
 	private static MusicPlayerController controller;
@@ -453,6 +462,14 @@ public class MusicPlayerView extends Application implements Observer {
 	}
 	
 
+	/**
+	 * The class to contain the control menu which are the buttons
+	 * that allow the user to toggle fast forward/backward, skip/go back 
+	 * songs, pause/play, and shuffle
+	 * 
+	 * @author Leighanna/Jackson
+	 *
+	 */
 	private class ControlMenu extends HBox {
 		
 		
@@ -492,6 +509,16 @@ public class MusicPlayerView extends Application implements Observer {
 			setAlignment(Pos.CENTER);
 		}
 		
+		/**
+		 * Sets the image and size of the specified button.
+		 * 
+		 * @param b
+		 * 		The button to set the image and size of
+		 * @param filename
+		 * 		the name and location of were the image of the image is
+		 * @param size
+		 * 		the size of the button
+		 */
 		private void setImage(Button b, String filename, int size) {
 			b.setShape(new Circle(10));
 			
@@ -505,10 +532,13 @@ public class MusicPlayerView extends Application implements Observer {
 			
 		}
 		
+		/**
+		 * Sets the functionality of the Pause and Play button into the meida player
+		 */
 		private void setPausePlayButton() {
 			setImage(playPauseButton, "play.png", BUTTON_SIZE_1);
 	        
-	     // Adding Functionality
+			// Adding Functionality
 	        // to play the media player
 	        playPauseButton.setOnAction(new EventHandler<ActionEvent>() {
 	            public void handle(ActionEvent e)
@@ -555,6 +585,9 @@ public class MusicPlayerView extends Application implements Observer {
 		}
 	        
 		
+		/**
+		 * Sets the functionality of the Fast Forward button in the media player
+		 */
 		private void setFastForwardButton() {
 			setImage(fastForwardButton, "forward.png", BUTTON_SIZE_2);
 	        
@@ -568,6 +601,9 @@ public class MusicPlayerView extends Application implements Observer {
 			}) ;
 		}
 		
+		/**
+		 * Sets the functionality of the backward button in the media player.
+		 */
 		private void setBackwardButton() {
 			setImage(backwardButton, "backward.png", BUTTON_SIZE_2);
 	        
@@ -581,6 +617,9 @@ public class MusicPlayerView extends Application implements Observer {
 			}) ;
 		}
 		
+		/**
+		 * Sets the functionality of the skip button in the media player.
+		 */
 		private void setNextSongButton() {
 			setImage(nextSongButton, "next-song.png", BUTTON_SIZE_2);
 	        
@@ -595,6 +634,9 @@ public class MusicPlayerView extends Application implements Observer {
 			});
 		}
 		
+		/**
+		 * Sets the functionality of the previous song button in the music player.
+		 */
 		private void setPrevSongButton() {
 			setImage(prevSongButton, "prev-song.png", BUTTON_SIZE_2);
 	        
@@ -637,6 +679,9 @@ public class MusicPlayerView extends Application implements Observer {
 			}) ;
 		}
 		
+		/**
+		 * Sets the functionality of the shuffle button in the music player.
+		 */
 		private void setShuffleButton() {
 			setImage(shuffleButton, "shuffle.png", BUTTON_SIZE_3);
 			shuffleButton.setMaxSize(500, 5);
@@ -697,7 +742,12 @@ public class MusicPlayerView extends Application implements Observer {
 		}
 	}
 
-	
+	/**
+	 * Creates the top menu bar so the user can sort the songs by title/artist/relase date, create
+	 * and switch playlists, search for songs, and go back.
+	 * @author Leighanna/Jackson
+	 *
+	 */
 	private class Menu extends BorderPane {
 	
 	private GridPane menu;
@@ -719,6 +769,7 @@ public class MusicPlayerView extends Application implements Observer {
 		searchButton = new Button("Search");
 		menu = new GridPane();
 		
+		// where the buttons are going to be placed in the gridpane
 		GridPane.setConstraints(createPlaylistButton, 1, 0);
 		GridPane.setConstraints(switchPlaylistButton, 2, 0);
 		GridPane.setConstraints(artistButton, 3, 0);
@@ -739,7 +790,9 @@ public class MusicPlayerView extends Application implements Observer {
 		
 	}
 	
-	
+	/**
+	 * Add the event handlers to each button in the menu bar
+	 */
 	private void addEventHandlers() {	
 		EventHandler<MouseEvent> createPlaylist = new EventHandler<MouseEvent>() {
 
@@ -958,6 +1011,13 @@ public class MusicPlayerView extends Application implements Observer {
 		}
 	}
 	
+	/**
+	 * The menu that pops up when a song is playing. This menu allows the user
+	 * to add that selected song to a playlist or favorite the song.
+	 * 
+	 * @author Leighanna
+	 *
+	 */
 	public class SongMenu extends BorderPane{
 		private GridPane menu;
 		Button addToPlaylistButton;
@@ -992,6 +1052,9 @@ public class MusicPlayerView extends Application implements Observer {
 			
 		}
 		
+		/**
+		 * Add the event handlers for each button in the Song menu.
+		 */
 		private void addEventHandlers() {
 			EventHandler<MouseEvent> addSongToPlaylist = new EventHandler<MouseEvent>() {
 
@@ -1072,6 +1135,9 @@ public class MusicPlayerView extends Application implements Observer {
 		}
 	}
 
+	/**
+	 * Update the View
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		VBox root = new VBox();
@@ -1124,6 +1190,14 @@ public class MusicPlayerView extends Application implements Observer {
 	
 	/*
 	 * The absolute most cracked shit i have ever coded - j
+	 */
+	
+	/**
+	 * Plays the next song in the queue based on the current playlist and the current song.
+	 * @param curPlaylist
+	 * 		the list of songs queued up to be played.
+	 * @param curSong
+	 * 		the current song that is playing.
 	 */
 	public void playNextSong(PlayList curPlaylist, Song curSong) {
 		if (curSong.getIndex() == curPlaylist.getSize() - 1) {
