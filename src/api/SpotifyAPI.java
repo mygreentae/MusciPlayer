@@ -50,7 +50,6 @@ public class SpotifyAPI {
 			String date = "";
 			String output;
 			while ((output = br.readLine()) != null) {
-				System.out.println(output);
 				if (output.contains("release_date")) {
 					date = output.substring(26, 36);
 					break;
@@ -95,6 +94,7 @@ public class SpotifyAPI {
 					i++;
 				}
 			}
+			System.out.println(prevLink);
 			String audioPath = downloadAudio(prevLink, artist, songName);
 			String artPath = downloadArt(coverLink, artist, songName);
 			String genre = getGenre(artist);
