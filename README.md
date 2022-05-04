@@ -5,7 +5,7 @@ Seth, Leighanna Pipatanangkura, Paris Garcia, Jackson Covey
 ## Functional aspects: 
  - [x] The ability to download Songs and store in a library.
  - [x] Songs are saved in a .txt file that is then loaded into the program when restarted.
- - [ ] Library/Playlist sorting, based on artist, title, date
+ - [x] Library/Playlist sorting, based on artist, title, date
  - [x] Play, pause, and fast-forward buttons, and  seek and volume bars for the MediaPlayer.
  - [x] Skip 10 seconds forward/backwards buttons.
  - [x] The ability to make Playlists.
