@@ -97,38 +97,7 @@ public class SpotifyAPI {
 	 * @throws SpotifyAPIInvalidStreamException Exception that gets thrown if the Stream we are given back isn't valid, i.e error.
 	 * @throws SpotifyAPIInvalidDownloadException Exception that gets thrown if the song queried already exists in the library. 
 	 */
-	
-	public static String getSongDate(String artist, String songName) throws Exception {
-		String link = formTrackURL(artist, songName);
-		try {
-			URL url = new URL(link);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			con.setRequestMethod("GET");
-			con.setDoInput(true);
-			con.setDoOutput(true);
-			con.setRequestProperty("Accept", "application/json");
-			con.setRequestProperty("Content-Type", "application/json");
-			con.setRequestProperty("Authorization", "Bearer " + token);
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					(con.getInputStream())));
-			String date = "";
-			String output;
-			while ((output = br.readLine()) != null) {
-				if (output.contains("release_date")) {
-					date = output.substring(26, 36);
-					break;
-				}
-			}
-			con.disconnect();
-			return date;
-		} catch (MalformedURLException e) {
-			throw new SpotifyAPIInvalidURLException("Invalid call to Spotify's API. Ensure the link is a valid SpotifyAPI URL");
-		} catch (IOException e) {
-			throw new SpotifyAPIInvalidStreamException();
-		}
-	}
-	
-	
+
 	public static Song getMetadata(String artist, String songName) throws SpotifyAPIInvalidURLException, SpotifyAPIInvalidStreamException, SpotifyAPIInvalidDownloadException  {
 		String link = formTrackURL(artist, songName);
 		try {
