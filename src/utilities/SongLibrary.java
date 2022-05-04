@@ -33,6 +33,7 @@ public class SongLibrary {
 	
 	ArrayList<Song> songLibrary;
 	ArrayList<PlayList> playlists;
+
 	
 
 	public SongLibrary() {
@@ -139,20 +140,27 @@ public class SongLibrary {
 	
 	/**
 	 * Adds an individual song to the song library
+	 * 
 	 * @param song
 	 * 		is the individual song to be added to the song library
 	 */
 	public void addSong(Song song) {
-		songLibrary.add(song);
 		File dir2 = new File("src/images");
 		File[] paths2 = dir2.listFiles();
 		if (paths2 != null) {
 			for (File p : paths2) {
 				if (p.toString().contains(song.getName())){
-						song.setCover(p.toString());
+					song.setCover(p.toString());
 				} 
 			}
 		}
+		
+		for (Song songs : songLibrary) {
+			if (songs.getArtPath().equals(song.getArtPath())) {
+				return;
+			}
+		} 
+		songLibrary.add(song);
 	}
 	
 	/**
