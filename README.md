@@ -24,23 +24,24 @@ A lengthy ReadMe on how to use our music player, as well as a deeper explanation
 
 ### Searching for a Song Bugs:
 1. Search format requirements: The format MUST be in a "Artist, Title" format. You will get an error Alert if it is not.
-2. "Ooos! Something went Wrong!" message: This means the Spotify API said "nope" to whatever song you tried to search up. This can be for a lot of reasons, some of which we predict are included here:
+2. "Ooos! Something went Wrong!" message: This means the Spotify API said "nope" to whatever song you tried to search up. We have intentionally kept the stack trace because it is interesting. This can be for a lot of reasons, some of which we predict are included here:
     1. The Spotify API cannot find the song based on what you put in the search bar.
     2. The Spotify API does not want you to play the song for copyright reasons???
     3. The distributer of the Song does not want you to play the song for copyright reasons???
     4. The Spotify API doesn't like playing that song???
 3. Sometimes it gets the wrong song. This is because in our implementation, it picks the first thing that comes up in the search result via the Spotyify API.
 #### Visual Bugs:
-3. If you're playing a playlist, and in the middle of typing something in the Search bar, when update() is called, it will interupt your typing. It is not an actual like bug persay, but it is somewhat frustrating.
-4. Album art not loading: This can be attributed to Eclipse, but it can only be fixed some of the time. Because of the way Eclipse works, you need to go to preferences -> General -> Workspace and click the below checkboxes.
+4. If you're playing a playlist, and in the middle of typing something in the Search bar, when update() is called, it will interupt your typing. It is not an actual like bug persay, but it is somewhat frustrating.
+5. Album art not loading: This can be attributed to Eclipse, but it can only be fixed some of the time. Because of the way Eclipse works, you need to go to preferences -> General -> Workspace and click the below checkboxes.
 - [x] Refresh using native hooks or polling
 - [x] Refresh on access
-5. This should fix, one of the four types of visual errors. When a song is searched and added to the Music Player, this will allow Eclipse to auto-refresh the project folder. This will allow you to view SOME of the album covers.
-6. The second type is those that eventually show up. After a while, some album covers will just magically start working for no explicable reason. 
-7. The third type is those that never show up (within a reasonable amount of time). To fix this, or any of the other visual glitches, stop and re-run the program.
-8. The fourth type is where the actual song does not even show up. We know our code works because we've tested it extensively. This is also why we know this bug exists. Sometimes for no reason, the song does not appear in the Song Library when viewing the Playlist View Window. It just does not show up. This is of course fixed when you restart the program, but it is of note. 
+6. This should fix, one of the four types of visual errors. When a song is searched and added to the Music Player, this will allow Eclipse to auto-refresh the project folder. This will allow you to view SOME of the album covers.
+7. The second type is those that eventually show up. After a while, some album covers will just magically start working for no explicable reason. 
+8. The third type is those that never show up (within a reasonable amount of time). To fix this, or any of the other visual glitches, stop and re-run the program.
+9. The fourth type is where the actual song does not even show up. We know our code works because we've tested it extensively. This is also why we know this bug exists. Sometimes for no reason, the song does not appear in the Song Library when viewing the Playlist View Window. It just does not show up. This is of course fixed when you restart the program, but it is of note. 
+10. A fifth type has been discovered that stems from one of the Search for a Song Bugs. There are times where a searching for a Song will result in an error message, as well as a Stack Trace print; however, when the View calls update(), there will be 2 copies of the Song in the Playlist View Window. No idea why it does this, it just does, although not very often.
 #### Auditory Bugs:
-9. Auditory glitches: Sometimes, the Spotify API is able to find a song, but it will play .5 seconds of it, and immediately move to the next song if there is one. There is no way to fix this, it just happens. Restarting the program, deleting the data from the .txt file, and re-searching for the song does not fix this either, so we have concluded it is a Spotify API quirk.
+11. Auditory glitches: Sometimes, the Spotify API is able to find a song, but it will play .5 seconds of it, and immediately move to the next song if there is one. There is no way to fix this, it just happens. Restarting the program, deleting the data from the .txt file, and re-searching for the song does not fix this either, so we have concluded it is a Spotify API quirk.
 
 # Running the Music Player:
 
