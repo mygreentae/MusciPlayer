@@ -855,7 +855,7 @@ public class MusicPlayerView extends Application implements Observer {
 			    	
 			    	if (toPlay.getSize() > 0) {
 			    		SHOW_PLAYLIST = toPlay;
-			    		update(model, null);// casuses visual error
+			    		update(model, null);
 			    	}
 			    	else {
 			    		 Platform.runLater(() -> {
@@ -931,12 +931,14 @@ public class MusicPlayerView extends Application implements Observer {
 				
 				SHOW_PLAYLIST = controller.getCurPlaylist();
 				if (SHOW_PLAYLIST == null) {
-					return;
+					SHOW_PLAYLIST = new PlayList(songLibrary.getSongs());
 				}
 				else if (controller.getCurPlaylist().getSongList() 
 						== controller.getCurPlaylist().getOriginalOrder()){
+					System.out.println("yeet2");
 					SHOW_PLAYLIST = new PlayList(songLibrary.getSongs());
 				} else {	
+					System.out.println("yeet3");
 					controller.getCurPlaylist().returnToOriginalOrder();
 					SHOW_PLAYLIST = new PlayList(songLibrary.getSongs());
 				}
@@ -1098,7 +1100,8 @@ public class MusicPlayerView extends Application implements Observer {
 					        return;
 				    	}
 				    	else {
-				    		toAddto.addSong(controller.getCurSong());
+				    		controller.addToPlaylist(toAddto, controller.getCurSong());
+				    		//toAddto.addSong(controller.getCurSong());
 				    	}
 				    	
 				    });

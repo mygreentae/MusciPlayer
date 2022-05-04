@@ -1,13 +1,14 @@
 package utilities;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Scanner;
 
 import song.Song;
 
@@ -31,12 +32,15 @@ import song.Song;
 public class SongLibrary {
 	
 	ArrayList<Song> songLibrary;
+	ArrayList<PlayList> playlists;
 	
 
 	public SongLibrary() {
 		songLibrary = new ArrayList<>();
+		playlists = new ArrayList<>();
 		try {
 			addSongs();
+			loadPlaylists();
 		} catch (IOException e) {
 			
 			return;
@@ -95,6 +99,40 @@ public class SongLibrary {
 		songLibrary = list;
 	}
 	
+	/**
+	 * Returns the ArrayList of PlayLists
+	 * 
+	 * @return the ArrayList of PlayLists
+	 */
+	public ArrayList<PlayList> getPlaylists(){
+		return playlists;
+	}
+	
+	/**
+	 * Reads a file that contains playlist data
+	 * 
+	 * @throws IOException when file cannot be found
+	 */
+	public void loadPlaylists() throws IOException {
+		List<String> dataList = readFile("playlists.txt");
+		for (String data : dataList) {
+			String[] lines = data.split(":");
+			String playlistName = lines[0];
+			String[] songs = lines[1].split(";");
+			PlayList p = new PlayList(playlistName);
+			if (!p.getName().equals("Favorites") && !p.getName().equals("Song Library")) {
+				for (Song song : songLibrary) {
+					String name = song.getName() + ", " + song.getArtist();
+					for (String songData: songs) {
+						if (name.equals(songData.strip())){
+							p.addSong(song);
+						}
+					}
+				}
+				playlists.add(p);
+			}
+		} 
+	}
 	
 	/**
 	 * Adds an individual song to the song library
@@ -113,4 +151,28 @@ public class SongLibrary {
 			}
 		}
 	}
+	
+	/**
+	 * This is a helper function that reads in the playlist.txt file
+	 * 
+	 * @param fileName, the name of the file you want to open
+	 * @return an ArrayList of Strings that contain the files contents
+	 */
+	public static ArrayList<String> readFile(String fileName) {
+		List<String> dataList = new ArrayList<>();
+	    try {
+	      File myObj = new File(fileName);
+	      Scanner myReader = new Scanner(myObj);
+	      while (myReader.hasNextLine()) {
+	        String data = myReader.nextLine();
+	        dataList.add(data);
+	      }
+	      myReader.close();
+	    } catch (FileNotFoundException e) {
+	      System.out.println("An error occurred.");
+	      e.printStackTrace();
+	    }
+	    return (ArrayList<String>) dataList;
+	  }
+
 }
