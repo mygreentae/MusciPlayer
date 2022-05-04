@@ -991,7 +991,7 @@ public class MusicPlayerView extends Application implements Observer {
 							update(model, null);
 						} catch (Exception e) {
 							Platform.runLater(() -> {
-						        Alert error = new Alert(AlertType.INFORMATION, "Oops! Something went wrong!", ButtonType.OK);
+						        Alert error = new Alert(AlertType.INFORMATION, "Oops! Something went wrong! Song not available!", ButtonType.OK);
 						        error.show();
 						    });
 							e.printStackTrace();
