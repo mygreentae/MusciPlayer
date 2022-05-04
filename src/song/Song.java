@@ -34,10 +34,9 @@ public class Song {
 	//properties
 	private String name;
 	private String artist; 
-	private int date;
-	private String cover;
+	private String cover; 
 	
-	//List shit
+	//List indexing
 	private int index;
 	
 	//metadata
@@ -54,7 +53,6 @@ public class Song {
 	public Song(String name, String artist, String genre, String artPath, String songDate, String audioPath) {
 		this.name = name;
 		this.artist = artist; 
-		this.date = 0;
 		this.genre = genre;
 		this.index = 0;
 		this.favorite = false;
@@ -112,14 +110,6 @@ public class Song {
 		return artist;
 	}
 	
-	/**
-	 * Returns the Song's release year
-	 * 
-	 * @return the Song release year
-	 */
-	public int getDate() {
-		return date;
-	}
 	
 	/**
 	 * Returns the Song's genre

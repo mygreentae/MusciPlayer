@@ -63,7 +63,6 @@ public class MusicPlayerModel extends Observable{
 	private PlayList recommended;
 
 	//model state
-	private boolean playingQueue;
 	private boolean playingPlaylist;
 	
 	private Map<String, Integer> metadata;
@@ -95,7 +94,6 @@ public class MusicPlayerModel extends Observable{
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist) {
-		//stops other songs playing
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		curSong = playlist.getPlayOrder().get(0);
@@ -112,11 +110,9 @@ public class MusicPlayerModel extends Observable{
 	 * @param playlist, the PlayList to be played
 	 */
 	public void playPlaylist(PlayList playlist, Song song) {
-		//stops other songs playing
 		currentPlaylist = playlist;
 		playingPlaylist = true;
 		curSong = song;
-		
 		setChanged();
 		notifyObservers();
 	}
@@ -125,9 +121,7 @@ public class MusicPlayerModel extends Observable{
 		//stops other songs playing
 		currentPlaylist = playlist;
 		playingPlaylist = true;
-		
 		curSong = song;
-
 		playlist.playFirst(song); //sets first song
 		// plays entire playlist
 		setChanged();
@@ -198,8 +192,6 @@ public class MusicPlayerModel extends Observable{
 		return true;
 	}
 	
-	
-	
 	/**
 	 * Returns the current Song
 	 * 
@@ -268,47 +260,6 @@ public class MusicPlayerModel extends Observable{
 	public boolean isPlayingPlaylist() {
 		return playingPlaylist;
 	}
-	
-	/**
-	 * If the model has no PlayLists, creates recommneded 
-	 * 10 song PlayList
-	 * 
-	 * Else: it uses the metadata map 
-	 */
-	public void createRecommended() {
-		recommended = new PlayList("Recommended");
-		// gets metadata
-		for (PlayList list: allPlaylists) {
-			for (Song song: list.getSongList()) {
-				if (metadata.containsKey(song.getGenre())){
-					metadata.put(song.getGenre(), 1);
-				} else {
-					int value = metadata.get(song.getGenre());
-					metadata.put(song.getGenre(), value + 1);
-				}
-			}
-		}
-		//
-		//makes 10 songs
-		int count = 10;
-		if (allPlaylists.size() == 0) {
-			ArrayList<Song> shuffle = new ArrayList<>();
-			
-			for (Song song : songLibrary.getSongs()) {
-				shuffle.add(song);
-			}
-			Random random = new Random();
-			while (count > 0) {
-				int i = random.nextInt(shuffle.size());
-				Song song = shuffle.get(i);
-				recommended.addSong(song);
-				shuffle.remove(i);
-				count--;
-			}		
-		} else {
-
-		}
-	}
 		
 	/**
 	 * Adds a PlayList to the model
@@ -363,28 +314,6 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	/**
-	 * Returns the song if its present in the Song Library
-	 * 
-	 * @param name, the name of the song the user wants
-	 * @return null if Song is not found, otherwise returns the Song
-	 */
-	public Song search(String name) {
-		//binary search song names?
-		Song searchedSong = null;
-		for (Song song : songLibrary.getSongs()) {
-			if (song.getName().toLowerCase().equals(name.toLowerCase())) {
-				searchedSong = song;
-			}
-		}
-		// if song is not found, returns null
-		if (searchedSong == null) {
-			return null;
-		} else {
-			return searchedSong;
-		}
-	}
-	
-	/**
 	 * unsure if we need this but ya never know, could be a cool feature
 	 * 
 	 * @param playlist
@@ -408,9 +337,7 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public void sortTitle(PlayList playlist){
 		playlist.sortTitle();
-	}
-		
-		
+	}		
 	
 	/**
 	 * Sorts the songLibrary by song Artist

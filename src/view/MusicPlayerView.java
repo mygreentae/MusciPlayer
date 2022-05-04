@@ -76,7 +76,7 @@ import utilities.SpotifyAPIInvalidURLException;
 
 /**
  * Is the GUI of the music player. It displays all the components so the user can
- * play music, shuffle music, and create playlists.
+ * play music, shuffle music, and create PlayLists.
  * 
  * All exceptions are caught in this class so if the user does something that would
  * crash the music player, there would be a window telling them about the action
@@ -90,13 +90,12 @@ public class MusicPlayerView extends Application implements Observer {
 	private static MusicPlayerController controller;
 	private static SongLibrary songLibrary;
 	
-	
+	// GUI Components
 	private ControlMenu controls;
-	
-	//media player stuff
 	private MediaBar mediaBar;
 	
-	
+	//media player stuff
+
 	private ArrayList<MediaPlayer> mediaPlayers;
 	private Song CURRENT_SONG;
 	private PlayList SHOW_PLAYLIST;
@@ -214,11 +213,6 @@ public class MusicPlayerView extends Application implements Observer {
 		songView.setPadding(new Insets(5, 10, 0, 20));
 		scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		
-		//change to current song queue
-		//ArrayList<Song> songList = controller.getCurPlaylist().getSongList();
-		// add if (curPlaylist == null) {
-		// then this line, otherwise, songList == curPlaylist;
-		
 		ArrayList<Song> songList = songLibrary.getSongs();
 		PlayList playlist = SHOW_PLAYLIST;
 		if (playlist != null) {
@@ -256,7 +250,6 @@ public class MusicPlayerView extends Application implements Observer {
 					SHOW_PLAYLIST = controller.getCurPlaylist();
 				}
 				CURRENT_PLAYER = mediaPlayer;
-				System.out.println(controller.getCurSong().getIndex());
 				CURRENT_PLAYER.setOnEndOfMedia(() -> playNextSong(controller.getCurPlaylist(), controller.getCurSong()));
 				
 			}
@@ -321,7 +314,6 @@ public class MusicPlayerView extends Application implements Observer {
     	} 
     	else {
     		try {
-    			System.out.println(CURRENT_SONG.getCover().substring(4).strip());
     			Image i = new Image(CURRENT_SONG.getCover().substring(4).strip());
     			imageView.setImage(i);
     		} catch (IllegalArgumentException e) {
@@ -335,6 +327,15 @@ public class MusicPlayerView extends Application implements Observer {
     	return imageView;
     }
 	
+	/**
+	 * This class encapsulates an entire Song object and displays it visually.
+	 * It highlights the song when hovered over, highlights it while it is 
+	 * playing, and is able to play it when clicking the playButton that is
+	 * revealed when SongTile is hovered over with the mouse.
+	 * 
+	 * @author Leighanna/Jackson
+	 *
+	 */
 	private class SongTile extends BorderPane {
 		private static final int PLAY_BUTTON_SIZE = 25;
 		
@@ -743,8 +744,9 @@ public class MusicPlayerView extends Application implements Observer {
 	}
 
 	/**
-	 * Creates the top menu bar so the user can sort the songs by title/artist/relase date, create
-	 * and switch playlists, search for songs, and go back.
+	 * Creates the top menu bar so the user can sort the songs by title/artist/release date, create
+	 * and switch PlayLists, search for songs, and go back.
+	 * 
 	 * @author Leighanna/Jackson
 	 *
 	 */
@@ -769,8 +771,8 @@ public class MusicPlayerView extends Application implements Observer {
 		searchButton = new Button("Search");
 		menu = new GridPane();
 		
-		// where the buttons are going to be placed in the gridpane
-		GridPane.setConstraints(createPlaylistButton, 1, 0);
+		// where the buttons are going to be placed in the GridPane
+		GridPane.setConstraints(createPlaylistButton, 1, 0)
 		GridPane.setConstraints(switchPlaylistButton, 2, 0);
 		GridPane.setConstraints(artistButton, 3, 0);
 		GridPane.setConstraints(titleButton, 4, 0);
@@ -961,7 +963,6 @@ public class MusicPlayerView extends Application implements Observer {
 				        return;
 			    	}
 			    	else {
-			    		System.out.println("Search[0]: " + toSearch[0] + " Search[1] " + toSearch[1]);
 			    		try {
 							SpotifyAPI.authenticate();
 						} catch (SpotifyAPIInvalidURLException e) {
@@ -1187,17 +1188,18 @@ public class MusicPlayerView extends Application implements Observer {
 	}
 	
 	
-	
-	/*
-	 * The absolute most cracked shit i have ever coded - j
-	 */
-	
 	/**
-	 * Plays the next song in the queue based on the current playlist and the current song.
+	 * Recursively assigns next song to play based on the current PlayList 
+	 * and the current song. Calls this same function to determine what Song
+	 * to play after said next song. 
+	 * 
+	 * Base case: When the Song passed as an argument has an index equal to
+	 * the length of the PlayList it belongs to.
+	 * 
 	 * @param curPlaylist
-	 * 		the list of songs queued up to be played.
+	 * 		the current PlayList that is being played.
 	 * @param curSong
-	 * 		the current song that is playing.
+	 * 		the current Song that is playing.
 	 */
 	public void playNextSong(PlayList curPlaylist, Song curSong) {
 		if (curSong.getIndex() == curPlaylist.getSize() - 1) {
@@ -1207,7 +1209,6 @@ public class MusicPlayerView extends Application implements Observer {
 		mediaPlayers = new ArrayList<>();
 
 		int index = curSong.getIndex();
-		System.out.println(index);
 		Song nextSong = curPlaylist.getPlayOrder().get(index + 1);
 		
 		Media file = new Media(new File(nextSong.getAudioPath()).toURI().toString());

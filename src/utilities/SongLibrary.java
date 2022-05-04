@@ -38,7 +38,8 @@ public class SongLibrary {
 		try {
 			addSongs();
 		} catch (IOException e) {
-			System.out.println("Error adding songs from Song Library");
+			
+			return;
 		}
 	}
 
