@@ -139,4 +139,28 @@ Toggling the "Shuffle" button out of shuffle mode while playing a playlist WILL 
 
 Using the Skip/Prev buttons in shuffle mode will work as a user expects. 
 
+# Resetting the Music Player
 
+
+## How We Store Data:
+#### data.txt 
+data.txt stores the information needed to initialize the SongLibrary. It keeps all the information that is needed to reinitialize all Song Objects upon re-launch. 
+
+#### playlist.txt
+playlist.txt stores the information that is required to reload PlayLists between between launches. 
+
+### Audios
+The Audios file stores all of the .wav files that are connected to Song Objects.
+
+### images
+src/images stores all of the image files that are connected to Song Objects.
+
+## How to reset the Music Player
+In order to reset the music player, all assests must be deleted. DO NOT DELETE THE FILES. 
+
+1. data.txt: Delete every line in this file.
+2. playlist.txt Delete every line in this file.
+3. Audios: Delete every .wav file in this directory.
+4. images: Delete every .jpg file EXCEPT no-cover-art-found.jpg. If you delete that, everything will break.
+
+Following these steps will reset the Music Player. 
