@@ -263,5 +263,14 @@ public class MusicPlayerController {
 		model.sortArtist(playlist);
 	}
 	
+	/**
+	 * Sorts the specified playlist by Date
+	 * @param playlist 
+	 * 		this is the specified playlist to be sorted
+	 */
+	public void sortDate(PlayList playlist) {
+		model.sortDate(playlist);
+	}
+	
 	
 }

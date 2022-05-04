@@ -333,7 +333,7 @@ public class PlayList {
 	}
 	
 	/**
-	 * Sorts the songLibrary by song release Date
+	 * Sorts the songLibrary by song release Date, Newest First.
 	 */
 	public void sortDate(){
 		ArrayList<String> dateList = new ArrayList<String>();
@@ -343,8 +343,10 @@ public class PlayList {
 		
 		Collections.sort(dateList);
 		
+		
 		ArrayList<Song> sortedOrder = new ArrayList<Song>();
-		for (String date : dateList) {
+		for (int i = dateList.size() - 1; i >= 0; i--) {
+			String date = dateList.get(i);
 			for (Song song : songList) {
 				if (song.getSongDate().equals(date)) {
 					sortedOrder.add(song);
