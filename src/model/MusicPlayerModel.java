@@ -5,13 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import javafx.application.Platform;
 
 import song.Song;
 import utilities.PlayList;
