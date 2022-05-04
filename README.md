@@ -10,7 +10,7 @@ Seth, Leighanna Pipatanangkura, Paris Garcia, Jackson Covey
  - [x] Skip 10 seconds forward/backwards buttons.
  - [x] The ability to make Playlists.
  - [x] a Favorites PlayList, with favorite/unfavorite buttons.
- - [ ] Playlists are saved in a .txt file that is then loaded into the program when restarted.
+ - [x] Playlists are saved in a .txt file that is then loaded into the program when restarted.
  - [x] A million visual/Spotify API glitches we can't account for.
 
 
