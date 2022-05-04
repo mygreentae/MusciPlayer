@@ -772,7 +772,7 @@ public class MusicPlayerView extends Application implements Observer {
 		menu = new GridPane();
 		
 		// where the buttons are going to be placed in the GridPane
-		GridPane.setConstraints(createPlaylistButton, 1, 0)
+		GridPane.setConstraints(createPlaylistButton, 1, 0);
 		GridPane.setConstraints(switchPlaylistButton, 2, 0);
 		GridPane.setConstraints(artistButton, 3, 0);
 		GridPane.setConstraints(titleButton, 4, 0);
