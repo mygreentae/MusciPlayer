@@ -118,9 +118,12 @@ public class SongLibrary {
 		for (String data : dataList) {
 			String[] lines = data.split(":");
 			String playlistName = lines[0];
+			if (lines.length == 1) {
+				return;
+			}
 			String[] songs = lines[1].split(";");
 			PlayList p = new PlayList(playlistName);
-			if (!p.getName().equals("Favorites") && !p.getName().equals("Song Library")) {
+			if (!p.getName().equals("Song Library")) {
 				for (Song song : songLibrary) {
 					String name = song.getName() + ", " + song.getArtist();
 					for (String songData: songs) {

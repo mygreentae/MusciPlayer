@@ -86,7 +86,14 @@ public class MusicPlayerModel extends Observable{
 		//loads playlists from txt file
 		ArrayList<PlayList> loadedPlaylists = songLibrary.getPlaylists();
 		for (PlayList list : loadedPlaylists) {
-			allPlaylists.add(list);
+			if (list.getName().equals("Favorites")) {
+				for (Song song : list.getSongList()) {
+					favorites.addSong(song);;
+				}
+			} else {
+				allPlaylists.add(list);
+			}
+			
 		}
 	}
 
