@@ -916,9 +916,9 @@ public class MusicPlayerView extends Application implements Observer {
 				PlayList songs = new PlayList(songLibrary.getSongs());
 				if (curPlaylist != null){
 					songs = curPlaylist;
-					controller.sortTitle(songs);
+					controller.sortDate(songs);
 				} else {
-					controller.sortTitle(songs);
+					controller.sortDate(songs);
 				}
 				update(model, null);
 			}
@@ -1007,6 +1007,7 @@ public class MusicPlayerView extends Application implements Observer {
 		switchPlaylistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, switchPlaylist);
 		artistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyArtist);
 		titleButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyTitle);
+		dateButton.addEventHandler(MouseEvent.MOUSE_CLICKED, sortPlaylistbyDate);
 		backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, back);
 		searchButton.addEventHandler(MouseEvent.MOUSE_CLICKED, search);
 		}
