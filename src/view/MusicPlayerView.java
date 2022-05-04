@@ -953,7 +953,6 @@ public class MusicPlayerView extends Application implements Observer {
 				TextInputDialog dialog = new TextInputDialog();
 				dialog.setTitle("Search for Song");
 				dialog.setHeaderText("Type in a song to search");
-//				dialog.setContentText("These are the playlists you have:\n" + controller.getAllPlaylistsAsString() + "Total Playlists: " + controller.getAllPlaylists().size());
 				dialog.showAndWait().ifPresent(string -> 
 			    {
 			    	String toSearch[] = string.split(",");

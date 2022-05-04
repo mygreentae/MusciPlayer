@@ -46,7 +46,7 @@ import utilities.SongLibrary;
  * A Map of Strings mapped to integers of genre's of Songs in a user's 
  * allPlaylists.
  * 
- * @author Seth/Jackson/Paris/Leighanna
+ * @author Seth/Jackson/Leighanna
  *
  */
 @SuppressWarnings("deprecation")

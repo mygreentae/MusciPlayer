@@ -11,9 +11,7 @@ import javax.sound.sampled.*;
 
 import utilities.PlayList;
 
-/**
- * @author Seth/Jackson
- * 	
+/**	
  * Holds a Song and all relevant information relating to it. Has dual functions 
  * mentioned below. ArrayList compatible, Linked List compatible, 
  * 
@@ -27,6 +25,7 @@ import utilities.PlayList;
  * favorite used in model as special PlayList
  * genre used as recommended songs metadata
  *
+ * @author Seth/Jackson
  */
 
 public class Song {
