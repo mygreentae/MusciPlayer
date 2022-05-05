@@ -41,8 +41,10 @@ public class SongLibrary {
 	 */
 	public SongLibrary() {
 		songLibrary = new ArrayList<>();
+		playlists = new ArrayList<>();
 		try {
 			addSongs();
+			loadPlaylists();
 		} catch (IOException e) {
 			
 			return;
