@@ -1047,7 +1047,7 @@ public class MusicPlayerView extends Application implements Observer {
 			GridPane.setConstraints(addToPlaylistButton, 1, 0);
 			GridPane.setConstraints(favoriteButton, 2, 0);
 			
-			menu.getChildren().addAll(addToPlaylistButton, favoriteButton, removeButton);
+			menu.getChildren().addAll(addToPlaylistButton, favoriteButton);
 			menu.setHgap(10);
 	        menu.setVgap(10);
 			
