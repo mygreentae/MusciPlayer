@@ -173,6 +173,59 @@ public class SongLibrary {
 
 	} 
 	
+	public void removeSong(Song song) {
+		String artPath = song.getArtPath();
+		String audioPath = song.getAudioPath();
+		removeArt(artPath);
+		removeAudio(audioPath);
+		songLibrary.remove(song);
+		for (PlayList p : playlists) {
+			p.removeSong(song);
+		}
+		try {
+			removeFromFile(song.getName(),song.getArtist());
+		} catch (IOException e) {
+			System.out.println();
+		}
+		
+	}
+	
+	private void removeArt(String artPath) {
+		File dir2 = new File("src/images");
+		File[] paths2 = dir2.listFiles();
+		if (paths2 != null) {
+			for (File p : paths2) {
+				if (p.toString().equals(artPath)){
+					p.delete();
+				} 
+			}
+		}
+	}
+	
+	private void removeAudio(String audioPath) {
+		File dir2 = new File("Audios");
+		File[] paths2 = dir2.listFiles();
+		if (paths2 != null) {
+			for (File p : paths2) {
+				if (p.toString().equals(audioPath)){
+					p.delete();
+				} 
+			}
+		}
+	}
+	
+	private void removeFromFile(String name, String artist) throws IOException {
+		List<String> dataList = Files.readAllLines(Paths.get("data.txt"), StandardCharsets.UTF_8);
+		for (String data : dataList) {
+			if (data.contains(name) && data.contains(artist)) {
+				data = "";
+			} 
+		}			
+	}
+
+	
+	
+	
 	/**
 	 * This is a helper function that reads in the playlist.txt file
 	 * 
