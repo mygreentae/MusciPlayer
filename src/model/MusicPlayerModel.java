@@ -95,8 +95,9 @@ public class MusicPlayerModel extends Observable{
 			} else {
 				allPlaylists.add(list);
 			}
-			
 		}
+			
+	}
 
 
 	
