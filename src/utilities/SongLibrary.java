@@ -34,6 +34,9 @@ public class SongLibrary {
 	ArrayList<String> songTitleArtist;
 	
 
+	/**
+	 * Creates the song Library
+	 */
 	public SongLibrary() {
 		songLibrary = new ArrayList<>();
 		try {
@@ -44,6 +47,10 @@ public class SongLibrary {
 		}
 	}
 
+	/**
+	 * Adds all Songs to library from data.txt
+	 * @throws IOException
+	 */
 	private void addSongs() throws IOException {
 		List<String> dataList = Files.readAllLines(Paths.get("data.txt"), StandardCharsets.UTF_8);
 		File dir = new File("Audios");
@@ -96,6 +103,45 @@ public class SongLibrary {
 		songLibrary = list;
 	}
 	
+
+	/**
+	 * Returns the ArrayList of PlayLists
+	 * 
+	 * @return the ArrayList of PlayLists
+	 */
+	public ArrayList<PlayList> getPlaylists(){
+		return playlists;
+	}
+	
+	/**
+	 * Reads a file that contains playlist data
+	 * 
+	 * @throws IOException when file cannot be found
+	 */
+	public void loadPlaylists() throws IOException {
+		List<String> dataList = readFile("playlists.txt");
+		for (String data : dataList) {
+			String[] lines = data.split(":");
+			String playlistName = lines[0];
+			if (lines.length == 1) {
+				return;
+			}
+			String[] songs = lines[1].split(";");
+			PlayList p = new PlayList(playlistName);
+			if (!p.getName().equals("Song Library")) {
+				for (Song song : songLibrary) {
+					String name = song.getName() + ", " + song.getArtist();
+					for (String songData: songs) {
+						if (name.equals(songData.strip())){
+							p.addSong(song);
+						}
+					}
+				}
+				playlists.add(p);
+			}
+		} 
+	}
+
 	
 	/**
 	 * Adds an individual song to the song library
@@ -118,7 +164,31 @@ public class SongLibrary {
 			if (songs.getArtPath().equals(song.getArtPath())) {
 				return;
 			}
-		} 
+		}
 		songLibrary.add(song);
-	}
+
+	} 
+	
+	/**
+	 * This is a helper function that reads in the playlist.txt file
+	 * 
+	 * @param fileName, the name of the file you want to open
+	 * @return an ArrayList of Strings that contain the files contents
+	 */
+	public static ArrayList<String> readFile(String fileName) {
+		List<String> dataList = new ArrayList<>();
+	    try {
+	      File myObj = new File(fileName);
+	      Scanner myReader = new Scanner(myObj);
+	      while (myReader.hasNextLine()) {
+	        String data = myReader.nextLine();
+	        dataList.add(data);
+	      }
+	      myReader.close();
+	    } catch (FileNotFoundException e) {
+	      System.out.println("An error occurred.");
+	      e.printStackTrace();
+	    }
+	    return (ArrayList<String>) dataList;
+	  }
 }

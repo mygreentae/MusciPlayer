@@ -359,12 +359,14 @@ public class SpotifyAPI {
 		}	
 	}
 	
+
 	/**
 	 * This method handles the second step of the authentication process, which is receiving our token,
 	 * to be able to query the API for JSON metadata. We send information about our client along with
 	 * the secret ID to receive our token so the API knows who this token is for. 
-	 * @throws SpotifyAPIInvalidURLException
-	 * @throws SpotifyAPIInvalidStreamException
+
+	 * @throws SpotifyAPIInvalidURLException, when has issues
+	 * @throws SpotifyAPIInvalidStreamException, when has issues
 	 */
 	public static void getToken() throws SpotifyAPIInvalidURLException, SpotifyAPIInvalidStreamException {
 		if (token != "") {
