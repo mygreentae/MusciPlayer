@@ -1,9 +1,5 @@
 package model;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,10 +18,12 @@ import utilities.SongLibrary;
  * User data regarding PlayLists, Queues, favorites, and recommended
  * songs
  * 
+ * 
  * Properties:
  * curSong: 
  * The Song currently playing, when Model is initialized, 
  * it is null.
+ * 
  * 
  * currentPlayList: 
  * The PlayList currently playing, null when initialized/
@@ -41,6 +39,7 @@ import utilities.SongLibrary;
  * 
  * playingPlaylist: 
  * Boolean value for if PlayList is playing, null when initialized.
+ * 
  * 
  * metadata:
  * A Map of Strings mapped to integers of genre's of Songs in a user's 
@@ -59,7 +58,7 @@ public class MusicPlayerModel extends Observable{
 	private PlayList currentPlaylist;
 	
 	//features maybe?
-	private static ArrayList<PlayList> allPlaylists; 
+	private ArrayList<PlayList> allPlaylists; 
 	private PlayList favorites; 
 	private PlayList recommended;
 
@@ -85,6 +84,7 @@ public class MusicPlayerModel extends Observable{
 		allPlaylists.add(favorites);
 		allPlaylists.add(playlist);
 		
+
 		//loads playlists from txt file
 		ArrayList<PlayList> loadedPlaylists = songLibrary.getPlaylists();
 		for (PlayList list : loadedPlaylists) {
@@ -97,8 +97,9 @@ public class MusicPlayerModel extends Observable{
 			}
 			
 		}
-	}
 
+
+	
 	/**
 	 * Starts playing a PlayList,
 	 * 
@@ -145,6 +146,7 @@ public class MusicPlayerModel extends Observable{
 		playingPlaylist = true;
 		curSong = song;
 		playlist.playFirst(song); //sets first song
+		// plays entire playlist
 		setChanged();
 		notifyObservers();
 	}
@@ -183,6 +185,7 @@ public class MusicPlayerModel extends Observable{
 	 * @param song, the Song we want to change to.
 	 */
 	public void changeSong(Song song) {
+		
 		// if a song is playing, stop it
 		// if in Playlist, and playlist is currently being played
 		if (playingPlaylist && currentPlaylist.contains(song)) {
@@ -191,6 +194,7 @@ public class MusicPlayerModel extends Observable{
 			
 		} 
 	}	
+	
 	
 	/* 
 	 * all of the getters that will be needed for the controller to call to
@@ -287,8 +291,6 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public void addPlaylist(PlayList playlist) {
 		allPlaylists.add(playlist);
-		updateData();
-		
 	}
 	
 	/**
@@ -300,7 +302,6 @@ public class MusicPlayerModel extends Observable{
 		if (allPlaylists.contains(playlist)) {
 			allPlaylists.remove(playlist);
 		}
-		updateData();
 	}
 	
 	/**
@@ -311,7 +312,6 @@ public class MusicPlayerModel extends Observable{
 	public void addToFavorites(Song song) {
 		song.makeFavorite();
 		favorites.addSong(song);
-		updateData();
 	}
 	
 	/**
@@ -323,7 +323,6 @@ public class MusicPlayerModel extends Observable{
 		if (favorites.contains(song)) {
 			song.unFavorite();
 			favorites.removeSong(song);
-			updateData();
 		}
 	}
 	
@@ -335,7 +334,6 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public void addToPlaylist(PlayList playlist, Song song) {
 		playlist.addSong(song);
-		updateData();
 	}
 
 	/**
@@ -386,28 +384,5 @@ public class MusicPlayerModel extends Observable{
 		}
 		
 		return sb.toString();
-	}
-	
-	private static void updateData() {
-		try {
-			File file = new File("playlists.txt");
-			file.delete();
-			File newFile = new File("playlists.txt");
-			FileWriter fw = new FileWriter("playlists.txt", true);
-			BufferedWriter bw = new BufferedWriter(fw);
-			
-			for (PlayList p : allPlaylists) {
-				String toWrite = p.getName() + ": ";
-				for (Song song : p.getSongList()) {
-					toWrite = toWrite + song.getName() + ", " + song.getArtist() + "; ";
-				}
-				bw.write(toWrite);
-				bw.newLine();
-			}
-			bw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

@@ -1,14 +1,13 @@
 package utilities;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
 
 import song.Song;
 
@@ -32,8 +31,7 @@ import song.Song;
 public class SongLibrary {
 	
 	ArrayList<Song> songLibrary;
-	ArrayList<PlayList> playlists;
-
+	ArrayList<String> songTitleArtist;
 	
 
 	/**
@@ -41,10 +39,8 @@ public class SongLibrary {
 	 */
 	public SongLibrary() {
 		songLibrary = new ArrayList<>();
-		playlists = new ArrayList<>();
 		try {
 			addSongs();
-			loadPlaylists();
 		} catch (IOException e) {
 			
 			return;
@@ -107,6 +103,7 @@ public class SongLibrary {
 		songLibrary = list;
 	}
 	
+
 	/**
 	 * Returns the ArrayList of PlayLists
 	 * 
@@ -144,6 +141,7 @@ public class SongLibrary {
 			}
 		} 
 	}
+
 	
 	/**
 	 * Adds an individual song to the song library
@@ -168,6 +166,7 @@ public class SongLibrary {
 			}
 		}
 		songLibrary.add(song);
+
 	} 
 	
 	/**
@@ -192,5 +191,4 @@ public class SongLibrary {
 	    }
 	    return (ArrayList<String>) dataList;
 	  }
-
 }
