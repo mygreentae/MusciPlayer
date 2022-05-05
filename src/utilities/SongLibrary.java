@@ -170,44 +170,6 @@ public class SongLibrary {
 		songLibrary.add(song);
 	} 
 	
-	
-	public void removeSong(Song song) {
-		String artPath = song.getArtPath();
-		String audioPath = song.getAudioPath();
-		deleteFromFile(song.getName());
-		deleteArt(artPath);
-		deleteAudio(audioPath);
-	}
-	
-	private void deleteFromFile(String songName) {
-		
-	}
-	
-	
-	private void deleteArt(String artPath) {
-		File dir2 = new File("src/images");
-		File[] paths2 = dir2.listFiles();
-		if (paths2 != null) {
-			for (File p : paths2) {
-				if (p.toString().equals(artPath)){
-					p.delete();
-				} 
-			}
-		}
-	}
-	
-	private void deleteAudio(String audioPath) {
-		File dir2 = new File("Audios");
-		File[] paths2 = dir2.listFiles();
-		if (paths2 != null) {
-			for (File p : paths2) {
-				if (p.toString().equals(audioPath)){
-					p.delete();
-				} 
-			}
-		}
-	}
-	
 	/**
 	 * This is a helper function that reads in the playlist.txt file
 	 * 

@@ -1134,28 +1134,11 @@ public class MusicPlayerView extends Application implements Observer {
 					
 				}
 			};
-			
-			
-			EventHandler<MouseEvent> remove = new EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent arg0) {
-					Song curSong = controller.getCurSong();
-					if (curSong == null) {   
-				        Platform.runLater(() -> {
-					        Alert error = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
-					        error.show();
-					    });
-				        return;
-					} 
-					songLibrary.removeSong(curSong);
-					update(model, null);
-				}
-			};
+		
 			
 			addToPlaylistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, addSongToPlaylist);
 			favoriteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, favorite);
-			removeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, remove);
+			//removeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, remove);
 		}
 	}
 
