@@ -1026,13 +1026,14 @@ public class MusicPlayerView extends Application implements Observer {
 		private GridPane menu;
 		Button addToPlaylistButton;
 		Button favoriteButton;
+		Button removeButton;
 		
 		public SongMenu() {
 			menu = new GridPane();
 			
 			addToPlaylistButton = new Button("Add Song to PlayList");
 			favoriteButton = new Button();
-			
+			removeButton = new Button("Remove");
 			if (controller.getCurSong()!= null) {
 				if (controller.getCurSong().isFavorite()) {
 					favoriteButton.setText("Unfavorite Song");
@@ -1048,7 +1049,7 @@ public class MusicPlayerView extends Application implements Observer {
 			GridPane.setConstraints(addToPlaylistButton, 1, 0);
 			GridPane.setConstraints(favoriteButton, 2, 0);
 			
-			menu.getChildren().addAll(addToPlaylistButton, favoriteButton);
+			menu.getChildren().addAll(addToPlaylistButton, favoriteButton, removeButton);
 			menu.setHgap(10);
 	        menu.setVgap(10);
 			
@@ -1135,8 +1136,26 @@ public class MusicPlayerView extends Application implements Observer {
 			};
 			
 			
+			EventHandler<MouseEvent> remove = new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					Song curSong = controller.getCurSong();
+					if (curSong == null) {   
+				        Platform.runLater(() -> {
+					        Alert error = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
+					        error.show();
+					    });
+				        return;
+					} 
+					songLibrary.removeSong(curSong);
+					update(model, null);
+				}
+			};
+			
 			addToPlaylistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, addSongToPlaylist);
 			favoriteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, favorite);
+			removeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, remove);
 		}
 	}
 

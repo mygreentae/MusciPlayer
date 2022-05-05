@@ -639,10 +639,9 @@ public class Tester {
 		}		
 	}
 	
-=======
 
 	@Test
-	void test16() {
+	void test20() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
 		MusicPlayerController c = new MusicPlayerController(model);
@@ -671,7 +670,7 @@ public class Tester {
 	 * thread Testing curSong() for changeSong() aka singleSongQueues
 	 */
 	//@Test
-	void test17() {
+	void test() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
 		MusicPlayerController c = new MusicPlayerController(model);
@@ -694,7 +693,7 @@ public class Tester {
 	 * thread testing curSong() for Queues
 	 */
 	//@Test
-	void test19() {
+	void test21() {
 		SongLibrary s = new SongLibrary();
 		MusicPlayerModel model = new MusicPlayerModel(s);
 		MusicPlayerController c = new MusicPlayerController(model);

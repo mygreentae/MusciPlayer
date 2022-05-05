@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"api","c":"SpotifyAPI","l":"authenticate()"},{"p":"api","c":"SpotifyAPI","l":"getMetadata(String, String)","u":"getMetadata(java.lang.String,java.lang.String)"},{"p":"api","c":"SpotifyAPI","l":"getToken()"},{"p":"api","c":"SpotifyAPI","l":"SpotifyAPI()","u":"%3Cinit%3E()"}];updateSearchResults();

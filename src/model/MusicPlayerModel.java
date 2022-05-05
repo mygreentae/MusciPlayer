@@ -70,6 +70,8 @@ public class MusicPlayerModel extends Observable{
 	
 	/**
 	 * Creates the MusicPlayerModel
+	 * 
+	 * @param songLibrary, the songLibrary that saves Song data
 	 */
 	public MusicPlayerModel(SongLibrary songLibrary) {
 		this.songLibrary = songLibrary;
@@ -120,6 +122,7 @@ public class MusicPlayerModel extends Observable{
 	 * how intended
 	 * 
 	 * @param playlist, the PlayList to be played
+	 * @param song, the Song to play in the PlayList
 	 */
 	public void playPlaylist(PlayList playlist, Song song) {
 		currentPlaylist = playlist;
@@ -129,6 +132,13 @@ public class MusicPlayerModel extends Observable{
 		notifyObservers();
 	}
 	
+	/**
+	 * Plays a PlayList that is shuffled from a specific song
+	 * 
+	 * @param playlist, the PlayList to be played
+	 * @param Shuffle, if the PlayList is shuffled
+	 * @param song, the Song to start with
+	 */
 	public void playPlaylist(PlayList playlist, boolean Shuffle, Song song) {
 		//stops other songs playing
 		currentPlaylist = playlist;
@@ -327,21 +337,6 @@ public class MusicPlayerModel extends Observable{
 		playlist.addSong(song);
 		updateData();
 	}
-	
-	/**
-	 * unsure if we need this but ya never know, could be a cool feature
-	 * 
-	 * @param playlist
-	 * @return
-	 */
-	public PlayList copyPlaylist(PlayList playlist) {
-		PlayList copy = new PlayList(playlist.getName());
-		for (Song song: playlist.getSongList()) {
-			copy.addSong(song);
-		}
-		return copy;
-		
-	}
 
 	/**
 	 * Sorting Playlists functions
@@ -349,6 +344,8 @@ public class MusicPlayerModel extends Observable{
 
 	/**
 	 * Sorts the songLibrary by song Name
+	 * 
+	 * @param playlist, the PlayList to be sorted
 	 */
 	public void sortTitle(PlayList playlist){
 		playlist.sortTitle();
@@ -356,6 +353,8 @@ public class MusicPlayerModel extends Observable{
 	
 	/**
 	 * Sorts the songLibrary by song Artist
+	 * 
+	 * @param playlist, the PlayList to be sorted
 	 */
 	public void sortArtist(PlayList playlist){
 		
@@ -364,6 +363,8 @@ public class MusicPlayerModel extends Observable{
 	
 	/**
 	 * Sorts the songLibrary by song release Date
+	 * 
+	 * @param playlist, the PlayList to be sorted
 	 */
 	public void sortDate(PlayList playlist){
 		
@@ -372,6 +373,7 @@ public class MusicPlayerModel extends Observable{
 	
 	/**
 	 * Returns a string of all the playlists names
+	 * 
 	 * @return the string that has all the playlists names
 	 */
 	public String getAllPlaylistsAsString() {

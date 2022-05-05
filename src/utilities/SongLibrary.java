@@ -36,6 +36,9 @@ public class SongLibrary {
 
 	
 
+	/**
+	 * Creates the song Library
+	 */
 	public SongLibrary() {
 		songLibrary = new ArrayList<>();
 		playlists = new ArrayList<>();
@@ -48,6 +51,10 @@ public class SongLibrary {
 		}
 	}
 
+	/**
+	 * Adds all Songs to library from data.txt
+	 * @throws IOException
+	 */
 	private void addSongs() throws IOException {
 		List<String> dataList = Files.readAllLines(Paths.get("data.txt"), StandardCharsets.UTF_8);
 		File dir = new File("Audios");
@@ -159,8 +166,46 @@ public class SongLibrary {
 			if (songs.getArtPath().equals(song.getArtPath())) {
 				return;
 			}
-		} 
+		}
 		songLibrary.add(song);
+	} 
+	
+	
+	public void removeSong(Song song) {
+		String artPath = song.getArtPath();
+		String audioPath = song.getAudioPath();
+		deleteFromFile(song.getName());
+		deleteArt(artPath);
+		deleteAudio(audioPath);
+	}
+	
+	private void deleteFromFile(String songName) {
+		
+	}
+	
+	
+	private void deleteArt(String artPath) {
+		File dir2 = new File("src/images");
+		File[] paths2 = dir2.listFiles();
+		if (paths2 != null) {
+			for (File p : paths2) {
+				if (p.toString().equals(artPath)){
+					p.delete();
+				} 
+			}
+		}
+	}
+	
+	private void deleteAudio(String audioPath) {
+		File dir2 = new File("Audios");
+		File[] paths2 = dir2.listFiles();
+		if (paths2 != null) {
+			for (File p : paths2) {
+				if (p.toString().equals(audioPath)){
+					p.delete();
+				} 
+			}
+		}
 	}
 	
 	/**

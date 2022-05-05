@@ -46,9 +46,16 @@ public class Song {
 	private String audioPath; 
 	private String songDate;
 
+	
 	/**
+	 * Creates the song object
+	 * 
 	 * @param name, the name of the Song
-	 * @param artist, the artist of the Song
+	 * @param artist, the Song artist
+	 * @param genre, the Song genre
+	 * @param artPath, the path to the album cover
+	 * @param songDate, the date of release
+	 * @param audioPath, the path to the audio
 	 */
 	public Song(String name, String artist, String genre, String artPath, String songDate, String audioPath) {
 		this.name = name;
@@ -123,6 +130,7 @@ public class Song {
 	/**
 	 * Sets the cover Image URL
 	 * 
+	 * @param url, the path to the image
 	 */
 	public void setCover(String url) {
 		cover = url;
@@ -181,7 +189,7 @@ public class Song {
 	/**
 	 * Adds this Song to a playList, also probably not needed
 	 * 
-	 * @param playlist
+	 * @param playlist, the playlist to add to
 	 */
 	public void addToPlaylist(PlayList playlist) {
 		playlist.addSong(this);
