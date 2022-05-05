@@ -550,7 +550,7 @@ public class MusicPlayerView extends Application implements Observer {
 	            		setImage(playPauseButton, "play.png", BUTTON_SIZE_1);
 	            	}
 	            	
-	            	if (controller.getCurSong() == null) {   
+	            	if (controller.getCurSong() == null || CURRENT_SONG == null) {   
 				        Platform.runLater(() -> {
 					        Alert dialog = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
 					        dialog.show();
@@ -855,7 +855,7 @@ public class MusicPlayerView extends Application implements Observer {
 			    	
 			    	if (toPlay.getSize() > 0) {
 			    		SHOW_PLAYLIST = toPlay;
-			    		update(model, null);// casuses visual error
+			    		update(model, null);
 			    	}
 			    	else {
 			    		 Platform.runLater(() -> {
@@ -1099,7 +1099,7 @@ public class MusicPlayerView extends Application implements Observer {
 					        return;
 				    	}
 				    	else {
-				    		toAddto.addSong(controller.getCurSong());
+				    		controller.addToPlaylist(toAddto, controller.getCurSong());
 				    	}
 				    	
 				    });
@@ -1132,10 +1132,32 @@ public class MusicPlayerView extends Application implements Observer {
 				}
 			};
 		
+			EventHandler<MouseEvent> remove = new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					Song curSong = controller.getCurSong();
+					if (curSong == null) {   
+				        Platform.runLater(() -> {
+					        Alert error = new Alert(AlertType.INFORMATION, "Please select song to play!", ButtonType.OK);
+					        error.show();
+					    });
+				        return;
+					} 
+					songLibrary.removeSong(curSong);
+					SHOW_PLAYLIST.removeSong(curSong);
+					CURRENT_SONG = null;
+					CURRENT_PLAYER.stop();
+					CURRENT_PLAYER = null;
+					update(model, null);
+					
+				}
+			};
+			
 			
 			addToPlaylistButton.addEventHandler(MouseEvent.MOUSE_CLICKED, addSongToPlaylist);
 			favoriteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, favorite);
-			//removeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, remove);
+			removeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, remove);
 		}
 	}
 

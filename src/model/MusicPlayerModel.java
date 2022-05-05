@@ -1,5 +1,9 @@
 package model;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,7 +62,7 @@ public class MusicPlayerModel extends Observable{
 	private PlayList currentPlaylist;
 	
 	//features maybe?
-	private ArrayList<PlayList> allPlaylists; 
+	private static ArrayList<PlayList> allPlaylists; 
 	private PlayList favorites; 
 	private PlayList recommended;
 
@@ -292,6 +296,7 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public void addPlaylist(PlayList playlist) {
 		allPlaylists.add(playlist);
+		updateData();
 	}
 	
 	/**
@@ -303,6 +308,7 @@ public class MusicPlayerModel extends Observable{
 		if (allPlaylists.contains(playlist)) {
 			allPlaylists.remove(playlist);
 		}
+		updateData();
 	}
 	
 	/**
@@ -313,6 +319,7 @@ public class MusicPlayerModel extends Observable{
 	public void addToFavorites(Song song) {
 		song.makeFavorite();
 		favorites.addSong(song);
+		updateData();
 	}
 	
 	/**
@@ -324,6 +331,7 @@ public class MusicPlayerModel extends Observable{
 		if (favorites.contains(song)) {
 			song.unFavorite();
 			favorites.removeSong(song);
+			updateData();
 		}
 	}
 	
@@ -335,6 +343,7 @@ public class MusicPlayerModel extends Observable{
 	 */
 	public void addToPlaylist(PlayList playlist, Song song) {
 		playlist.addSong(song);
+		updateData();
 	}
 
 	/**
@@ -386,4 +395,30 @@ public class MusicPlayerModel extends Observable{
 		
 		return sb.toString();
 	}
+	
+	/**
+	 * Updates data
+	 */
+	private static void updateData() {
+ 		try {
+ 			File file = new File("playlists.txt");
+ 			file.delete();
+ 			File newFile = new File("playlists.txt");
+ 			FileWriter fw = new FileWriter("playlists.txt", true);
+ 			BufferedWriter bw = new BufferedWriter(fw);
+
+ 			for (PlayList p : allPlaylists) {
+ 				String toWrite = p.getName() + ": ";
+ 				for (Song song : p.getSongList()) {
+ 					toWrite = toWrite + song.getName() + ", " + song.getArtist() + "; ";
+ 				}
+ 				bw.write(toWrite);
+ 				bw.newLine();
+ 			}
+ 			bw.close();
+ 		} catch (IOException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+ 	}
 }
